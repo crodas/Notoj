@@ -1,0 +1,390 @@
+State 0:
+          start ::= * body
+          body ::= * body code
+      (2) body ::= *
+
+                         start accept
+                          body shift  11
+                     {default} reduce 2
+
+State 1:
+          args_body ::= * args_body T_COMMA args_body
+          args_body ::= args_body T_COMMA * args_body
+          args_body ::= * expr
+          args_body ::= * named_arg
+     (12) args_body ::= *
+          named_arg ::= * term T_EQ expr
+          expr ::= * term
+          expr ::= * json
+          term ::= * T_ALPHA
+          term ::= * T_TRUE
+          term ::= * T_FALSE
+          term ::= * T_STRING
+          term ::= * T_NUMBER
+          json ::= * T_CURLY_OPEN json_obj T_CURLY_CLOSE
+          json ::= * T_SUBSCR_OPEN json_arr T_SUBSCR_CLOSE
+
+                       T_ALPHA shift  35
+                        T_TRUE shift  25
+                       T_FALSE shift  33
+                      T_STRING shift  34
+                      T_NUMBER shift  38
+                  T_CURLY_OPEN shift  8
+                 T_SUBSCR_OPEN shift  3
+                     args_body shift  26
+                          term shift  16
+                          expr shift  27
+                     named_arg shift  31
+                          json shift  36
+                     {default} reduce 12
+
+State 2:
+          args ::= T_PAR_LEFT * args_body T_PAR_RIGHT
+          args_body ::= * args_body T_COMMA args_body
+          args_body ::= * expr
+          args_body ::= * named_arg
+     (12) args_body ::= *
+          named_arg ::= * term T_EQ expr
+          expr ::= * term
+          expr ::= * json
+          term ::= * T_ALPHA
+          term ::= * T_TRUE
+          term ::= * T_FALSE
+          term ::= * T_STRING
+          term ::= * T_NUMBER
+          json ::= * T_CURLY_OPEN json_obj T_CURLY_CLOSE
+          json ::= * T_SUBSCR_OPEN json_arr T_SUBSCR_CLOSE
+
+                       T_ALPHA shift  35
+                        T_TRUE shift  25
+                       T_FALSE shift  33
+                      T_STRING shift  34
+                      T_NUMBER shift  38
+                  T_CURLY_OPEN shift  8
+                 T_SUBSCR_OPEN shift  3
+                     args_body shift  13
+                          term shift  16
+                          expr shift  27
+                     named_arg shift  31
+                          json shift  36
+                     {default} reduce 12
+
+State 3:
+          expr ::= * term
+          expr ::= * json
+          term ::= * T_ALPHA
+          term ::= * T_TRUE
+          term ::= * T_FALSE
+          term ::= * T_STRING
+          term ::= * T_NUMBER
+          json ::= * T_CURLY_OPEN json_obj T_CURLY_CLOSE
+          json ::= * T_SUBSCR_OPEN json_arr T_SUBSCR_CLOSE
+          json ::= T_SUBSCR_OPEN * json_arr T_SUBSCR_CLOSE
+          json_arr ::= * json_arr T_COMMA expr
+          json_arr ::= * expr
+
+                       T_ALPHA shift  35
+                        T_TRUE shift  25
+                       T_FALSE shift  33
+                      T_STRING shift  34
+                      T_NUMBER shift  38
+                  T_CURLY_OPEN shift  8
+                 T_SUBSCR_OPEN shift  3
+                          term shift  37
+                          expr shift  21
+                          json shift  36
+                      json_arr shift  12
+
+State 4:
+          expr ::= * term
+          expr ::= * json
+          term ::= * T_ALPHA
+          term ::= * T_TRUE
+          term ::= * T_FALSE
+          term ::= * T_STRING
+          term ::= * T_NUMBER
+          json ::= * T_CURLY_OPEN json_obj T_CURLY_CLOSE
+          json ::= * T_SUBSCR_OPEN json_arr T_SUBSCR_CLOSE
+          json_obj ::= term T_COLON * expr
+
+                       T_ALPHA shift  35
+                        T_TRUE shift  25
+                       T_FALSE shift  33
+                      T_STRING shift  34
+                      T_NUMBER shift  38
+                  T_CURLY_OPEN shift  8
+                 T_SUBSCR_OPEN shift  3
+                          term shift  37
+                          expr shift  20
+                          json shift  36
+
+State 5:
+          named_arg ::= term T_EQ * expr
+          expr ::= * term
+          expr ::= * json
+          term ::= * T_ALPHA
+          term ::= * T_TRUE
+          term ::= * T_FALSE
+          term ::= * T_STRING
+          term ::= * T_NUMBER
+          json ::= * T_CURLY_OPEN json_obj T_CURLY_CLOSE
+          json ::= * T_SUBSCR_OPEN json_arr T_SUBSCR_CLOSE
+
+                       T_ALPHA shift  35
+                        T_TRUE shift  25
+                       T_FALSE shift  33
+                      T_STRING shift  34
+                      T_NUMBER shift  38
+                  T_CURLY_OPEN shift  8
+                 T_SUBSCR_OPEN shift  3
+                          term shift  37
+                          expr shift  32
+                          json shift  36
+
+State 6:
+          expr ::= * term
+          expr ::= * json
+          term ::= * T_ALPHA
+          term ::= * T_TRUE
+          term ::= * T_FALSE
+          term ::= * T_STRING
+          term ::= * T_NUMBER
+          json ::= * T_CURLY_OPEN json_obj T_CURLY_CLOSE
+          json ::= * T_SUBSCR_OPEN json_arr T_SUBSCR_CLOSE
+          json_arr ::= json_arr T_COMMA * expr
+
+                       T_ALPHA shift  35
+                        T_TRUE shift  25
+                       T_FALSE shift  33
+                      T_STRING shift  34
+                      T_NUMBER shift  38
+                  T_CURLY_OPEN shift  8
+                 T_SUBSCR_OPEN shift  3
+                          term shift  37
+                          expr shift  22
+                          json shift  36
+
+State 7:
+          term ::= * T_ALPHA
+          term ::= * T_TRUE
+          term ::= * T_FALSE
+          term ::= * T_STRING
+          term ::= * T_NUMBER
+          json_obj ::= * json_obj T_COMMA json_obj
+          json_obj ::= json_obj T_COMMA * json_obj
+          json_obj ::= * term T_COLON expr
+
+                       T_ALPHA shift  35
+                        T_TRUE shift  25
+                       T_FALSE shift  33
+                      T_STRING shift  34
+                      T_NUMBER shift  38
+                          term shift  17
+                      json_obj shift  18
+
+State 8:
+          term ::= * T_ALPHA
+          term ::= * T_TRUE
+          term ::= * T_FALSE
+          term ::= * T_STRING
+          term ::= * T_NUMBER
+          json ::= T_CURLY_OPEN * json_obj T_CURLY_CLOSE
+          json_obj ::= * json_obj T_COMMA json_obj
+          json_obj ::= * term T_COLON expr
+
+                       T_ALPHA shift  35
+                        T_TRUE shift  25
+                       T_FALSE shift  33
+                      T_STRING shift  34
+                      T_NUMBER shift  38
+                          term shift  17
+                      json_obj shift  14
+
+State 9:
+          code ::= T_AT T_ALPHA * args
+          args ::= * T_PAR_LEFT args_body T_PAR_RIGHT
+          args ::= * term_array
+      (6) args ::= *
+          term_array ::= * term_array term
+      (8) term_array ::= *
+
+                             $ reduce 6
+                             $ reduce 8   ** Parsing conflict **
+                          T_AT reduce 6
+                          T_AT reduce 8   ** Parsing conflict **
+                    T_PAR_LEFT shift  2
+                          args shift  29
+                    term_array shift  10
+                     {default} reduce 8
+
+State 10:
+      (5) args ::= term_array *
+          term_array ::= term_array * term
+          term ::= * T_ALPHA
+          term ::= * T_TRUE
+          term ::= * T_FALSE
+          term ::= * T_STRING
+          term ::= * T_NUMBER
+
+                       T_ALPHA shift  35
+                        T_TRUE shift  25
+                       T_FALSE shift  33
+                      T_STRING shift  34
+                      T_NUMBER shift  38
+                          term shift  24
+                     {default} reduce 5
+
+State 11:
+      (0) start ::= body *
+          body ::= body * code
+          code ::= * T_AT T_ALPHA args
+
+                          T_AT shift  15
+                          code shift  30
+                     {default} reduce 0
+
+State 12:
+          json ::= T_SUBSCR_OPEN json_arr * T_SUBSCR_CLOSE
+          json_arr ::= json_arr * T_COMMA expr
+
+                       T_COMMA shift  6
+                T_SUBSCR_CLOSE shift  19
+
+State 13:
+          args ::= T_PAR_LEFT args_body * T_PAR_RIGHT
+          args_body ::= args_body * T_COMMA args_body
+
+                       T_COMMA shift  1
+                   T_PAR_RIGHT shift  28
+
+State 14:
+          json ::= T_CURLY_OPEN json_obj * T_CURLY_CLOSE
+          json_obj ::= json_obj * T_COMMA json_obj
+
+                       T_COMMA shift  7
+                 T_CURLY_CLOSE shift  23
+
+State 15:
+          code ::= T_AT * T_ALPHA args
+
+                       T_ALPHA shift  9
+
+State 16:
+          named_arg ::= term * T_EQ expr
+     (14) expr ::= term *
+
+                          T_EQ shift  5
+                     {default} reduce 14
+
+State 17:
+          json_obj ::= term * T_COLON expr
+
+                       T_COLON shift  4
+
+State 18:
+          json_obj ::= json_obj * T_COMMA json_obj
+     (23) json_obj ::= json_obj T_COMMA json_obj *
+
+                     {default} reduce 23
+
+State 19:
+     (22) json ::= T_SUBSCR_OPEN json_arr T_SUBSCR_CLOSE *
+
+                     {default} reduce 22
+
+State 20:
+     (24) json_obj ::= term T_COLON expr *
+
+                     {default} reduce 24
+
+State 21:
+     (26) json_arr ::= expr *
+
+                     {default} reduce 26
+
+State 22:
+     (25) json_arr ::= json_arr T_COMMA expr *
+
+                     {default} reduce 25
+
+State 23:
+     (21) json ::= T_CURLY_OPEN json_obj T_CURLY_CLOSE *
+
+                     {default} reduce 21
+
+State 24:
+      (7) term_array ::= term_array term *
+
+                     {default} reduce 7
+
+State 25:
+     (17) term ::= T_TRUE *
+
+                     {default} reduce 17
+
+State 26:
+          args_body ::= args_body * T_COMMA args_body
+      (9) args_body ::= args_body T_COMMA args_body *
+
+                     {default} reduce 9
+
+State 27:
+     (10) args_body ::= expr *
+
+                     {default} reduce 10
+
+State 28:
+      (4) args ::= T_PAR_LEFT args_body T_PAR_RIGHT *
+
+                     {default} reduce 4
+
+State 29:
+      (3) code ::= T_AT T_ALPHA args *
+
+                     {default} reduce 3
+
+State 30:
+      (1) body ::= body code *
+
+                     {default} reduce 1
+
+State 31:
+     (11) args_body ::= named_arg *
+
+                     {default} reduce 11
+
+State 32:
+     (13) named_arg ::= term T_EQ expr *
+
+                     {default} reduce 13
+
+State 33:
+     (18) term ::= T_FALSE *
+
+                     {default} reduce 18
+
+State 34:
+     (19) term ::= T_STRING *
+
+                     {default} reduce 19
+
+State 35:
+     (16) term ::= T_ALPHA *
+
+                     {default} reduce 16
+
+State 36:
+     (15) expr ::= json *
+
+                     {default} reduce 15
+
+State 37:
+     (14) expr ::= term *
+
+                     {default} reduce 14
+
+State 38:
+     (20) term ::= T_NUMBER *
+
+                     {default} reduce 20
+
