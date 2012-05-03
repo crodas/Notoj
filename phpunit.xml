@@ -25,17 +25,10 @@
         </testsuite>
     </testsuites>
 
-    <php>
-        <server name="KERNEL_DIR" value="app" />
-    </php>
-
     <filter>
         <whitelist>
             <directory>tests/</directory>
-            <exclude>
-                <directory>*Bundle/Resources</directory>
-                <directory>*Bundle/Tests</directory>
-            </exclude>
+            <directory>lib/</directory>
         </whitelist>
     </filter>
 

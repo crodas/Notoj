@@ -5,6 +5,10 @@ use Notoj\ReflectionClass,
 /** @test */
 class simpletest extends \phpunit_framework_testcase
 {
+
+    /** @var_name("foo") */
+    protected $bar;
+
     /** yet another comment {{{
      * This is a bloody comment that nobody is going to read
      *
@@ -31,6 +35,15 @@ class simpletest extends \phpunit_framework_testcase
                 $this->assertEquals($annotation[1]['args'][0], false);
                 $this->assertequals($annotation[2]['method'], 'bar');
                 $this->assertEquals($annotation[2]['args'][0], 'hola que tal?');
+            }
+        }
+
+        foreach ($reflection->getProperties() as $property) {
+            $this->assertTrue($property instanceof \Notoj\ReflectionProperty);
+            if ($property->getName() === 'bar') {
+                $annotation = $property->getAnnotations();
+                $this->assertEquals($annotation[0]['method'], 'var_name');
+                $this->assertEquals($annotation[0]['args'][0], 'foo');
             }
         }
     }
