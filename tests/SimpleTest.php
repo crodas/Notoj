@@ -32,7 +32,7 @@ class simpletest extends \phpunit_framework_testcase
         
         foreach ($reflection->getMethods() as $method) {
             $this->assertTrue($method instanceof \Notoj\ReflectionMethod);
-            if ($method->getName() == 'testNormal') {
+            if ($method->getName() == 'testClass') {
                 $annotation = $method->getAnnotations();
                 $this->assertEquals(3, count($annotation));
                 $this->assertEquals($annotation[0]['method'], 'expect');
@@ -80,7 +80,7 @@ class simpletest extends \phpunit_framework_testcase
         
         foreach ($reflection->getMethods() as $method) {
             $this->assertTrue($method instanceof \Notoj\ReflectionMethod);
-            if ($method->getName() == 'testNormal') {
+            if ($method->getName() == 'testObject') {
                 $annotation = $method->getAnnotations();
                 $this->assertEquals(3, count($annotation));
                 $this->assertEquals($annotation[0]['method'], 'expect');
