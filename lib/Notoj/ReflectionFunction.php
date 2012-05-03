@@ -36,9 +36,9 @@
 */
 namespace Notoj;
 
-class ReflectionClass extends \ReflectionClass
+class ReflectionFunction extends \ReflectionFunction 
 {
-    protected $annotation = array();
+    protected $annotation;
 
     public function __construct($name) 
     {
@@ -53,43 +53,4 @@ class ReflectionClass extends \ReflectionClass
     {
         return (array)$this->annotation;
     }
-
-    public function getMethods($filter = null)
-    {
-        $methods = array();
-        if ($filter === null) {
-            $methods = parent::getMethods();
-        } else {
-            $methods = parent::getMethods($filter);
-        }
-        foreach ($methods as $id => $method) {
-            $methods[$id] = $this->getMethod($method->GetName());
-        }
-        return $methods;
-    }
-
-    public function getMethod($name)
-    {
-        return new ReflectionMethod($this->getName(), $name);
-    }
-
-    public function getProperties($filter = null) 
-    {
-        $properties = array();
-        if ($filter === null) {
-            $properties = parent::getProperties();
-        } else {
-            $properties = parent::getProperties($filter);
-        }
-        foreach ($properties as $id => $property) {
-            $properties[$id] = $this->getProperty($property->GetName());
-        }
-        return $properties;
-    }
-
-    public function getProperty($name)
-    {
-        return new ReflectionProperty($this->getName(), $name);
-    }
 }
-

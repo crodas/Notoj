@@ -30,7 +30,6 @@ Format
 
 Todo
 -----
-* Add ReflectionFunction and ReflectionObject
-* Add ReflectionAnnotations to objects/classes by annotations
+* Documentation
 
 Feel free to email fork and submit pull requests or write me crodas@php.net
