@@ -39,6 +39,8 @@ namespace Notoj;
 
 class Notoj
 {
+    protected static $annotations = array();
+
     public static function parseDocComment($content) {
         $pzToken = new Tokenizer($content);
         $Parser  = new \Notoj_Parser;
@@ -67,41 +69,109 @@ class Notoj
     {
         $tokens = token_get_all($string);
         $total  = count($tokens);
-        $zAnnot = false;
         $nodes  = array();
+        $classes = array();
+        $level  = 0;
+        $namespace = "";
         for ($i=0; $i < $total; $i++) {
             $token = $tokens[$i];
-            if ($token[0] == T_DOC_COMMENT) {
-                $zAnnot = self::parseDocComment($token[1]);
-            } else if ($zAnnot) {
-                $node = new Node;
+            if ($token[0] == T_NAMESPACE) {
+                $i += 2;
+                $namespace = "\\" . $tokens[$i][1] . "\\";
+                continue;
+            }
+
+            switch ($token[0]) {
+            case T_CLASS:
                 for (; $i < $total; $i++) {
-                    if (!is_array($tokens[$i])) break;
                     switch ($tokens[$i][0]) {
-                    case T_PROTECTED:
-                        $node->flags[] = 'protected';
-                        break;
-                    case T_FUNCTION:
-                        $node->type = Node::T_FUNCTION;
-                        break;
-                    case T_CLASS:
-                        $node->type = Node::T_CLASS;
-                        break;
-                    case T_VARIABLE:
-                        $node->name = $tokens[$i][1];
-                        $node->type = Node::T_PROPERTY;
-                        break;
                     case T_STRING:
-                        $node->name = $tokens[$i][1];
-                        break;
+                        $classes[] = array($namespace . $tokens[$i][1], $level);
+                        break 2;
                     }
                 }
-                $node->annotations = $zAnnot;
-                $nodes[] = $node;
-                $zAnnot = false;
+                break;
+
+            case '{':
+                $level++;
+                break;
+
+            case '}':
+                $level--;
+                if (count($classes) > 0) {
+                    if ($classes[count($classes) - 1][1] ==  $level) {
+                        array_pop($classes);
+                    }
+                }
+
+                break;
+
+            case T_DOC_COMMENT:
+                $type = NULL;
+                $name = "";
+                $zdoc = self::parseDocComment($token[1]);
+                if (count($zdoc) == 0) {
+                    continue;
+                }
+                for ($i++; $i < $total; $i++) {
+                    if (!is_array($tokens[$i])) break;
+                    switch ($tokens[$i][0]) {
+                    case T_FUNCTION:
+                        $type = Node::T_FUNCTION;
+                        break;
+                    case T_CLASS:
+                        $type = Node::T_CLASS;
+                        break;
+                    case T_VARIABLE:
+                        $name = $tokens[$i][1];
+                        $type = Node::T_PROPERTY;
+                        break;
+                    case T_STRING:
+                        $name = $tokens[$i][1];
+                        if ($type == Node::T_CLASS) {
+                            $classes[] = array($namespace . $name, $level);
+                        }
+                        break;
+                    case T_WHITESPACE:
+                    case T_PROTECTED:
+                    case T_STATIC:
+                    case T_PUBLIC:
+                        /* ignored */
+                        break;
+                    default:
+                        --$i;
+                        break 2;
+                    }
+                }
+
+                switch ($type){
+                case Node::T_FUNCTION:
+                    if (count($classes) > 0) {
+                        $class = $classes[count($classes) - 1];
+                        $node = new ReflectionMethod($class[0], $namespace . $name);
+                    } else {
+                        $node = new ReflectionFunction($namespace . $name);
+                    }
+                    break;
+                case Node::T_CLASS:
+                    $node = new ReflectionClass($namespace . $name);
+                    break;
+                }
+                if (!empty($node)) {
+                    $nodes[] = $node;
+                    foreach ($zdoc as  $doc) {
+                        $name = $doc['method'];
+                        if (empty(self::$annotations[$name])) {
+                            self::$annotations[$name] = array();
+                        }
+                        self::$annotations[$name][] = $node;
+                    }
+                    unset($node);
+                }
+                break;
             }
         }
-        print_r($nodes);exit;
+        return $nodes;
     }
 }
 

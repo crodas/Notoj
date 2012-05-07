@@ -55,7 +55,7 @@ class simpletest extends \phpunit_framework_testcase
     }
     /* }}} */
 
-    function testFunction() {
+    public function testFunction() {
         $function   = new ReflectionFunction('someFunction');
         $annotation = $function->getAnnotations();
         $this->assertEquals(1, count($annotation));
@@ -112,5 +112,20 @@ class simpletest extends \phpunit_framework_testcase
     function testNoAnnotations() {
         $annotations = getReflection(__METHOD__)->getAnnotations();
         $this->assertEquals(0, count($annotations));
+    }
+
+    function testNotojParseFile() {
+        $notoj = new \Notoj\Notoj;
+        $annotations = $notoj->parseFile(__FILE__);
+        $this->assertTrue(is_array($annotations));
+        $this->assertTrue(count($annotations) >= 4);
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof ReflectionClass) {
+                $this->AssertEquals($annotation->getName(), __CLASS__);
+            } else if ($annotation instanceof ReflectionMethod) {
+                $name = $annotation->getName();
+                $this->assertTrue(is_callable(array($this, $name)));
+            }
+        }
     }
 }
