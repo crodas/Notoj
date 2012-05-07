@@ -44,6 +44,7 @@ class Notoj
     const T_PROPERTY = 3;
 
     protected static $annotations = array();
+    protected static $parsed = array();
 
     public static function parseDocComment($content) {
         $pzToken = new Tokenizer($content);
@@ -64,9 +65,28 @@ class Notoj
         return array_merge($buffer, $Parser->body);
     }
 
+    public static function parseAll() 
+    {
+        $class = new self;
+        foreach (get_included_files() as $file) {
+            $class->parseFile($file);
+        }
+    }
+
     public function parseFile($file)
     {
-        return $this->parse(file_get_contents($file));
+        if (empty(self::$parsed[$file])) {
+            self::$parsed[$file] = $this->parse(file_get_contents($file));
+        }
+        return self::$parsed[$file];
+    }
+
+    public static function query($name) 
+    {
+        if (empty(self::$annotations[$name])) {
+            return array();
+        }
+        return self::$annotations[$name];
     }
 
     public function parse($string)
@@ -76,17 +96,18 @@ class Notoj
         $nodes  = array();
         $classes = array();
         $level  = 0;
-        $namespace = "";
+        $namespace = "\\";
         for ($i=0; $i < $total; $i++) {
             $token = $tokens[$i];
-            if ($token[0] == T_NAMESPACE) {
-                $i += 2;
-                $namespace = "\\" . $tokens[$i][1] . "\\";
-                continue;
-            }
 
             switch ($token[0]) {
+            case T_NAMESPACE:
+                $i += 2;
+                $namespace = "\\" . $tokens[$i][1] . "\\";
+                break;
+
             case T_CLASS:
+            case T_INTERFACE:
                 for (; $i < $total; $i++) {
                     switch ($tokens[$i][0]) {
                     case T_STRING:
@@ -118,18 +139,20 @@ class Notoj
                     continue;
                 }
                 for ($i++; $i < $total; $i++) {
-                    if (!is_array($tokens[$i])) break;
+                    if (!is_array($tokens[$i])) { --$i; break; }
                     switch ($tokens[$i][0]) {
                     case T_FUNCTION:
                         $type = self::T_FUNCTION;
                         break;
                     case T_CLASS:
+                    case T_INTERFACE:
                         $type = self::T_CLASS;
                         break;
                     case T_VARIABLE:
                         $name = $tokens[$i][1];
                         $type = self::T_PROPERTY;
                         break;
+
                     case T_STRING:
                         $name = $tokens[$i][1];
                         if ($type == self::T_CLASS) {

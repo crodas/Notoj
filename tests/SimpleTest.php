@@ -4,7 +4,7 @@ use Notoj\ReflectionClass,
     Notoj\ReflectionFunction,
     Notoj\ReflectionMethod;
 
-/** @expect(True) */
+/** @zzexpect(True) */
 function someFunction() {
 }
 
@@ -17,7 +17,7 @@ class simpletest extends \phpunit_framework_testcase
     /** yet another comment {{{
      * This is a bloody comment that nobody is going to read
      *
-     * @expect(True) 
+     * @zzexpect(True) 
      * @bar(False)
      * @bar hola que tal?
      */
@@ -34,7 +34,7 @@ class simpletest extends \phpunit_framework_testcase
             if ($method->getName() == 'testClass') {
                 $annotation = $method->getAnnotations();
                 $this->assertEquals(3, count($annotation));
-                $this->assertEquals($annotation[0]['method'], 'expect');
+                $this->assertEquals($annotation[0]['method'], 'zzexpect');
                 $this->assertEquals($annotation[0]['args'][0], true);
                 $this->assertequals($annotation[1]['method'], 'bar');
                 $this->assertEquals($annotation[1]['args'][0], false);
@@ -58,14 +58,14 @@ class simpletest extends \phpunit_framework_testcase
         $function   = new ReflectionFunction('someFunction');
         $annotation = $function->getAnnotations();
         $this->assertEquals(1, count($annotation));
-        $this->assertEquals($annotation[0]['method'], 'expect');
+        $this->assertEquals($annotation[0]['method'], 'zzexpect');
         $this->assertEquals($annotation[0]['args'][0], true);
     }
 
     /** yet another comment {{{
      * This is a bloody comment that nobody is going to read
      *
-     * @expect(True) 
+     * @zzexpect(True) 
      * @bar(False)
      * @bar hola que tal?
      */
@@ -82,7 +82,7 @@ class simpletest extends \phpunit_framework_testcase
             if ($method->getName() == 'testObject') {
                 $annotation = $method->getAnnotations();
                 $this->assertEquals(3, count($annotation));
-                $this->assertEquals($annotation[0]['method'], 'expect');
+                $this->assertEquals($annotation[0]['method'], 'zzexpect');
                 $this->assertEquals($annotation[0]['args'][0], true);
                 $this->assertequals($annotation[1]['method'], 'bar');
                 $this->assertEquals($annotation[1]['args'][0], false);
@@ -113,7 +113,7 @@ class simpletest extends \phpunit_framework_testcase
         $this->assertEquals(0, count($annotations));
     }
 
-    function testNotojParseFile() {
+    function testNotojParseFiles() {
         $notoj = new \Notoj\Notoj;
         $annotations = $notoj->parseFile(__FILE__);
         $this->assertTrue(is_array($annotations));
@@ -130,5 +130,11 @@ class simpletest extends \phpunit_framework_testcase
             }
         }
         $this->assertTrue($hasProperty);
+    }
+
+    function testNotojQuery() {
+        \Notoj\Notoj::parseAll();
+        $annotations = \Notoj\Notoj::query('zzexpect');
+        $this->assertEquals(count($annotations), 3);
     }
 }
