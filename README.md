@@ -1,5 +1,5 @@
-Notoj
-=====
+Notoj [![Build Status](https://secure.travis-ci.org/crodas/Notoj.png?branch=master)](http://travis-ci.org/crodas/Notoj)
+=========================
 
 Yet another annotation parser (DocBlocks). It's designed to be simple and intuitive. It extends the Reflection methods inside the Notoj namespace (ReflectionClass, RefletionProperties, ReflectionMethod so far), and adds the getAnnotations() method.
 
