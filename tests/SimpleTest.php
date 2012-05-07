@@ -11,7 +11,6 @@ function someFunction() {
 /** @test */
 class simpletest extends \phpunit_framework_testcase
 {
-
     /** @var_name("foo") */
     protected $bar;
 
@@ -119,13 +118,17 @@ class simpletest extends \phpunit_framework_testcase
         $annotations = $notoj->parseFile(__FILE__);
         $this->assertTrue(is_array($annotations));
         $this->assertTrue(count($annotations) >= 4);
+        $hasProperty = false;
         foreach ($annotations as $annotation) {
             if ($annotation instanceof ReflectionClass) {
                 $this->AssertEquals($annotation->getName(), __CLASS__);
             } else if ($annotation instanceof ReflectionMethod) {
                 $name = $annotation->getName();
                 $this->assertTrue(is_callable(array($this, $name)));
+            } else if ($annotation instanceof ReflectionProperty) {
+                $hasProperty = true;
             }
         }
+        $this->assertTrue($hasProperty);
     }
 }

@@ -39,6 +39,10 @@ namespace Notoj;
 
 class Notoj
 {
+    const T_CLASS = 1;
+    const T_FUNCTION = 2;
+    const T_PROPERTY = 3;
+
     protected static $annotations = array();
 
     public static function parseDocComment($content) {
@@ -117,18 +121,18 @@ class Notoj
                     if (!is_array($tokens[$i])) break;
                     switch ($tokens[$i][0]) {
                     case T_FUNCTION:
-                        $type = Node::T_FUNCTION;
+                        $type = self::T_FUNCTION;
                         break;
                     case T_CLASS:
-                        $type = Node::T_CLASS;
+                        $type = self::T_CLASS;
                         break;
                     case T_VARIABLE:
                         $name = $tokens[$i][1];
-                        $type = Node::T_PROPERTY;
+                        $type = self::T_PROPERTY;
                         break;
                     case T_STRING:
                         $name = $tokens[$i][1];
-                        if ($type == Node::T_CLASS) {
+                        if ($type == self::T_CLASS) {
                             $classes[] = array($namespace . $name, $level);
                         }
                         break;
@@ -145,15 +149,21 @@ class Notoj
                 }
 
                 switch ($type){
-                case Node::T_FUNCTION:
+                case self::T_FUNCTION:
                     if (count($classes) > 0) {
                         $class = $classes[count($classes) - 1];
-                        $node = new ReflectionMethod($class[0], $namespace . $name);
+                        $node = new ReflectionMethod($class[0], $name);
                     } else {
                         $node = new ReflectionFunction($namespace . $name);
                     }
                     break;
-                case Node::T_CLASS:
+                case self::T_PROPERTY:
+                    if (count($classes) > 0) {
+                        $class = $classes[count($classes) - 1];
+                        $node = new ReflectionProperty($class[0], substr($name,1));
+                    }
+                    break;
+                case self::T_CLASS:
                     $node = new ReflectionClass($namespace . $name);
                     break;
                 }
