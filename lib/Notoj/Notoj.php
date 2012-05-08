@@ -36,6 +36,13 @@
 */
 namespace Notoj;
 
+require __DIR__ . "/Tokenizer.php";
+require __DIR__ . "/Parser.php";
+require __DIR__ . "/ReflectionClass.php";
+require __DIR__ . "/ReflectionFunction.php";
+require __DIR__ . "/ReflectionObject.php";
+require __DIR__ . "/ReflectionProperty.php";
+require __DIR__ . "/ReflectionMethod.php";
 
 class Notoj
 {
