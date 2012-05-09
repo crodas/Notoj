@@ -14,7 +14,7 @@ Yet another annotation parser (DocBlocks). It's designed to be simple and intuit
     $reflection = new ReflectionClass('Foo');
     var_dump($reflection->getAnnotations());
   
-The `getAnnotations()` returns an array, with a very simple array structure (`array("name" => "Foo", "args" 
+The `getAnnotations()` returns an array, with a very simple array structure (`array("method" => "Foo", "args" 
 => NULL)`)
 
 Format
@@ -25,6 +25,19 @@ Format
     /** @Foo(some_label="something here") */
     /** @Foo({some: "array here", arr:[1,2,3]}) */
     /** @Foo(some_label={some: "array here", arr:[1,2,3]}) */
+
+Caching support
+---------------
+
+Notoj supports caching that will help the Notoj's engine to avoid parsing over and over the same string. The cache will be invalidated automatically.
+
+
+To enable this feature you need to specify which file should be used to save the cache, Notoj will do the rest :-).
+
+
+```
+Notoj::enableCache("/tmp/annotations.php");
+```
 
 
 
