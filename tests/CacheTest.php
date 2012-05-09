@@ -24,7 +24,8 @@ class CacheTest extends \phpunit_framework_testcase
     function testCacheContent() {
         $obj = new ReflectionClass(__CLASS__);
         $arr = $obj->getAnnotations();
-        Notoj::saveCache();
+        $this->assertTrue(Notoj::saveCache());
+        $this->assertFalse(Notoj::saveCache());
         $content = file_get_contents(CACHE);
         $this->assertTrue(strpos($content, sha1($obj->getDocComment())) !== FALSE);
     }
