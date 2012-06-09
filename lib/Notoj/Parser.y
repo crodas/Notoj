@@ -41,6 +41,7 @@
 %include_class {
     public $body = array();
 }
+
 %syntax_error {
     $expect = array();
     foreach ($this->yy_get_expected_tokens($yymajor) as $token) {

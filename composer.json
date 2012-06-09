@@ -1,0 +1,13 @@
+{
+    "name": "crodas/Notoj",
+    "description": "Annotation parser. Uses reflection and provides cache out of the box.",
+    "authors": [
+        {
+            "name": "César D. Rodas",
+            "email": "crodas@php.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
