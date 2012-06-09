@@ -11,6 +11,8 @@
         "php": ">=5.3.0"
     },
     "autoload": {
-        "Notoj": "lib/"
+        "psr-0": {
+            "Notoj": "lib/"
+        }
     }
 }
