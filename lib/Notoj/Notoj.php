@@ -36,12 +36,6 @@
 */
 namespace Notoj;
 
-require_once __DIR__ . "/ReflectionClass.php";
-require_once __DIR__ . "/ReflectionFunction.php";
-require_once __DIR__ . "/ReflectionObject.php";
-require_once __DIR__ . "/ReflectionProperty.php";
-require_once __DIR__ . "/ReflectionMethod.php";
-
 class Notoj
 {
     const T_CLASS = 1;
@@ -53,20 +47,16 @@ class Notoj
     protected static $cached = array();
     protected static $cacheFile = "";
     protected static $isDirty = false;
-    protected static $loaded = false;
 
     public static function loadCache(Array $content) 
     {
         self::$cached = $content;
     }
 
-    protected static function loadCompiler() 
-    {
-        if (self::$loaded) return;
-        self::$loaded = TRUE;
-        require __DIR__ . "/Tokenizer.php";
-        require __DIR__ . "/Parser.php";
+    public static function registerAutoloader() {
+        require __DIR__ . "/Loader.php";
     }
+
 
     public static function saveCache() 
     {
@@ -103,7 +93,6 @@ class Notoj
         if (!empty(self::$cached[$id])) {
             return self::$cached[$id];
         }
-        self::loadCompiler();
         $pzToken = new Tokenizer($content);
         $Parser  = new \Notoj_Parser;
         $buffer  = array();
