@@ -109,7 +109,8 @@ class File
                             'line'  => $tokens[$e][2],
                         );
                     }
-                    $annotations[] = array_merge($annotation, $def);
+                    $def['annotations'] = $annotation;
+                    $annotations[] = $def;
                     break;
                 }
                 break;

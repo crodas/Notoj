@@ -158,10 +158,10 @@ class simpletest extends \phpunit_framework_testcase
         foreach ($obj->getAnnotations() as $class => $annotations) {
             if (isset($annotations['function']) && isset($annotations['class'])) {
                 $refl = new ReflectionMethod($annotations['class'], $annotations['function']);
-                $this->assertEquals(0, count(array_diff($refl->getAnnotations(), $annotations)));
+                $this->assertEquals(0, count(array_diff($refl->getAnnotations(), $annotations['annotations'])));
             } else if (isset($annotations['class'])) {
                 $refl = new ReflectionClass($annotations['class']);
-                $this->assertEquals(0, count(array_diff($refl->getAnnotations(), $annotations)));
+                $this->assertEquals(0, count(array_diff($refl->getAnnotations(), $annotations['annotations'])));
             } else if (isset($annotations['function'])) {
                 die("I'm not implemented yet!");
             }
