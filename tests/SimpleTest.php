@@ -8,6 +8,11 @@ use Notoj\ReflectionClass,
 function someFunction() {
 }
 
+/** @invalid_me*/
+// foo
+function foo() {
+}
+
 /** @test */
 class simpletest extends \phpunit_framework_testcase
 {
@@ -155,7 +160,7 @@ class simpletest extends \phpunit_framework_testcase
     public function testNotojFile($file) 
     {
         $obj = new \Notoj\File($file);
-        foreach ($obj->getAnnotations() as $class => $annotations) {
+        foreach ($obj->getAnnotations() as $annotations) {
             if (isset($annotations['function']) && isset($annotations['class'])) {
                 $refl = new ReflectionMethod($annotations['class'], $annotations['function']);
             } else if (isset($annotations['class'])) {
@@ -165,6 +170,40 @@ class simpletest extends \phpunit_framework_testcase
             }
 
             $this->assertEquals($refl->getAnnotations(), $annotations['annotations']);
+        }
+    }
+
+    public function testNotojFileInvalid()
+    {
+        $foo = new \Notoj\File(__FILE__);
+        foreach ($foo->getAnnotations() as $annotations) {
+            foreach ($annotations['annotations'] as $annotation) {
+                $this->assertNotEquals($annotation['method'], 'invalid_me');
+            }
+        }
+    }
+
+    /**
+     *  @expectedException \RuntimeException
+     */
+    public function testNotojFileNotFound()
+    {
+        new \Notoj\File(__DIR__ . "/fixtures/not-found.php");
+    }
+
+    public function testNotojFileNamespaces() 
+    {
+        $foo = new \Notoj\File(__DIR__ . "/fixtures/namespace.php");
+        foreach ($foo->getAnnotations() as $id => $annotation) {
+            if ($id < 2) {
+                $expected = explode("\\", isset($annotation['class']) ? $annotation['class'] : $annotation['function']);
+                $expected = array_pop($expected);
+            } else {
+                $expected = isset($annotation['class']) ? $annotation['class'] : $annotation['function'];
+            }
+            foreach ($annotation['annotations'] as $ann) {
+                $this->assertEquals($ann['method'], $expected);
+            }
         }
     }
 }

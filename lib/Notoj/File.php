@@ -48,7 +48,7 @@ class File
     public function __construct($filePath = "")
     {
         if (!is_file($filePath) || !is_readable($filePath)) {
-            throw new \RuntimException("{$filePath} is not a file or cannot be read");
+            throw new \RuntimeException("{$filePath} is not a file or cannot be read");
         }
         $this->path    = $filePath;
         $this->content = file_get_contents($filePath); 
@@ -95,12 +95,13 @@ class File
                     while ($tokens[$e][0] != T_STRING) $e++;
                     if ($token[0] == T_FUNCTION) {
                         $def  = array(
-                            'function' => $tokens[$e][1],
+                            'function' => $namespace . $tokens[$e][1],
                             'file'  => $this->path,
                             'line'  => $tokens[$e][2],
                         );
                         if (isset($classes[$level])) {
-                            $def['class'] = $classes[$level];
+                            $def['function'] = $tokens[$e][1];
+                            $def['class']    = $classes[$level];
                         }
                     } else {
                         $def  = array(
@@ -116,7 +117,7 @@ class File
                 break;
 
             case T_NAMESPACE:
-                while ($tokens[$i][0] != T_STRING) $i++;
+                while ($tokens[$i][0] != T_STRING && $tokens[$i] != '{') $i++;
                 $parts = array();
                 while ($tokens[$i][0] == T_STRING || $tokens[$i][0] == T_NS_SEPARATOR || $tokens[$i][0] == T_WHITESPACE) {
                     if ($tokens[$i][0] != T_WHITESPACE) {
@@ -124,7 +125,7 @@ class File
                     }
                     $i++;
                 }
-                $namespace = implode("", $parts) . '\\';
+                $namespace = empty($parts) ? "" : implode("", $parts) . '\\';
                 break;
             }
         }
