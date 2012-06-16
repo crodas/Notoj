@@ -36,6 +36,9 @@
 */
 namespace Notoj;
 
+/**
+ *  @autoload("Notoj")
+ */
 class ReflectionProperty extends \ReflectionProperty 
 {
     protected $annotation;

@@ -132,9 +132,39 @@ class simpletest extends \phpunit_framework_testcase
         $this->assertTrue($hasProperty);
     }
 
-    function testNotojQuery() {
+    public function testNotojQuery()
+    {
         \Notoj\Notoj::parseAll();
         $annotations = \Notoj\Notoj::query('zzexpect');
         $this->assertEquals(count($annotations), 3);
+    }
+
+
+    public static function fileProvider() 
+    {
+        $args = array();
+        foreach (glob(__DIR__ . "/../lib/Notoj/*.php") as $file) {
+            $args[] = array($file);
+        }
+        return $args;
+    }
+
+    /**
+     *  @dataProvider fileProvider
+     */
+    public function testNotojFile($file) 
+    {
+        $obj = new \Notoj\File($file);
+        foreach ($obj->getAnnotations() as $class => $annotations) {
+            if (isset($annotations['function']) && isset($annotations['class'])) {
+                $refl = new ReflectionMethod($annotations['class'], $annotations['function']);
+                $this->assertEquals(0, count(array_diff($refl->getAnnotations(), $annotations)));
+            } else if (isset($annotations['class'])) {
+                $refl = new ReflectionClass($annotations['class']);
+                $this->assertEquals(0, count(array_diff($refl->getAnnotations(), $annotations)));
+            } else if (isset($annotations['function'])) {
+                die("I'm not implemented yet!");
+            }
+        }
     }
 }

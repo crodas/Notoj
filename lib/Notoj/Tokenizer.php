@@ -36,6 +36,9 @@
 */
 namespace Notoj;
 
+/**
+ *  @autoload("Notoj", "\Notoj_Parser")
+ */ 
 class Tokenizer
 {
     protected $body;
