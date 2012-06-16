@@ -163,11 +163,8 @@ class simpletest extends \phpunit_framework_testcase
             } else if (isset($annotations['function'])) {
                 die("I'm not implemented yet!");
             }
-            $diff = array_diff(
-                $refl->getAnnotations(), 
-                $annotations['annotations']
-            );
-            $this->assertTrue(0 === count($diff));
+
+            $this->assertEquals($refl->getAnnotations(), $annotations['annotations']);
         }
     }
 }
