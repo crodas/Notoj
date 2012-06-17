@@ -12,7 +12,7 @@ namespace foo\name {
 
 namespace {
     /** @foobar */
-    class foobar {
+    final class foobar {
     }
 
     function xxx() {

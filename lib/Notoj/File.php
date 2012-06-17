@@ -63,7 +63,10 @@ class File
         $annotations = array();
         $traits      = defined('T_TRAIT') ? T_TRAIT : -1;
 
-        $allow = array(T_WHITESPACE, T_PUBLIC, T_PRIVATE, T_PROTECTED, T_STATIC);
+        $allow = array(
+            T_WHITESPACE, T_PUBLIC, T_PRIVATE, T_PROTECTED, 
+            T_STATIC, T_ABSTRACT, T_FINAL
+        );
         $level = 0;
         for($i=0; $i < $allTokens; $i++) {
             $token = $tokens[$i];
