@@ -33,6 +33,34 @@ spl_autoload_register(function ($class) {
 
     // deps {{{
     static $deps    = array (
+  'notoj\\file' => 
+  array (
+    0 => 'notoj\\notoj',
+  ),
+  'notoj\\tokenizer' => 
+  array (
+    0 => 'notoj\\notoj',
+  ),
+  'notoj\\reflectionfunction' => 
+  array (
+    0 => 'notoj\\notoj',
+  ),
+  'notoj\\reflectionproperty' => 
+  array (
+    0 => 'notoj\\notoj',
+  ),
+  'notoj\\reflectionmethod' => 
+  array (
+    0 => 'notoj\\notoj',
+  ),
+  'notoj\\reflectionclass' => 
+  array (
+    0 => 'notoj\\notoj',
+  ),
+  'notoj\\reflectionobject' => 
+  array (
+    0 => 'notoj\\notoj',
+  ),
 );
     // }}}
 
