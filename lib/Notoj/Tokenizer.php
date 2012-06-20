@@ -115,6 +115,11 @@ class Tokenizer
                             && trim($line[$e]) !== "") {
                             $data .= $line[$e++];
                         }
+
+                        if (empty($data)) {
+                            continue;
+                        }
+
                         $e--;
 
                         if (is_numeric($data[0]) && is_numeric($data)) {
