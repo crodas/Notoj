@@ -90,7 +90,7 @@ class Notoj
 
     public static function parseDocComment($content) {
         $id = sha1($content);
-        if (!empty(self::$cached[$id])) {
+        if (isset(self::$cached[$id])) {
             return self::$cached[$id];
         }
         $pzToken = new Tokenizer($content);
