@@ -31,7 +31,7 @@ class CacheTest extends \phpunit_framework_testcase
     }
 
     /** I'm just a annotation without something useful */
-    function testNoArgs()
+    function testNoContent()
     {
         $arr = getReflection(__METHOD__)->getAnnotations();
         $this->assertEquals($arr, array());
