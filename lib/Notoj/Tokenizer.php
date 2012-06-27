@@ -78,6 +78,7 @@ class Tokenizer
         $symbols  = $this->symbols;
         $keywords = $this->keywords;
 
+        $found = false;
         for ($i=&$this->line; $i < count($this->lines); $i++) {
             $line  = $this->lines[$i];
             $len   = strlen($line);

@@ -88,9 +88,11 @@ class Notoj
         });
     }
 
-    public static function parseDocComment($content) {
+    public static function parseDocComment($content, &$isCached = NULL) {
         $id = sha1($content);
-        if (!empty(self::$cached[$id])) {
+        $isCached = false;
+        if (array_key_exists($id, self::$cached)) {
+            $isCached = true;
             return self::$cached[$id];
         }
         $pzToken = new Tokenizer($content);

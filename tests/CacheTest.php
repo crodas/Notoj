@@ -30,4 +30,14 @@ class CacheTest extends \phpunit_framework_testcase
         $this->assertTrue(strpos($content, sha1($obj->getDocComment())) !== FALSE);
     }
 
+    /** I'm just a annotation without something useful */
+    function testNoArgs()
+    {
+        $arr = getReflection(__METHOD__)->getAnnotations();
+        $this->assertEquals($arr, array());
+        $raw = getReflection(__METHOD__)->getDocComment();
+        Notoj::parseDocComment($raw, $isCached);
+        $this->assertTrue($isCached);
+    }
+
 }
