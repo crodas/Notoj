@@ -113,7 +113,7 @@ class Notoj
         $struct = array_merge($buffer, $Parser->body);
         self::$cached[$id] = $struct;
         self::$isDirty  = true;
-        return $struct;
+        return new Annotation($struct);
     }
 
     public static function parseAll() 

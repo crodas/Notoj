@@ -8,8 +8,6 @@
  */
 
 
-
-
 spl_autoload_register(function ($class) {
     /*
         This array has a map of (class => file)
@@ -19,6 +17,7 @@ spl_autoload_register(function ($class) {
     static $classes = array (
   'notoj\\notoj' => '/Notoj.php',
   'notoj\\file' => '/File.php',
+  'notoj\\annotation' => '/Annotation.php',
   'notoj\\tokenizer' => '/Tokenizer.php',
   'notoj_yytoken' => '/Parser.php',
   'notoj_yystackentry' => '/Parser.php',
@@ -68,13 +67,13 @@ spl_autoload_register(function ($class) {
     if (isset($classes[$class])) {
         if (!empty($deps[$class])) {
             foreach ($deps[$class] as $zclass) {
-if (!class_exists($zclass, false)) {
+                if (!class_exists($zclass, false)) {
                     require __DIR__  . $classes[$zclass];
                 }
             }
         }
 
-if (!class_exists($class, false)) {
+        if (!class_exists($class, false)) {
             require __DIR__  . $classes[$class];
         }
         return true;
