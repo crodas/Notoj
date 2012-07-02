@@ -89,11 +89,14 @@ class Notoj
     }
 
     public static function parseDocComment($content, &$isCached = NULL) {
+        if (is_object($content) && is_callable(array($content, 'getDocComment'))) {
+            $content = $content->getDocComment();
+        }
         $id = sha1($content);
         $isCached = false;
         if (array_key_exists($id, self::$cached)) {
             $isCached = true;
-            return self::$cached[$id];
+            return new Annotation(self::$cached[$id]);
         }
         $pzToken = new Tokenizer($content);
         $Parser  = new \Notoj_Parser;

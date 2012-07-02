@@ -46,10 +46,7 @@ class ReflectionClass extends \ReflectionClass
     public function __construct($name) 
     {
         parent::__construct($name);
-        $doc = $this->getDocComment();
-        if (!empty($doc)) {
-            $this->annotation = Notoj::parseDocComment($doc);
-        }
+        $this->annotation = Notoj::parseDocComment($this);
     }
 
     public function getAnnotations() 
