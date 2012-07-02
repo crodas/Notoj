@@ -54,7 +54,7 @@ class ReflectionProperty extends \ReflectionProperty
 
     public function getAnnotations() 
     {
-        return (array)$this->annotation;
+        return $this->annotation;
     }
 }
 

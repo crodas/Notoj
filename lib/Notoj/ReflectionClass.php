@@ -54,7 +54,7 @@ class ReflectionClass extends \ReflectionClass
 
     public function getAnnotations() 
     {
-        return (array)$this->annotation;
+        return $this->annotation;
     }
 
     public function getMethods($filter = null)

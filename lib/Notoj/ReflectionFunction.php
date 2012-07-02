@@ -54,6 +54,6 @@ class ReflectionFunction extends \ReflectionFunction
 
     public function getAnnotations() 
     {
-        return (array)$this->annotation;
+        return $this->annotation;
     }
 }
