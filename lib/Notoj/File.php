@@ -38,14 +38,14 @@
 namespace Notoj;
 
 /**
- *  @autoload("Notoj")
+ *  @autoload("Notoj", "Annotations")
  */
 class File
 {
     protected $path;
     protected $content;
 
-    public function __construct($filePath = "")
+    public function __construct($filePath)
     {
         if (!is_file($filePath) || !is_readable($filePath)) {
             throw new \RuntimeException("{$filePath} is not a file or cannot be read");
@@ -54,14 +54,17 @@ class File
         $this->content = file_get_contents($filePath); 
     }
 
-    public function getAnnotations()
+    public function getAnnotations(Annotations $annotations = NULL)
     {
-        $tokens      = token_get_all($this->content);
-        $allTokens   = count($tokens);
-        $annotation  = NULL;
-        $namespace   = "";
-        $annotations = array();
-        $traits      = defined('T_TRAIT') ? T_TRAIT : -1;
+        $tokens     = token_get_all($this->content);
+        $allTokens  = count($tokens);
+        $annotation = NULL;
+        $namespace  = "";
+        $traits     = defined('T_TRAIT') ? T_TRAIT : -1;
+
+        if (is_null($annotations)) {
+            $annotations = new Annotations;
+        }
 
         $allow = array(
             T_WHITESPACE, T_PUBLIC, T_PRIVATE, T_PROTECTED, 
@@ -113,8 +116,8 @@ class File
                             'line'  => $tokens[$e][2],
                         );
                     }
-                    $def['annotations'] = $annotation;
-                    $annotations[] = $def;
+                    $annotation->setMetadata($def);
+                    $annotations[] = $annotation;
                     break;
                 }
                 break;

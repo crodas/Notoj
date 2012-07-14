@@ -191,6 +191,20 @@ class simpletest extends \phpunit_framework_testcase
         new \Notoj\File(__DIR__ . "/fixtures/not-found.php");
     }
 
+    /**
+     *  @expectedException \RuntimeException
+     */
+    public function testNotojDirNotFound()
+    {
+        new \Notoj\File(__DIR__ . "/fixtures/not-found/");
+    }
+
+    public function testNotojDir() 
+    {
+        $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
+        $foo->getAnnotations();
+    }
+
     public function testNotojFileNamespaces() 
     {
         $foo = new \Notoj\File(__DIR__ . "/fixtures/namespace.php");

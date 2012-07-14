@@ -85,4 +85,23 @@ class ArgumentsTest extends \phpunit_framework_testcase
         );
         $this->assertEquals($expected, $args);
     }
+
+    /**
+     *  @expectedException \RuntimeException
+     */
+    public function testAnnotationArguments()
+    {
+        $f = new \Notoj\Annotation(array());
+        $f['foo'] = 'bar';
+    }
+
+    /**
+     *  @expectedException \RuntimeException
+     */
+    public function testAnnotationInvalidMeta()
+    {
+        $f = new \Notoj\Annotation(array());
+        $f->setMetadata(array('foo'));
+    }
+
 }

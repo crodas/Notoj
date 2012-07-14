@@ -36,6 +36,10 @@
 */
 namespace Notoj;
 
+
+/**
+ *  @autoload("Annotation")
+ */
 class Notoj
 {
     const T_CLASS = 1;

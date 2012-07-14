@@ -37,100 +37,19 @@
 
 namespace Notoj;
 
+use ArrayObject,
+    InvalidArgumentException;
 
-use ArrayObject;
-
-class Annotation extends ArrayObject
+/**
+ *  @autoload("Annotation")
+ */
+class Annotations extends ArrayObject
 {
-    protected $args;
-    protected $meta = array();
-    protected $keys = array();
-
-    public function __construct(Array $args = array())
-    {
-        $keys = array();
-        foreach ($args as $id => $arg) {
-            if (empty($keys[$arg['method']])) {
-                $keys[$arg['method']] = array();
-            }
-            $keys[$arg['method']][] = $id;
-        }
-        $this->annotations = $args;
-        $this->keys = $keys;
-        parent::__construct($args);
-    }
-
-    public function setMetadata(Array $meta)
-    {
-        foreach (array_keys($meta) as $id) {
-            if (is_numeric($id)) {
-                throw new \RuntimeException("Metadata cannot contain numbers as keys");
-            }
-        }
-        $this->meta = array_merge($this->meta, $meta);
-    }
-
-    public function offsetExists($index)
-    {
-        if ($index === 'annotations') {
-            // backwards compatiblility
-            return true;
-        }
-
-        if (array_key_exists($index, $this->meta)) {
-            return true;
-        }
-
-        if (array_key_exists($index, $this->annotations)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function offsetGet($index)
-    {
-        if ($index === 'annotations') {
-            // backwards compatiblility
-            return $this;
-        }
-
-        if (array_key_exists($index, $this->meta)) {
-            return $this->meta[$index];
-        }
-
-        if (array_key_exists($index, $this->annotations)) {
-            return $this->annotations[$index];
-        }
-
-        return NULL;
-    }
-
     public function offsetSet($index, $value)
     {
-        throw new \RuntimeException("Annotation objects are read only");
-    }
-
-    public function has($name)
-    {
-        return array_key_exists($name, $this->keys);
-    }
-
-    public function getAll()
-    {
-        return $this->getIterator();
-    }
-
-    public function get($name = NULL)
-    {
-        if (!$this->has($name)) {
-            return array();
+        if (!($value instanceof Annotation)) {
+            throw new InvalidArgumentException("Annotations object only accept Annotation objects");
         }
-        $return = array();
-        foreach ($this->keys[$name] as $id) {
-            $return[] = $this->annotations[$id];
-        }
-        return $return;
+        parent::offsetSet($index, $value);
     }
-
 }

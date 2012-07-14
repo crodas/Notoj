@@ -16,9 +16,11 @@ spl_autoload_register(function ($class) {
     // classes {{{
     static $classes = array (
   'notoj\\notoj' => '/Notoj.php',
-  'notoj\\file' => '/File.php',
   'notoj\\annotation' => '/Annotation.php',
+  'notoj\\file' => '/File.php',
+  'notoj\\annotations' => '/Annotations.php',
   'notoj\\tokenizer' => '/Tokenizer.php',
+  'notoj\\dir' => '/Dir.php',
   'notoj_yytoken' => '/Parser.php',
   'notoj_yystackentry' => '/Parser.php',
   'notoj_parser' => '/Parser.php',
@@ -32,33 +34,56 @@ spl_autoload_register(function ($class) {
 
     // deps {{{
     static $deps    = array (
+  'notoj\\notoj' => 
+  array (
+    0 => 'notoj\\annotation',
+  ),
   'notoj\\file' => 
   array (
-    0 => 'notoj\\notoj',
+    0 => 'notoj\\annotation',
+    1 => 'notoj\\annotations',
+    3 => 'notoj\\notoj',
+  ),
+  'notoj\\annotations' => 
+  array (
+    0 => 'notoj\\annotation',
   ),
   'notoj\\tokenizer' => 
   array (
-    0 => 'notoj\\notoj',
+    0 => 'notoj\\annotation',
+    1 => 'notoj\\notoj',
+  ),
+  'notoj\\dir' => 
+  array (
+    0 => 'notoj\\annotation',
+    1 => 'notoj\\annotations',
+    3 => 'notoj\\notoj',
+    4 => 'notoj\\file',
   ),
   'notoj\\reflectionfunction' => 
   array (
-    0 => 'notoj\\notoj',
+    0 => 'notoj\\annotation',
+    1 => 'notoj\\notoj',
   ),
   'notoj\\reflectionproperty' => 
   array (
-    0 => 'notoj\\notoj',
+    0 => 'notoj\\annotation',
+    1 => 'notoj\\notoj',
   ),
   'notoj\\reflectionmethod' => 
   array (
-    0 => 'notoj\\notoj',
+    0 => 'notoj\\annotation',
+    1 => 'notoj\\notoj',
   ),
   'notoj\\reflectionclass' => 
   array (
-    0 => 'notoj\\notoj',
+    0 => 'notoj\\annotation',
+    1 => 'notoj\\notoj',
   ),
   'notoj\\reflectionobject' => 
   array (
-    0 => 'notoj\\notoj',
+    0 => 'notoj\\annotation',
+    1 => 'notoj\\notoj',
   ),
 );
     // }}}
