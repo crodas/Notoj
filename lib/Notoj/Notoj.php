@@ -58,7 +58,7 @@ class Notoj
     }
 
     public static function registerAutoloader() {
-        require __DIR__ . "/Loader.php";
+        require __DIR__ . "/autoload.php";
     }
 
 
