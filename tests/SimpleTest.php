@@ -202,13 +202,23 @@ class simpletest extends \phpunit_framework_testcase
     public function testNotojDir() 
     {
         $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
-        $foo->getAnnotations();
+        $annotations = $foo->getAnnotations();
+
+        $this->assertEquals($annotations->get('fooinvalid'), array());
+        foreach ($annotations->get('foobar') as $annotation) {
+            $this->assertTrue($annotation instanceof \Notoj\Annotation);
+            $this->assertTrue( file_exists($annotation->getFile()) );
+            $this->assertTrue($annotation->isClass());
+            $this->assertFalse($annotation->isMethod());
+            $this->assertFalse($annotation->isMethod());
+        }
     }
 
     public function testNotojFileNamespaces() 
     {
         $foo = new \Notoj\File(__DIR__ . "/fixtures/namespace.php");
-        foreach ($foo->getAnnotations() as $id => $annotation) {
+        $annotations = $foo->getAnnotations();
+        foreach ($annotations as $id => $annotation) {
             if ($id < 2) {
                 $expected = explode("\\", isset($annotation['class']) ? $annotation['class'] : $annotation['function']);
                 $expected = array_pop($expected);
@@ -217,6 +227,10 @@ class simpletest extends \phpunit_framework_testcase
             }
             foreach ($annotation['annotations'] as $ann) {
                 $this->assertEquals($ann['method'], $expected);
+            }
+            $this->assertEquals($annotation->get('fooobar'), array());
+            if ($annotation->has('foobar')) {
+                $this->assertEquals($annotation->get('foobar'), array(array('method' => 'foobar', 'args' => NULL)));
             }
         }
     }

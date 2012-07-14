@@ -70,6 +70,40 @@ class Annotation extends ArrayObject
         $this->meta = array_merge($this->meta, $meta);
     }
 
+    public function getMetadata()
+    {
+        return $meta;
+    }
+
+    public function getKeys()
+    {
+        return array_keys($this->keys);
+    }
+
+    public function isClass()
+    {
+        $meta = $this->meta;
+        return isset($meta['class']) && !isset($meta['function']);
+    }
+
+    public function isMethod()
+    {
+        $meta = $this->meta;
+        return isset($meta['class']) && isset($meta['function']);
+    }
+
+    public function isFunction()
+    {
+        $meta = $this->meta;
+        return !isset($meta['class']) && isset($meta['function']);
+    }
+
+    public function getFile()
+    {
+        return $this->meta['file'];
+    }
+
+
     public function offsetExists($index)
     {
         if ($index === 'annotations') {

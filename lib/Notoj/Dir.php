@@ -53,6 +53,9 @@ class Dir
             throw new \RuntimeException("{$dirPath} is not a dir or cannot be read");
         }
         $this->dir = $dirPath;
+        $this->filter = function(\splFileInfo $file) {
+            return strtolower($file->getExtension()) === "php";
+        };
     }
 
     public function setFilter(\Closure $callback)
@@ -61,11 +64,13 @@ class Dir
         return $this;
     }
 
-    public function getAnnotations()
+    public function getAnnotations(Annotations $annotations = NULL)
     {
         $iter   = new RecursiveDirectoryIterator($this->dir);
         $filter = $this->filter; 
-        $annotations = new Annotations;
+        if (is_null($annotations)) {
+            $annotations = new Annotations;
+        }
 
         foreach (new RecursiveIteratorIterator($iter) as $file) {
             if (!$file->isfile()) {
@@ -75,6 +80,7 @@ class Dir
             if ($filter && !$filter($file)) {
                 continue;
             }
+
             $file = new File($file->getPathname());
             $file->getAnnotations($annotations);
         }

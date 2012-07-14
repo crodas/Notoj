@@ -1,6 +1,7 @@
 <?php
 
 namespace foo\name {
+    /** @fooinvalid */
     /** @foobar */
     class foobar {
     }

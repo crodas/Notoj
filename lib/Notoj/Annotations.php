@@ -38,6 +38,7 @@
 namespace Notoj;
 
 use ArrayObject,
+    RuntimeException,
     InvalidArgumentException;
 
 /**
@@ -45,11 +46,51 @@ use ArrayObject,
  */
 class Annotations extends ArrayObject
 {
+    protected $keys = array();
+    protected $lastId = 0;
+
     public function offsetSet($index, $value)
     {
         if (!($value instanceof Annotation)) {
             throw new InvalidArgumentException("Annotations object only accept Annotation objects");
         }
+        
+        if ($index) {
+            if ($this->offsetExists($index)) {
+                throw new RuntimeException("You cannot modify annotations objects");
+            }
+            if (is_numeric($index)) {
+                throw new InvalidArgumentException("Annotations object do not accept numeric index");
+            }
+        } else {
+            $index = $this->lastId++;
+        }
+
+        foreach ($value->getKeys() as $key) {
+            if (empty($this->keys[$key])) {
+                $this->keys[$key] = array();
+            }
+            $this->keys[$key][] = $index;
+        }
+
         parent::offsetSet($index, $value);
+    }
+
+    public function has($index)
+    {
+        return array_key_exists($index, $this->keys);
+    }
+
+    public function get($index)
+    {
+        if (!$this->has($index)) {
+            return array();
+        }
+
+        $return = array();
+        foreach ($this->keys[$index] as $id) {
+            $return[] = $this->offsetGet($id);
+        }
+        return $return;
     }
 }
