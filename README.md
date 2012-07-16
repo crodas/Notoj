@@ -3,17 +3,18 @@ Notoj [![Build Status](https://secure.travis-ci.org/crodas/Notoj.png?branch=mast
 
 Yet another annotation parser (DocBlocks). It's designed to be simple and intuitive. It extends the Reflection methods inside the Notoj namespace (ReflectionClass, RefletionProperties, ReflectionMethod so far), and adds the getAnnotations() method.
 
-
-
-    use Notoj\ReflectionClass;
+```php
+<?php
+use Notoj\ReflectionClass;
   
-    /** @foo @bar */
-    class Foo {
-    }
+/** @foo @bar */
+class Foo {
+}
   
-    $reflection = new ReflectionClass('Foo');
-    var_dump($reflection->getAnnotations());
-  
+$reflection = new ReflectionClass('Foo');
+var_dump($reflection->getAnnotations());
+ ```
+ 
 The `getAnnotations()` returns an array, with a very simple array structure (`array("method" => "Foo", "args" 
 => NULL)`)
 
@@ -33,12 +34,14 @@ Offline parsing means that you want to get annotations from a file or directory 
 
 #### File
 ```php
+<?php
 $parser = new \Notoj\File("/foo.php");
 $parser->getAnnotations();
 ```
 #### Dir
 
 ```php
+<?php
 $parser = new \Notoj\Dir("/foo"); // The parser is recursive
 $parser->setFilter(function($file) {
  return true;
@@ -61,6 +64,7 @@ It is the output object that represents an annotation. It is important that you 
 It provides `->get($tag)` and `->has($tag)` filters that helps processing the object.
 
 ```php
+<?php
 // check if there is a @Foo
 if (!$annotation->has('Foo')) {
   throw new \RuntimeException("We were expecting a Foo annotation tag");
@@ -86,12 +90,15 @@ It is an object that behaves like an array of Annotation object. Provides a very
 
 Format
 -------
-    /** @Foo */
-    /** @Foo("some") */
-    /** @Foo some other strings */
-    /** @Foo(some_label="something here") */
-    /** @Foo({some: "array here", arr:[1,2,3]}) */
-    /** @Foo(some_label={some: "array here", arr:[1,2,3]}) */
+```php
+<?php
+/** @Foo */
+/** @Foo("some") */
+/** @Foo some other strings */
+/** @Foo(some_label="something here") */
+/** @Foo({some: "array here", arr:[1,2,3]}) */
+/** @Foo(some_label={some: "array here", arr:[1,2,3]}) */
+```
 
 Warning: Notoj will do its best effort to parse broken annotations, but if there is an error it will fail silently. Also, in the `@foo bar foobar` format whitespaces are ignored.
  
@@ -103,7 +110,7 @@ Notoj supports caching that will help the Notoj's engine to avoid parsing over a
 To enable this feature you need to specify which file should be used to save the cache, Notoj will do the rest :-).
 
 
-```
+```php
 Notoj::enableCache("/tmp/annotations.php");
 ```
 
