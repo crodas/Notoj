@@ -19,6 +19,7 @@ spl_autoload_register(function ($class) {
   'notoj\\annotation' => '/Annotation.php',
   'notoj\\file' => '/File.php',
   'notoj\\annotations' => '/Annotations.php',
+  'notoj\\annotationbase' => '/AnnotationBase.php',
   'notoj\\tokenizer' => '/Tokenizer.php',
   'notoj\\dir' => '/Dir.php',
   'notoj_yytoken' => '/Parser.php',
@@ -36,54 +37,68 @@ spl_autoload_register(function ($class) {
     static $deps    = array (
   'notoj\\notoj' => 
   array (
-    0 => 'notoj\\annotation',
+    0 => 'notoj\\annotationbase',
+    1 => 'notoj\\annotation',
+  ),
+  'notoj\\annotation' => 
+  array (
+    0 => 'notoj\\annotationbase',
   ),
   'notoj\\file' => 
   array (
-    0 => 'notoj\\annotation',
-    1 => 'notoj\\annotations',
-    3 => 'notoj\\notoj',
+    0 => 'notoj\\annotationbase',
+    2 => 'notoj\\annotation',
+    3 => 'notoj\\annotations',
+    6 => 'notoj\\notoj',
   ),
   'notoj\\annotations' => 
   array (
-    0 => 'notoj\\annotation',
+    0 => 'notoj\\annotationbase',
+    2 => 'notoj\\annotation',
   ),
   'notoj\\tokenizer' => 
   array (
-    0 => 'notoj\\annotation',
-    1 => 'notoj\\notoj',
+    0 => 'notoj\\annotationbase',
+    1 => 'notoj\\annotation',
+    2 => 'notoj\\notoj',
   ),
   'notoj\\dir' => 
   array (
-    0 => 'notoj\\annotation',
-    1 => 'notoj\\annotations',
-    3 => 'notoj\\notoj',
-    4 => 'notoj\\file',
+    0 => 'notoj\\annotationbase',
+    2 => 'notoj\\annotation',
+    3 => 'notoj\\annotations',
+    6 => 'notoj\\notoj',
+    7 => 'notoj\\file',
   ),
   'notoj\\reflectionfunction' => 
   array (
-    0 => 'notoj\\annotation',
-    1 => 'notoj\\notoj',
+    0 => 'notoj\\annotationbase',
+    1 => 'notoj\\annotation',
+    2 => 'notoj\\notoj',
   ),
   'notoj\\reflectionproperty' => 
   array (
-    0 => 'notoj\\annotation',
-    1 => 'notoj\\notoj',
+    0 => 'notoj\\annotationbase',
+    1 => 'notoj\\annotation',
+    2 => 'notoj\\notoj',
   ),
   'notoj\\reflectionmethod' => 
   array (
-    0 => 'notoj\\annotation',
-    1 => 'notoj\\notoj',
+    0 => 'notoj\\annotationbase',
+    1 => 'notoj\\annotation',
+    2 => 'notoj\\notoj',
   ),
   'notoj\\reflectionclass' => 
   array (
-    0 => 'notoj\\annotation',
-    1 => 'notoj\\notoj',
+    0 => 'notoj\\annotationbase',
+    1 => 'notoj\\annotation',
+    2 => 'notoj\\notoj',
   ),
   'notoj\\reflectionobject' => 
   array (
-    0 => 'notoj\\annotation',
-    1 => 'notoj\\notoj',
+    0 => 'notoj\\annotationbase',
+    1 => 'notoj\\annotation',
+    2 => 'notoj\\notoj',
   ),
 );
     // }}}

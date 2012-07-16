@@ -37,38 +37,54 @@
 
 namespace Notoj;
 
-use RuntimeException,
-    InvalidArgumentException;
+use ArrayObject;
 
-/**
- *  @autoload("Annotation")
- */
-class Annotations extends AnnotationBase
+class AnnotationBase extends ArrayObject
 {
-    protected $lastId = 0;
+    protected $keys   = array();
+    protected $ikeys  = array();
+    protected $values = array();
 
-    public function offsetSet($index, $value)
+    protected function add($key, $value)
     {
-        if (!($value instanceof Annotation)) {
-            throw new InvalidArgumentException("Annotations object only accept Annotation objects");
-        }
-        
-        if ($index) {
-            if ($this->offsetExists($index)) {
-                throw new RuntimeException("You cannot modify annotations objects");
-            }
-            if (is_numeric($index)) {
-                throw new InvalidArgumentException("Annotations object do not accept numeric index");
-            }
-        } else {
-            $index = $this->lastId++;
-        }
+        $index = count($this->values);
+        $this->values[$index] = $value;
 
-        foreach ($value->getKeys() as $key) {
-            $this->add($key, $value);
+        if (empty($this->keys[$key])) {
+            $this->keys[$key] = array();
         }
+        $this->keys[$key][] = $index;
 
-        parent::offsetSet($index, $value);
+        $key = strtolower($key);
+        if (empty($this->ikeys[$key])) {
+            $this->ikeys[$key] = array();
+        }
+        $this->ikeys[$key][] = $index;
     }
 
+    public function has($index, $caseSensitive = true)
+    {
+        $source = $caseSensitive ? $this->keys : $this->ikeys;
+        if (!$caseSensitive) {
+            $index = strtolower($index);
+        }
+        return array_key_exists($index, $source);
+    }
+
+    public function get($index, $caseSensitive = true)
+    {
+        if (!$this->has($index, $caseSensitive)) {
+            return array();
+        }
+
+        $return = array();
+        $source = $caseSensitive ? $this->keys : $this->ikeys;
+        if (!$caseSensitive) {
+            $index = strtolower($index);
+        }
+        foreach ($source[$index] as $id) {
+            $return[] = $this->values[$id];
+        }
+        return $return;
+    }
 }

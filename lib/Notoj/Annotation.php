@@ -37,26 +37,17 @@
 
 namespace Notoj;
 
-
-use ArrayObject;
-
-class Annotation extends ArrayObject
+class Annotation extends AnnotationBase
 {
     protected $args;
     protected $meta = array();
-    protected $keys = array();
 
     public function __construct(Array $args = array())
     {
-        $keys = array();
-        foreach ($args as $id => $arg) {
-            if (empty($keys[$arg['method']])) {
-                $keys[$arg['method']] = array();
-            }
-            $keys[$arg['method']][] = $id;
+        foreach ($args as $arg) {
+            $this->add($arg['method'], $arg);
         }
         $this->annotations = $args;
-        $this->keys = $keys;
         parent::__construct($args);
     }
 
@@ -145,26 +136,9 @@ class Annotation extends ArrayObject
         throw new \RuntimeException("Annotation objects are read only");
     }
 
-    public function has($name)
-    {
-        return array_key_exists($name, $this->keys);
-    }
-
     public function getAll()
     {
         return $this->getIterator();
-    }
-
-    public function get($name = NULL)
-    {
-        if (!$this->has($name)) {
-            return array();
-        }
-        $return = array();
-        foreach ($this->keys[$name] as $id) {
-            $return[] = $this->annotations[$id];
-        }
-        return $return;
     }
 
 }
