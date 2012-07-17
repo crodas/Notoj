@@ -103,7 +103,7 @@ class Tokenizer
                         $data .= $line[$e];
                     }
                     if ($line[$e] !== $end) {
-                        throw Exception("Unexpected end of line");
+                        throw new \Exception("Unexpected end of line, expected {$end} in line {$line}");
                     }
                     $found = array(\Notoj_Parser::T_STRING, $data);
                     break;
