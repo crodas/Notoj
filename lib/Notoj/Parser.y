@@ -86,7 +86,8 @@ term(A) ::= T_ALPHA(B)  . { A = trim(B); }
 term(A) ::= T_TRUE      . { A = TRUE; }
 term(A) ::= T_FALSE     . { A = FALSE; }
 term(A) ::= T_STRING(B) . { A = B; }
-term(A) ::= T_NUMBER(B) . { A = B; }
+term(A) ::= T_NUMBER(B) . { A = B + 0; }
+term(A) ::= T_MINUS T_NUMBER(B) . { A = -1 * (B+0); }
 
 /* json {{{ */
 json(A) ::= T_CURLY_OPEN json_obj(B) T_CURLY_CLOSE. { A  = B; }
