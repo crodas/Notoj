@@ -142,6 +142,17 @@ class simpletest extends \phpunit_framework_testcase
         $this->assertEquals(0, count($annotations));
     }
 
+    /**
+     * @param Request $request object
+     * @param string  $name    user name, spaces 'n all
+     * @param string  $section which section to render
+     */
+    function testStrErrorNicely()
+    {
+        $annotations = getReflection(__METHOD__)->getAnnotations();
+        $this->assertEquals(1, count($annotations));
+    }
+
     function testNoAnnotations() {
         $annotations = getReflection(__METHOD__)->getAnnotations();
         $this->assertEquals(0, count($annotations));

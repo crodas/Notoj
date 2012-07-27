@@ -113,7 +113,7 @@ class Tokenizer
                 /* string {{{ */
                 $end  = $body[$e];
                 $data = "";
-                while ($e < $len && $body[++$e] !== $end) {
+                while ($e+1 < $len && $body[++$e] !== $end) {
                     if ($body[$e] == "\\") {
                         ++$e;
                     }

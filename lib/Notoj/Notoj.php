@@ -107,18 +107,17 @@ class Notoj
         $buffer  = array();
         $isNew   = true;
         do {
-            $token = $pzToken->getToken($isNew);
-            if ($token) {
+            try {
+                $token = $pzToken->getToken($isNew);
+                if (!$token) break;
                 $isNew = false;
-                try {
-                    $Parser->doParse($token[0], $token[1]);
-                } catch (\Exception $e) {
-                    $buffer = array_merge($buffer, $Parser->body);
-                    $Parser = new \Notoj_Parser;
-                    $isNew  = true;
-                }
+                $Parser->doParse($token[0], $token[1]);
+            } catch (\Exception $e) {
+                $buffer = array_merge($buffer, $Parser->body);
+                $Parser = new \Notoj_Parser;
+                $isNew  = true;
             }
-        } while($token);
+        } while(true);
         $Parser->doParse(0, 0);
         $struct = array_merge($buffer, $Parser->body);
         self::$cached[$id] = $struct;
