@@ -118,7 +118,11 @@ class Notoj
                 $isNew  = true;
             }
         } while(true);
-        $Parser->doParse(0, 0);
+        try {
+            $Parser->doParse(0, 0);
+        } catch (\Exception $e) {
+            // ignore error
+        }
         $struct = array_merge($buffer, $Parser->body);
         self::$cached[$id] = $struct;
         self::$isDirty  = true;
