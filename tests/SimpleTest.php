@@ -23,6 +23,30 @@ class simpletest extends \phpunit_framework_testcase
     /** @var_name("foo") */
     protected $bar;
 
+    /** 
+     *  @test({
+     *      "foo": "bar",
+     *      "bar": "foobar",
+     *      99: [12, "foobar",
+                [99]]
+    **  }, "something else")
+     */
+    function testMultiline() {
+        $annotations = getReflection(__METHOD__)->getAnnotations();
+        $args = array(
+            array(
+                'foo' => 'bar',
+                'bar' => 'foobar',
+                99  => array(12, "foobar", array(99)),
+            ),
+            "something else"
+        );
+        $this->assertEquals(1, count($annotations));
+        $this->assertEquals("test", $annotations[0]['method']);
+        $this->assertEquals($args, $annotations[0]['args']);
+    }
+
+
     /** yet another comment {{{
      * This is a bloody comment that nobody is going to read
      *
@@ -110,6 +134,7 @@ class simpletest extends \phpunit_framework_testcase
         }
     }
     /* }}} */
+
 
     /** @test( dasda @bar) */
     function testError() {

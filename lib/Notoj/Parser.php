@@ -951,11 +951,17 @@ static public $yy_action = array(
     function yy_r24(){ $this->_retvalue  = $this->yystack[$this->yyidx + -1]->minor;     }
 #line 958 "lib/Notoj/Parser.php"
 #line 95 "lib/Notoj/Parser.y"
-    function yy_r26(){ $this->_retvalue = array_merge($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
-#line 961 "lib/Notoj/Parser.php"
-#line 98 "lib/Notoj/Parser.y"
+    function yy_r26(){
+$this->_retvalue = $this->yystack[$this->yyidx + -2]->minor; 
+foreach ($this->yystack[$this->yyidx + 0]->minor as $k => $v) {
+    $this->_retvalue[$k] = $v;
+}
+
+    }
+#line 967 "lib/Notoj/Parser.php"
+#line 104 "lib/Notoj/Parser.y"
     function yy_r28(){ $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor; $this->_retvalue[] = $this->yystack[$this->yyidx + 0]->minor;     }
-#line 964 "lib/Notoj/Parser.php"
+#line 970 "lib/Notoj/Parser.php"
 
     /**
      * placeholder for the left hand side in a reduce operation.
@@ -1074,7 +1080,7 @@ static public $yy_action = array(
         $expect[] = self::$yyTokenName[$token];
     }
     throw new Exception('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. ')');
-#line 1084 "lib/Notoj/Parser.php"
+#line 1090 "lib/Notoj/Parser.php"
     }
 
     /**
