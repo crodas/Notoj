@@ -13,7 +13,11 @@ function someFunction() {
 function foo() {
 }
 
-/** @test */
+/**
+ * @test(
+ *      ["foobar"]
+ * )
+ */
 class simpletest extends \phpunit_framework_testcase
 {
     /** @var_name("foo") */
@@ -32,7 +36,7 @@ class simpletest extends \phpunit_framework_testcase
         $annotation = $reflection->getAnnotations();
         $this->assertEquals(1, count($annotation));
         $this->assertEquals($annotation[0]['method'], 'test');
-        $this->assertEquals($annotation[0]['args'], NULL);
+        $this->assertEquals($annotation[0]['args'], array(array("foobar")));
         
         foreach ($reflection->getMethods() as $method) {
             $this->assertTrue($method instanceof \Notoj\ReflectionMethod);
@@ -80,7 +84,7 @@ class simpletest extends \phpunit_framework_testcase
         $annotation = $reflection->getAnnotations();
         $this->assertEquals(1, count($annotation));
         $this->assertEquals($annotation[0]['method'], 'test');
-        $this->assertEquals($annotation[0]['args'], NULL);
+        $this->assertEquals($annotation[0]['args'], array(array("foobar")));
         
         foreach ($reflection->getMethods() as $method) {
             $this->assertTrue($method instanceof \Notoj\ReflectionMethod);

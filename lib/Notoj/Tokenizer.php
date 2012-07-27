@@ -42,7 +42,6 @@ namespace Notoj;
 class Tokenizer
 {
     protected $body;
-    protected $lines;
     protected $pos  = 0;
     protected $line = 0;
     protected $valid = false;
@@ -66,17 +65,95 @@ class Tokenizer
 
 
     public function __construct($body) {
-        $this->body  = $body;
-        $this->lines = array_map('trim', preg_split("/[\n\r]/", $body));
-        if (count($this->lines) === 1) {
-            $this->lines[0] = substr($this->lines[0], 0, -2);
+        $this->body  = trim(substr($body, 3, -2));
+    }
+
+    protected function jumpNextLine()
+    {
+        $body = $this->body;
+        $pos  = &$this->pos;
+        $len  = strlen($body);
+        if ($pos > 0) {
+            $pos = strpos($body, "\n", $pos);
+            if ($pos === false) {
+                // EOF
+                $pos = $len;
+                return;
+            }
+        }
+        
+        $ignore = array(" ", "\t", "\r", "\n", "*");
+        while ($pos < $len && in_array($body[$pos], $ignore)) {
+            $pos++;
         }
     }
 
-    public function getToken()
+    public function getToken($start = true)
     {
         $symbols  = $this->symbols;
         $keywords = $this->keywords;
+
+        if ($start) {
+            $this->jumpNextLine();
+        }
+
+        $found = false;
+        $body  = $this->body;
+        $len   = strlen($body);
+        for ($e = &$this->pos; !$found && $e < $len; $e++) {
+            switch ($body[$e]) {
+            case "\r": case " ": case "\f": case "\t":
+                break;
+            case "\n":
+                $this->jumpNextLine();
+                $e--;
+                break;
+
+            case '"': case "'":
+                /* string {{{ */
+                $end  = $body[$e];
+                $data = "";
+                while ($e < $len && $body[++$e] !== $end) {
+                    if ($body[$e] == "\\") {
+                        ++$e;
+                    }
+                    $data .= $body[$e];
+                }
+                if ($body[$e] !== $end) {
+                    throw new \Exception("Unexpected end of line, expected {$end} in line {$body}");
+                }
+                $found = array(\Notoj_Parser::T_STRING, $data);
+                break;
+                /* }}} */
+
+            default:
+                if (!empty($symbols[$body[$e]])) {
+                    $found = array($symbols[$body[$e]], $body[$e]);
+                } else {
+                    $data = "";
+                    while ($e < $len && empty($symbols[$body[$e]])
+                        && trim($body[$e]) !== "") {
+                        $data .= $body[$e++];
+                    }
+
+                    if (empty($data)) {
+                        continue;
+                    }
+
+                    $e--;
+                    if (is_numeric($data[0]) && is_numeric($data)) {
+                        $found = array(\Notoj_Parser::T_NUMBER, $data + 0);
+                    } else if (!empty($keywords[strtolower($data)])) {
+                        $found = array($keywords[strtolower($data)], $data);
+                    } else {
+                        $found = array(\Notoj_Parser::T_ALPHA, $data);
+                    }
+                }
+                break;
+            }
+        }
+
+        return $found;
 
         $found = false;
         for ($i=&$this->line; $i < count($this->lines); $i++) {

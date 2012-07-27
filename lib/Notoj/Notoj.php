@@ -105,14 +105,17 @@ class Notoj
         $pzToken = new Tokenizer($content);
         $Parser  = new \Notoj_Parser;
         $buffer  = array();
+        $isNew   = true;
         do {
-            $token = $pzToken->getToken();
+            $token = $pzToken->getToken($isNew);
             if ($token) {
+                $isNew = false;
                 try {
                     $Parser->doParse($token[0], $token[1]);
                 } catch (\Exception $e) {
                     $buffer = array_merge($buffer, $Parser->body);
                     $Parser = new \Notoj_Parser;
+                    $isNew  = true;
                 }
             }
         } while($token);
