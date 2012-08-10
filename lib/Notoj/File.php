@@ -117,7 +117,7 @@ class File
                         );
                     }
                     $annotation->setMetadata($def);
-                    $annotations[] = $annotation;
+                    $annotations[] = $annotation->setFile($this->path);
                     break;
                 }
                 break;

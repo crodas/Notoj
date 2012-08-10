@@ -92,7 +92,46 @@ class Notoj
         });
     }
 
-    public static function parseDocComment($content, &$isCached = NULL) {
+    public static function getClassAlias($file, &$isCached = NULL)
+    {
+        if (!is_readable($file)) {
+            throw new \RuntimeException("{$file} is not a readable");
+        }
+
+        if (!empty(self::$cached['alias']) && isset(self::$cached['alias'][$file])) {
+            return self::$cached['alias'][$file];
+        }
+
+        $lastts = filemtime($file);
+        $tokens = token_get_all(file_get_contents($file));
+        $ttotal = count($tokens);
+
+        $aliases = array();
+        for ($i=0; $i < $ttotal; ++$i) {
+            if ($tokens[$i][0] != T_USE) continue;
+            do {
+                $tmp = array();
+                for (++$i; $i < $ttotal; ++$i) {
+                    if ($tokens[$i] == ',' || $tokens[$i] == ';' || $tokens[$i][0] == T_AS) break;
+                    $tmp[] = $tokens[$i][1];
+                }
+
+                $alias = $tmp[ count($tmp) - 1];
+                if ($tokens[$i][0] == T_AS) {
+                    for (; $i < $ttotal && $tokens[$i][0] != T_STRING; $i++);
+                    $alias = $tokens[$i][1];
+                }
+                $aliases[$alias] = trim(implode("", $tmp));
+            } while ($tokens[$i] == ',');
+        }
+
+        self::$cached['alias'][$file] = $aliases;
+
+        return $aliases;
+    }
+
+    public static function parseDocComment($content, &$isCached = NULL)
+    {
         if (is_object($content) && is_callable(array($content, 'getDocComment'))) {
             $content = $content->getDocComment();
         }

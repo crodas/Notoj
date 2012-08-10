@@ -51,6 +51,13 @@ class Annotation extends AnnotationBase
         parent::__construct($args);
     }
 
+    public function setFile($file)
+    {
+        Notoj::getClassAlias($file);
+
+        return $this;
+    }
+
     public function setMetadata(Array $meta)
     {
         foreach (array_keys($meta) as $id) {

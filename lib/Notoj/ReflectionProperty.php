@@ -46,7 +46,8 @@ class ReflectionProperty extends \ReflectionProperty
     public function __construct($name, $class) 
     {
         parent::__construct($name, $class);
-        $this->annotation = Notoj::parseDocComment($this);
+        $this->annotation = Notoj::parseDocComment($this)
+            ->setFile($this->getDeclaringClass()->getFileName());
     }
 
     public function getAnnotations() 
