@@ -53,7 +53,25 @@ class Annotation extends AnnotationBase
 
     public function setFile($file)
     {
-        Notoj::getClassAlias($file);
+        foreach (Notoj::getClassAlias($file) as $alias => $class) {
+            foreach ($this->annotations as $id => $annotation) {
+                if (strncmp($alias, $annotation['method'], strlen($alias)) == 0) {
+                    $after = substr($annotation['method'], strlen($alias));
+                    if (!empty($after) && $after[0] != '\\') continue;
+
+                    // update annotation array
+                    $this->annotations[$id]['method'] = $class . $after;
+
+                    // update indexes
+                    $this->keys[ $class . $after ] = $this->keys[ $annotation['method'] ];
+                    $this->keys[ strtolower($class . $after) ] = $this->keys[ $annotation['method'] ];
+
+                    // update internal storage
+                    parent::offsetSet($id, $this->annotations[$id]);
+                }
+            }
+        }
+        
 
         return $this;
     }

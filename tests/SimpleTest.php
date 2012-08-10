@@ -254,6 +254,19 @@ class simpletest extends \phpunit_framework_testcase
         }
     }
 
+    public function testAlias()
+    {
+        $foo = new \Notoj\File(__DIR__ . "/fixtures/alias.php");
+        $annotations = $foo->getAnnotations();
+        foreach ($annotations as $annotation) {
+            foreach ($annotation as $ann) {
+                $this->assertTrue(strncmp('Foo\Bar', $ann['method'], 7) === 0);
+            }
+        }
+        $this->assertTrue($annotations->has('Foo\Bar\Another'));
+        $this->assertTrue($annotations->has('xxx\Another'));
+    }
+
     public function testNotojFileNamespaces() 
     {
         $foo = new \Notoj\File(__DIR__ . "/fixtures/namespace.php");

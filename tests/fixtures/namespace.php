@@ -1,7 +1,5 @@
 <?php
 
-use xxx\foobar as yyy;
-
 namespace foo\name {
     /** @fooinvalid */
     /** @foobar */
