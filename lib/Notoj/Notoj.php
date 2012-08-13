@@ -99,7 +99,11 @@ class Notoj
         }
 
         if (!empty(self::$cached['alias']) && isset(self::$cached['alias'][$file])) {
-            return self::$cached['alias'][$file];
+            $cache = self::$cached['alias'][$file];
+            if ($cache[0] >= filemtime($file)) {
+                $isCached = true;
+                return $cache[1];
+            }
         }
 
         $lastts = filemtime($file);
@@ -125,7 +129,7 @@ class Notoj
             } while ($tokens[$i] == ',');
         }
 
-        self::$cached['alias'][$file] = $aliases;
+        self::$cached['alias'][$file] = array(filemtime($file), $aliases);
 
         return $aliases;
     }
