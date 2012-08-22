@@ -2,6 +2,7 @@
 use Notoj\ReflectionClass,
     Notoj\ReflectionObject,
     Notoj\ReflectionFunction,
+    Notoj\ReflectionProperty,
     Notoj\ReflectionMethod;
 
 /** @zzexpect(True) */
@@ -201,10 +202,12 @@ class simpletest extends \phpunit_framework_testcase
     {
         $obj = new \Notoj\File($file);
         foreach ($obj->getAnnotations() as $annotations) {
-            if (isset($annotations['function']) && isset($annotations['class'])) {
+            if ($annotations->isMethod()) {
                 $refl = new ReflectionMethod($annotations['class'], $annotations['function']);
-            } else if (isset($annotations['class'])) {
+            } else if ($annotations->isClass()) {
                 $refl = new ReflectionClass($annotations['class']);
+            } else if ($annotations->isProperty()) {
+                $refl = new ReflectionProperty($annotations['class'], $annotations['property']);
             } else if (isset($annotations['function'])) {
                 die("I'm not implemented yet!");
             }

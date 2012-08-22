@@ -74,19 +74,25 @@ class Annotation extends AnnotationBase
     public function isClass()
     {
         $meta = $this->meta;
-        return isset($meta['class']) && !isset($meta['function']);
+        return $meta['type'] == 'class';
     }
 
     public function isMethod()
     {
         $meta = $this->meta;
-        return isset($meta['class']) && isset($meta['function']);
+        return $meta['type'] == 'method';
     }
 
     public function isFunction()
     {
         $meta = $this->meta;
-        return !isset($meta['class']) && isset($meta['function']);
+        return $meta['type'] == 'function';
+    }
+
+    public function isProperty()
+    {
+        $meta = $this->meta;
+        return $meta['type'] == 'property';
     }
 
     public function getFile()

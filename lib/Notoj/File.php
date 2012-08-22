@@ -42,7 +42,13 @@ namespace Notoj;
  */
 class File
 {
+    /**
+     *  @type string
+     */
     protected $path;
+    /**
+     *  @type string
+     */
     protected $content;
 
     public function __construct($filePath)
@@ -94,6 +100,19 @@ class File
                 while (in_array($tokens[++$e][0], $allow));
                 $token = $tokens[$e];
                 switch ($token[0]) {
+                case T_VARIABLE:
+                    if (!isset($classes[$level])) {
+                        break;
+                    }
+                    $annotation->setMetadata(array(
+                        'type'     => 'property',
+                        'property' => substr($token[1],1),
+                        'class' => $classes[$level],
+                        'file'  => $this->path,
+                        'line'  => $tokens[$e][2],
+                    ));
+                    $annotations[] = $annotation;
+                    break;
                 case T_CLASS:
                 case T_INTERFACE:
                 case $traits:
@@ -101,16 +120,19 @@ class File
                     while ($tokens[$e][0] != T_STRING) $e++;
                     if ($token[0] == T_FUNCTION) {
                         $def  = array(
+                            'type'     => 'function',
                             'function' => $namespace . $tokens[$e][1],
                             'file'  => $this->path,
                             'line'  => $tokens[$e][2],
                         );
                         if (isset($classes[$level])) {
+                            $def['type']     = 'method';
                             $def['function'] = $tokens[$e][1];
                             $def['class']    = $classes[$level];
                         }
                     } else {
                         $def  = array(
+                            'type'  => 'class',
                             'class' => $namespace . $tokens[$e][1],
                             'file'  => $this->path,
                             'line'  => $tokens[$e][2],
