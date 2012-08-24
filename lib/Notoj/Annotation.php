@@ -63,7 +63,7 @@ class Annotation extends AnnotationBase
 
     public function getMetadata()
     {
-        return $meta;
+        return $this->meta;
     }
 
     public function getKeys()
