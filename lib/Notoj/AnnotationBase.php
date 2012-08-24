@@ -71,6 +71,20 @@ class AnnotationBase extends ArrayObject
         return array_key_exists($index, $source);
     }
 
+    public function getOne($index, $caseSensitive = true)
+    {
+        if (!$this->has($index, $caseSensitive)) {
+            return array();
+        }
+
+        $return = array();
+        $source = $caseSensitive ? $this->keys : $this->ikeys;
+        if (!$caseSensitive) {
+            $index = strtolower($index);
+        }
+        return $this->values[$source[$index][0]]['args'];
+    }
+
     public function get($index, $caseSensitive = true)
     {
         if (!$this->has($index, $caseSensitive)) {
