@@ -80,4 +80,11 @@ class Annotations extends AnnotationBase
         parent::offsetSet($index, $value);
     }
 
+    public function merge(self $another) 
+    {
+        foreach ($another as $annotation) {
+            $this[] = $annotation;
+        }
+    }
+
 }

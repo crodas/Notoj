@@ -38,6 +38,7 @@
 namespace Notoj;
 
 use RecursiveDirectoryIterator,
+    DirectoryIterator,
     RecursiveIteratorIterator;
 
 /**
@@ -46,6 +47,8 @@ use RecursiveDirectoryIterator,
 class Dir
 {
     protected $filter;
+    protected $cached;
+    protected $cacheTs;
 
     public function __construct($dirPath)
     {
@@ -64,25 +67,61 @@ class Dir
         return $this;
     }
 
+    public function isCached()
+    {
+        return $this->cached;
+    }
+
+    public function getCacheTime()
+    {
+        return $this->cacheTs;
+    }
+
+    public function readDirectory($path)
+    {
+        $annotations = new Annotations;
+        $filter  = $this->filter;
+        $modtime = filemtime($path);
+        $cached  = Cache::get('dir://' . $path);
+        if ($cached && $cached['modtime'] >= $modtime) {
+            if ($this->cacheTs < $modtime) {
+                $this->cacheTs = $modtime;
+            }
+            foreach ($cached['cache'] as $annotation) {
+                $obj = new Annotation($annotation['data']);
+                $obj->setMetadata($annotation['meta']);
+                $annotations[] = $obj;
+            }
+            return $annotations;
+        }
+            
+        $this->cached = false;
+        foreach (new DirectoryIterator($path) as $file) {
+            if (!$file->isfile() || ($filter && !$filter($file))) {
+                continue;
+            }
+            $file = new File($file->getPathname());
+            $file->getAnnotations($annotations);
+        } 
+
+        $cache = $annotations->toCache();
+        Cache::set('dir://' . $path, compact('modtime', 'cache'));
+        return $annotations;
+    }
+
     public function getAnnotations(Annotations $annotations = NULL)
     {
-        $iter   = new RecursiveDirectoryIterator($this->dir);
-        $filter = $this->filter; 
+        $this->cached  = true;
+        $this->cacheTs = 0;
+        $iter = new RecursiveDirectoryIterator($this->dir);
         if (is_null($annotations)) {
             $annotations = new Annotations;
         }
 
         foreach (new RecursiveIteratorIterator($iter) as $file) {
-            if (!$file->isfile()) {
-                continue;
+            if ($file->isdir()) {
+                $annotations->merge($this->readDirectory($file));
             }
-            
-            if ($filter && !$filter($file)) {
-                continue;
-            }
-
-            $file = new File($file->getPathname());
-            $file->getAnnotations($annotations);
         }
 
         return $annotations;

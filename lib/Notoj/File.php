@@ -46,6 +46,7 @@ class File
      *  @type string
      */
     protected $path;
+    protected $cached;
 
     public function __construct($filePath)
     {
@@ -53,6 +54,11 @@ class File
             throw new \RuntimeException("{$filePath} is not a file or cannot be read");
         }
         $this->path = realpath($filePath);
+    }
+
+    public function isCached()
+    {
+        return $this->cached;
     }
 
     public function getAnnotations(Annotations $annotations = NULL)
@@ -64,6 +70,7 @@ class File
         $modtime = filemtime($this->path);
         $cached = Cache::get('file://' . $this->path, $found);
         if ($found && $cached['modtime'] >= $modtime) {
+            $this->cached = true;
             foreach ((array)$cached['cache'] as $annotation) {
                 $obj = new Annotation($annotation['data']);
                 $obj->setMetadata($annotation['meta']);
@@ -72,6 +79,7 @@ class File
             return $annotations;
         }
 
+        $this->cached = false;
         $content    = file_get_contents($this->path); 
         $tokens     = token_get_all($content);
         $allTokens  = count($tokens);
