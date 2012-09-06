@@ -61,9 +61,10 @@ class File
             $annotations = new Annotations;
         }
 
+        $modtime = filemtime($this->path);
         $cached = Cache::get('file://' . $this->path, $found);
-        if ($found) {
-            foreach ($cached as $annotation) {
+        if ($found && $cached['modtime'] >= $modtime) {
+            foreach ((array)$cached['cache'] as $annotation) {
                 $obj = new Annotation($annotation['data']);
                 $obj->setMetadata($annotation['meta']);
                 $annotations[] = $obj;
@@ -85,6 +86,7 @@ class File
         
 
         $level = 0;
+        $cache = array();
         for($i=0; $i < $allTokens; $i++) {
             $token = $tokens[$i];
             if (!is_array($token) && $token != '{' && $token != '}') continue;
@@ -120,6 +122,7 @@ class File
                         'line'  => $tokens[$e][2],
                     ));
                     $annotations[] = $annotation;
+                    $cache[] = $annotation->toCache();
                     break;
                 case T_CLASS:
                 case T_INTERFACE:
@@ -148,6 +151,7 @@ class File
                     }
                     $annotation->setMetadata($def);
                     $annotations[] = $annotation;
+                    $cache[] = $annotation->toCache();
                     break;
                 }
                 break;
@@ -166,7 +170,8 @@ class File
             }
         }
 
-        $cached = Cache::set('file://' . $this->path, $annotations);
+
+        $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'));
         return $annotations;
     }
 }
