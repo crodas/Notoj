@@ -21,6 +21,7 @@ spl_autoload_register(function ($class) {
   'notoj\\annotations' => '/Annotations.php',
   'notoj\\annotationbase' => '/AnnotationBase.php',
   'notoj\\tokenizer' => '/Tokenizer.php',
+  'notoj\\cache' => '/Cache.php',
   'notoj\\dir' => '/Dir.php',
   'notoj_yytoken' => '/Parser.php',
   'notoj_yystackentry' => '/Parser.php',
@@ -49,7 +50,7 @@ spl_autoload_register(function ($class) {
     0 => 'notoj\\annotationbase',
     2 => 'notoj\\annotation',
     3 => 'notoj\\annotations',
-    6 => 'notoj\\notoj',
+    5 => 'notoj\\notoj',
   ),
   'notoj\\annotations' => 
   array (
@@ -67,8 +68,8 @@ spl_autoload_register(function ($class) {
     0 => 'notoj\\annotationbase',
     2 => 'notoj\\annotation',
     3 => 'notoj\\annotations',
-    6 => 'notoj\\notoj',
-    7 => 'notoj\\file',
+    5 => 'notoj\\notoj',
+    6 => 'notoj\\file',
   ),
   'notoj\\reflectionfunction' => 
   array (
@@ -114,7 +115,9 @@ spl_autoload_register(function ($class) {
         }
 
         if (!class_exists($class, false)) {
+
             require __DIR__  . $classes[$class];
+
         }
         return true;
     }
