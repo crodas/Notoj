@@ -47,6 +47,15 @@ class Annotations extends AnnotationBase
 {
     protected $lastId = 0;
 
+    public function toCache()
+    {
+        $cache = array();
+        foreach ($this as $key => $value) {
+            $cache[$key] = $value->toCache();
+        }
+        return $cache;
+    }
+
     public function offsetSet($index, $value)
     {
         if (!($value instanceof Annotation)) {

@@ -76,6 +76,9 @@ class Cache
         if (empty(self::$path)) {
             return false;
         }
+        if (is_object($value) && is_callable(array($value, 'toCache'))) {
+            $value = $value->toCache();
+        }
         self::$data[$key] = $value;
         self::$isDirty    = true;
         return true;

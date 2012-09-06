@@ -192,7 +192,7 @@ class simpletest extends \phpunit_framework_testcase
         foreach (glob(__DIR__ . "/../lib/Notoj/*.php") as $file) {
             $args[] = array($file);
         }
-        return $args;
+        return array_merge($args, $args);
     }
 
     /**

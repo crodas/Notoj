@@ -46,36 +46,44 @@ class File
      *  @type string
      */
     protected $path;
-    /**
-     *  @type string
-     */
-    protected $content;
 
     public function __construct($filePath)
     {
         if (!is_file($filePath) || !is_readable($filePath)) {
             throw new \RuntimeException("{$filePath} is not a file or cannot be read");
         }
-        $this->path    = $filePath;
-        $this->content = file_get_contents($filePath); 
+        $this->path = realpath($filePath);
     }
 
     public function getAnnotations(Annotations $annotations = NULL)
     {
-        $tokens     = token_get_all($this->content);
+        if (is_null($annotations)) {
+            $annotations = new Annotations;
+        }
+
+        $cached = Cache::get('file://' . $this->path, $found);
+        if ($found) {
+            foreach ($cached as $annotation) {
+                $obj = new Annotation($annotation['data']);
+                $obj->setMetadata($annotation['meta']);
+                $annotations[] = $obj;
+            }
+            return $annotations;
+        }
+
+        $content    = file_get_contents($this->path); 
+        $tokens     = token_get_all($content);
         $allTokens  = count($tokens);
         $annotation = NULL;
         $namespace  = "";
         $traits     = defined('T_TRAIT') ? T_TRAIT : -1;
 
-        if (is_null($annotations)) {
-            $annotations = new Annotations;
-        }
-
         $allow = array(
             T_WHITESPACE, T_PUBLIC, T_PRIVATE, T_PROTECTED, 
             T_STATIC, T_ABSTRACT, T_FINAL
         );
+        
+
         $level = 0;
         for($i=0; $i < $allTokens; $i++) {
             $token = $tokens[$i];
@@ -157,6 +165,8 @@ class File
                 break;
             }
         }
+
+        $cached = Cache::set('file://' . $this->path, $annotations);
         return $annotations;
     }
 }

@@ -51,6 +51,11 @@ class Annotation extends AnnotationBase
         parent::__construct($args);
     }
 
+    public function toCache()
+    {
+        return array('data' => $this->annotations, 'meta' => $this->meta);
+    }
+
     public function setMetadata(Array $meta)
     {
         foreach (array_keys($meta) as $id) {
