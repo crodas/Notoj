@@ -14,6 +14,8 @@ namespace foo\name {
 namespace {
     /** @foobar */
     final class foobar {
+        /** @something */
+        public function something() {}
     }
 
     function xxx() {

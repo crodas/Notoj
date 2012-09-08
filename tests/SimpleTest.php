@@ -255,6 +255,13 @@ class simpletest extends \phpunit_framework_testcase
             $this->assertFalse($annotation->isMethod());
             $this->assertFalse($annotation->isMethod());
         }
+
+        $this->assertEquals(NULL, $annotations->getClassInfo('not-found-class'));
+        $classInfo = $annotations->getClassInfo('foobar');
+        $this->assertTrue(is_array($classInfo));
+        $this->assertTrue(count($classInfo) > 1);
+        $this->assertEquals($classInfo['class']['type'], 'class');
+        $this->assertEquals($classInfo['method'][0]['type'], 'method');
     }
 
     public function testNotojFileNamespaces() 
@@ -265,8 +272,10 @@ class simpletest extends \phpunit_framework_testcase
             if ($id < 2) {
                 $expected = explode("\\", isset($annotation['class']) ? $annotation['class'] : $annotation['function']);
                 $expected = array_pop($expected);
+            } else if ($annotation->isClass()) {
+                $expected = $annotation['class'];
             } else {
-                $expected = isset($annotation['class']) ? $annotation['class'] : $annotation['function'];
+                $expected = $annotation['function'];
             }
             foreach ($annotation['annotations'] as $ann) {
                 $this->assertEquals($ann['method'], $expected);

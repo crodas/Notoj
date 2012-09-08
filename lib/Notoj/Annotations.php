@@ -46,6 +46,8 @@ use RuntimeException,
 class Annotations extends AnnotationBase
 {
     protected $lastId = 0;
+    protected $classes = array();
+    protected $functions = array();
 
     public function toCache()
     {
@@ -54,6 +56,22 @@ class Annotations extends AnnotationBase
             $cache[$key] = $value->toCache();
         }
         return $cache;
+    }
+
+    public function getClassInfo($class)
+    {
+        if (empty($this->classes[$class])) {
+            return NULL;
+        }
+        return $this->classes[$class];
+    }
+
+    public function getFunction($name)
+    {
+        if (empty($this->functions[$name])) {
+            return NULL;
+        }
+        return $this->functions[$name];
     }
 
     public function offsetSet($index, $value)
@@ -77,6 +95,27 @@ class Annotations extends AnnotationBase
             $this->add($key, $value);
         }
 
+        $meta = $value->getMetadata();
+        if (!empty($meta)) {
+            switch ($meta['type']) {
+            case 'class':
+            case 'property':
+            case 'method':
+                if (empty($this->classes[$meta['class']])) {
+                    $this->classes[$meta['class']] = array();
+                }
+
+                if ($meta['type'] == 'class') {
+                    $this->classes[$meta['class']][$meta['type']] = $value;
+                } else {
+                    $this->classes[$meta['class']][$meta['type']][] = $value;
+                }
+                break;
+            default:
+                $this->functions[$meta['function']] = $value;
+                break;
+            }
+        }
         parent::offsetSet($index, $value);
     }
 
