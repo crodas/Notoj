@@ -119,7 +119,7 @@ class Dir
         }
 
         foreach (new RecursiveIteratorIterator($iter) as $file) {
-            if ($file->isdir()) {
+            if ($file->isdir() && substr($file, -2) != '..') {
                 $annotations->merge($this->readDirectory($file));
             }
         }
