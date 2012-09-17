@@ -253,7 +253,7 @@ class simpletest extends \phpunit_framework_testcase
             $this->assertTrue( file_exists($annotation->getFile()) );
             $this->assertTrue($annotation->isClass());
             $this->assertFalse($annotation->isMethod());
-            $this->assertFalse($annotation->isMethod());
+            $this->assertFalse($annotation->isProperty());
         }
 
         $this->assertEquals(NULL, $annotations->getClassInfo('not-found-class'));
