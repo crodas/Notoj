@@ -67,7 +67,7 @@ class Notoj
         $cached   = Cache::Get($id, $found);
         if ($found) {
             $isCached = true;
-            return new Annotation($cached);
+            return Annotation::Instantiate(array(), $cached);
         }
         $pzToken = new Tokenizer($content);
         $Parser  = new \Notoj_Parser;
@@ -92,7 +92,7 @@ class Notoj
         }
         $struct = array_merge($buffer, $Parser->body);
         Cache::Set($id, $struct);
-        return new Annotation($struct);
+        return Annotation::Instantiate(array(), $struct);
     }
 
     public static function parseAll() 

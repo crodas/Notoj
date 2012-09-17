@@ -72,8 +72,7 @@ class File
         if ($found && $cached['modtime'] >= $modtime) {
             $this->cached = true;
             foreach ((array)$cached['cache'] as $annotation) {
-                $obj = new Annotation($annotation['data']);
-                $obj->setMetadata($annotation['meta']);
+                $obj = Annotation::Instantiate($annotation['meta'], $annotation['data'], $annotations);
                 $annotations[] = $obj;
             }
             return $annotations;

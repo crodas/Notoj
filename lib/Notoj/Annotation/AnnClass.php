@@ -35,70 +35,34 @@
   +---------------------------------------------------------------------------------+
 */
 
-namespace Notoj;
+namespace Notoj\Annotation;
 
-use ArrayObject;
+use Notoj\Annotation,
+    Notoj\Annotations,
+    RuntimeException,
+    InvalidArgumentException;
 
-class AnnotationBase extends ArrayObject
+/**
+ *  @autoload("Annotation")
+ */
+class AnnClass extends Annotation
 {
-    protected $keys   = array();
-    protected $ikeys  = array();
-    protected $values = array();
-
-    protected function add($key, $value)
+    protected $parent;
+    public function __construct(Array $args, Annotations $parent)
     {
-        $index = count($this->values);
-        $this->values[$index] = $value;
-
-        if (empty($this->keys[$key])) {
-            $this->keys[$key] = array();
-        }
-        $this->keys[$key][] = $index;
-
-        $key = strtolower($key);
-        if (empty($this->ikeys[$key])) {
-            $this->ikeys[$key] = array();
-        }
-        $this->ikeys[$key][] = $index;
+        $this->parent = $parent;
+        parent::__construct($args);
     }
 
-    public function has($index, $caseSensitive = true)
+    public function getProperties()
     {
-        $source = $caseSensitive ? $this->keys : $this->ikeys;
-        if (!$caseSensitive) {
-            $index = strtolower($index);
-        }
-        return array_key_exists($index, $source);
+        $classInfo = $this->parent->getClassInfo($this['class']);
+        return $classInfo['property'];
     }
 
-    public function getOne($index, $caseSensitive = true)
+    public function getMethods()
     {
-        if (!$this->has($index, $caseSensitive)) {
-            return array();
-        }
-
-        $return = array();
-        $source = $caseSensitive ? $this->keys : $this->ikeys;
-        if (!$caseSensitive) {
-            $index = strtolower($index);
-        }
-        return $this->values[$source[$index][0]]['args'];
-    }
-
-    public function get($index, $caseSensitive = true)
-    {
-        if (!$this->has($index, $caseSensitive)) {
-            return array();
-        }
-
-        $return = array();
-        $source = $caseSensitive ? $this->keys : $this->ikeys;
-        if (!$caseSensitive) {
-            $index = strtolower($index);
-        }
-        foreach ($source[$index] as $id) {
-            $return[] = $this->values[$id];
-        }
-        return $return;
+        $classInfo = $this->parent->getClassInfo($this['class']);
+        return $classInfo['property'];
     }
 }

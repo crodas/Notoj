@@ -212,7 +212,7 @@ class simpletest extends \phpunit_framework_testcase
                 die("I'm not implemented yet!");
             }
 
-            $this->assertEquals($refl->getAnnotations(), $annotations['annotations']);
+            $this->assertEquals((array)$refl->getAnnotations(), (array)$annotations['annotations']);
         }
     }
 

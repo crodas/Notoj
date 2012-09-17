@@ -43,7 +43,7 @@ use RuntimeException,
 /**
  *  @autoload("Annotation")
  */
-class Annotations extends AnnotationBase
+class Annotations extends Annotation\Base
 {
     protected $lastId = 0;
     protected $classes = array();

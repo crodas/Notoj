@@ -35,138 +35,70 @@
   +---------------------------------------------------------------------------------+
 */
 
-namespace Notoj;
+namespace Notoj\Annotation;
 
-class Annotation extends Annotation\Base
+use ArrayObject;
+
+class Base extends ArrayObject
 {
-    protected $args;
-    protected $meta = array();
-    
-    public static function Instantiate(Array $meta, Array $args, Annotations $parent = NULL)
+    protected $keys   = array();
+    protected $ikeys  = array();
+    protected $values = array();
+
+    protected function add($key, $value)
     {
-        if (!empty($meta['type'])) {
-            $class = '\\Notoj\\Annotation\\Ann' . $meta['type'];
-            if (class_exists($class)) {
-                $obj = new $class($args, $parent);
-            }
+        $index = count($this->values);
+        $this->values[$index] = $value;
+
+        if (empty($this->keys[$key])) {
+            $this->keys[$key] = array();
         }
-        if (empty($obj)) {
-            $obj = new self($args);
+        $this->keys[$key][] = $index;
+
+        $key = strtolower($key);
+        if (empty($this->ikeys[$key])) {
+            $this->ikeys[$key] = array();
         }
-        if (count($meta)) {
-            $obj->setMetadata($meta);
+        $this->ikeys[$key][] = $index;
+    }
+
+    public function has($index, $caseSensitive = true)
+    {
+        $source = $caseSensitive ? $this->keys : $this->ikeys;
+        if (!$caseSensitive) {
+            $index = strtolower($index);
         }
-        return $obj;
+        return array_key_exists($index, $source);
     }
 
-    public function __construct(Array $args = array())
+    public function getOne($index, $caseSensitive = true)
     {
-        foreach ($args as $arg) {
-            $this->add($arg['method'], $arg);
-        }
-        $this->annotations = $args;
-        parent::__construct($args);
-    }
-
-    public function toCache()
-    {
-        return array('data' => $this->annotations, 'meta' => $this->meta);
-    }
-
-    public function setMetadata(Array $meta)
-    {
-        foreach (array_keys($meta) as $id) {
-            if (is_numeric($id)) {
-                throw new \RuntimeException("Metadata cannot contain numbers as keys");
-            }
-        }
-        $this->meta = array_merge($this->meta, $meta);
-    }
-
-    public function getMetadata()
-    {
-        return $this->meta;
-    }
-
-    public function getKeys()
-    {
-        return array_keys($this->keys);
-    }
-
-    public function isClass()
-    {
-        $meta = $this->meta;
-        return $meta['type'] == 'class';
-    }
-
-    public function isMethod()
-    {
-        $meta = $this->meta;
-        return $meta['type'] == 'method';
-    }
-
-    public function isFunction()
-    {
-        $meta = $this->meta;
-        return $meta['type'] == 'function';
-    }
-
-    public function isProperty()
-    {
-        $meta = $this->meta;
-        return $meta['type'] == 'property';
-    }
-
-    public function getFile()
-    {
-        return $this->meta['file'];
-    }
-
-
-    public function offsetExists($index)
-    {
-        if ($index === 'annotations') {
-            // backwards compatiblility
-            return true;
+        if (!$this->has($index, $caseSensitive)) {
+            return array();
         }
 
-        if (array_key_exists($index, $this->meta)) {
-            return true;
+        $return = array();
+        $source = $caseSensitive ? $this->keys : $this->ikeys;
+        if (!$caseSensitive) {
+            $index = strtolower($index);
         }
-
-        if (array_key_exists($index, $this->annotations)) {
-            return true;
-        }
-
-        return false;
+        return $this->values[$source[$index][0]]['args'];
     }
 
-    public function offsetGet($index)
+    public function get($index, $caseSensitive = true)
     {
-        if ($index === 'annotations') {
-            // backwards compatiblility
-            return $this;
+        if (!$this->has($index, $caseSensitive)) {
+            return array();
         }
 
-        if (array_key_exists($index, $this->meta)) {
-            return $this->meta[$index];
+        $return = array();
+        $source = $caseSensitive ? $this->keys : $this->ikeys;
+        if (!$caseSensitive) {
+            $index = strtolower($index);
         }
-
-        if (array_key_exists($index, $this->annotations)) {
-            return $this->annotations[$index];
+        foreach ($source[$index] as $id) {
+            $return[] = $this->values[$id];
         }
-
-        return NULL;
+        return $return;
     }
-
-    public function offsetSet($index, $value)
-    {
-        throw new \RuntimeException("Annotation objects are read only");
-    }
-
-    public function getAll()
-    {
-        return $this->getIterator();
-    }
-
 }
