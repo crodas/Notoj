@@ -258,7 +258,7 @@ class simpletest extends \phpunit_framework_testcase
 
         $this->assertEquals(NULL, $annotations->getClassInfo('not-found-class'));
         $classInfo = $annotations->getClassInfo('foobar');
-        $this->assertTrue(is_array($classInfo));
+        $this->assertEquals(gettype($classInfo), 'array');
         $this->assertTrue(count($classInfo) > 1);
         $this->assertEquals($classInfo['class']['type'], 'class');
         $this->assertEquals($classInfo['method'][0]['type'], 'method');
