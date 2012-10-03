@@ -39,8 +39,19 @@ namespace Notoj;
 
 class Annotation extends Annotation\Base
 {
+    protected $annotations;
     protected $args;
     protected $meta = array();
+
+
+    public function getInstance($parent = NULL)
+    {
+        if (!empty($this->meta)) {
+            return self::Instantiate($this->meta, $this->annotations ?: array(), $parent);
+        }
+
+        return $this;
+    }
     
     public static function Instantiate(Array $meta, Array $args, Annotations $parent = NULL)
     {

@@ -128,7 +128,7 @@ class File
                         'file'  => $this->path,
                         'line'  => $tokens[$e][2],
                     ));
-                    $annotations[] = $annotation;
+                    $annotations[] = $annotation->getInstance($annotations);
                     $cache[] = $annotation->toCache();
                     break;
                 case T_CLASS:
@@ -157,7 +157,7 @@ class File
                         );
                     }
                     $annotation->setMetadata($def);
-                    $annotations[] = $annotation;
+                    $annotations[] = $annotation->getInstance($annotations);
                     $cache[] = $annotation->toCache();
                     break;
                 }
