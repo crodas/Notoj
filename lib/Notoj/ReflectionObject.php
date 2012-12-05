@@ -73,6 +73,16 @@ class ReflectionObject extends \ReflectionObject
         return new ReflectionMethod($this->getName(), $name);
     }
 
+    public function getParentClass()
+    {
+        $parent = parent::getParentClass();
+        if ($parent) {
+            $parent = new self($parent->getName());
+        }
+        return $parent;
+    }
+
+
     public function getProperties($filter = null) 
     {
         $properties = array();
