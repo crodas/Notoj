@@ -42,6 +42,9 @@ namespace Notoj;
 class ReflectionClass extends \ReflectionClass
 {
     protected $annotation = array();
+    
+    static protected $properties = array();
+    static protected $methods = array();
 
     public function __construct($name) 
     {
@@ -56,6 +59,11 @@ class ReflectionClass extends \ReflectionClass
 
     public function getMethods($filter = null)
     {
+        $class = $this->name;
+        if (array_key_exists($class, self::$methods)) {
+            return self::$methods[$class];
+        }
+
         $methods = array();
         if ($filter === null) {
             $methods = parent::getMethods();
@@ -65,6 +73,8 @@ class ReflectionClass extends \ReflectionClass
         foreach ($methods as $id => $method) {
             $methods[$id] = $this->getMethod($method->GetName());
         }
+        self::$methods[$class] = $methods;
+
         return $methods;
     }
 
@@ -84,6 +94,11 @@ class ReflectionClass extends \ReflectionClass
 
     public function getProperties($filter = null) 
     {
+        $class = $this->name;
+        if (array_key_exists($class, self::$properties)) {
+            return self::$properties[$class];
+        }
+
         $properties = array();
         if ($filter === null) {
             $properties = parent::getProperties();
@@ -93,6 +108,7 @@ class ReflectionClass extends \ReflectionClass
         foreach ($properties as $id => $property) {
             $properties[$id] = $this->getProperty($property->GetName());
         }
+        self::$properties[$class] =  $properties;
         return $properties;
     }
 
