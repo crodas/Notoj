@@ -48,6 +48,7 @@ class Notoj
 
     protected static $annotations = array();
     protected static $parsed = array();
+    protected static $internal_cache = array();
 
     public static function registerAutoloader() {
         require __DIR__ . "/autoload.php";
@@ -63,11 +64,17 @@ class Notoj
             $content = $content->getDocComment();
         }
         $id = sha1($content);
+        if (isset(self::$internal_cache[$id])) {
+            $isCached = true;
+            return self::$internal_cache[$id];
+        }
+
         $isCached = false;
         $cached   = Cache::Get($id, $found);
         if ($found) {
             $isCached = true;
-            return Annotation::Instantiate(array(), $cached);
+            self::$internal_cache[$id] = Annotation::Instantiate(array(), $cached);
+            return self::$internal_cache[$id];
         }
         $pzToken = new Tokenizer($content);
         $Parser  = new \Notoj_Parser;
@@ -92,7 +99,8 @@ class Notoj
         }
         $struct = array_merge($buffer, $Parser->body);
         Cache::Set($id, $struct);
-        return Annotation::Instantiate(array(), $struct);
+        self::$internal_cache[$id] = Annotation::Instantiate(array(), $struct);
+        return self::$internal_cache[$id];
     }
 
     public static function parseAll() 
