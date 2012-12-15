@@ -44,6 +44,8 @@ class Base extends ArrayObject
     protected $keys   = array();
     protected $ikeys  = array();
     protected $values = array();
+    
+    protected $hasCache = array();
 
     protected function add($key, $value)
     {
@@ -64,11 +66,16 @@ class Base extends ArrayObject
 
     public function has($index, $caseSensitive = true)
     {
-        $source = $caseSensitive ? $this->keys : $this->ikeys;
-        if (!$caseSensitive) {
-            $index = strtolower($index);
+        $key = $index . ($caseSensitive ? "_0"  : "_1");
+        if (!array_key_exists($key, $this->hasCache)) {
+            $source = $caseSensitive ? $this->keys : $this->ikeys;
+            if (!$caseSensitive) {
+                $index = strtolower($index);
+            }
+            $this->hasCache[$key] = array_key_exists($index, $source);
         }
-        return array_key_exists($index, $source);
+
+        return $this->hasCache[$key];
     }
 
     public function getOne($index, $caseSensitive = true)

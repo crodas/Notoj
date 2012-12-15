@@ -97,7 +97,9 @@ class File
         for($i=0; $i < $allTokens; $i++) {
             $token = $tokens[$i];
             if (!is_array($token) && $token != '{' && $token != '}') continue;
+
             switch ($token[0]) {
+            case T_CURLY_OPEN:
             case '{':
                 $level++;
                 break;
@@ -143,6 +145,7 @@ class File
                             'file'  => $this->path,
                             'line'  => $tokens[$e][2],
                         );
+
                         if (isset($classes[$level])) {
                             $def['type']     = 'method';
                             $def['function'] = $tokens[$e][1];
