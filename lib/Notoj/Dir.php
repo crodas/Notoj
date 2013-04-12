@@ -95,7 +95,8 @@ class Dir
         }
             
         $this->cached = false;
-        foreach (new DirectoryIterator($path) as $file) {
+        $iter = new RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS);
+        foreach (new RecursiveIteratorIterator($iter) as $file) {
             if (!$file->isfile() || ($filter && !$filter($file))) {
                 continue;
             }
@@ -112,18 +113,11 @@ class Dir
     {
         $this->cached  = true;
         $this->cacheTs = 0;
-        $iter = new RecursiveDirectoryIterator($this->dir);
         if (is_null($annotations)) {
             $annotations = new Annotations;
         }
 
         $annotations->merge($this->readDirectory($this->dir));
-
-        foreach (new RecursiveIteratorIterator($iter) as $file) {
-            if ($file->isdir() && substr($file, -1 != '.')) {
-                $annotations->merge($this->readDirectory($file));
-            }
-        }
 
         return $annotations;
     }
