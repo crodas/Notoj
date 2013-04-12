@@ -117,8 +117,10 @@ class Dir
             $annotations = new Annotations;
         }
 
+        $annotations->merge($this->readDirectory($this->dir));
+
         foreach (new RecursiveIteratorIterator($iter) as $file) {
-            if ($file->isdir() && substr($file, -2) != '..') {
+            if ($file->isdir() && substr($file, -1 != '.')) {
                 $annotations->merge($this->readDirectory($file));
             }
         }
