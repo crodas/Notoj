@@ -61,6 +61,7 @@ class Tokenizer
     protected $keywords = array(
         'true'  => \Notoj_Parser::T_TRUE,
         'false' => \Notoj_Parser::T_FALSE,
+        'null'  => \Notoj_Parser::T_NULL,
     );
 
 

@@ -83,6 +83,7 @@ expr(A) ::= term(B) . { A = B; }
 expr(A) ::= json(B) . { A = B; }
 
 term(A) ::= T_ALPHA(B)  . { A = trim(B); }
+term(A) ::= T_NULL      . { A = NULL; }
 term(A) ::= T_TRUE      . { A = TRUE; }
 term(A) ::= T_FALSE     . { A = FALSE; }
 term(A) ::= T_STRING(B) . { A = B; }
