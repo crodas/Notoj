@@ -93,6 +93,7 @@ term(A) ::= T_MINUS T_NUMBER(B) . { A = -1 * (B+0); }
 json(A) ::= T_CURLY_OPEN json_obj(B) T_CURLY_CLOSE. { A  = B; }
 json(A) ::= T_SUBSCR_OPEN json_arr(B) T_SUBSCR_CLOSE. { A = B; }
 
+json_obj(A) ::= . { A = array(); }
 json_obj(A) ::= json_obj(B) T_COMMA json_obj(C). {
 A = B; 
 foreach (C as $k => $v) {
@@ -102,6 +103,7 @@ foreach (C as $k => $v) {
 }
 json_obj(A) ::= term(B) T_COLON expr(C) . { A = array(B => C); } 
 
+json_arr(A) ::= . { A = array(); }
 json_arr(X) ::= json_arr(A) T_COMMA expr(B) .  { X = A; X[] = B; }
 json_arr(A) ::= expr(B). { A = array(B); }
 /* }}} */
