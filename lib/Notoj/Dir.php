@@ -49,6 +49,7 @@ class Dir
     protected $filter;
     protected $cached;
     protected $cacheTs;
+    protected $files = array();
 
     public function __construct($dirPath)
     {
@@ -59,6 +60,11 @@ class Dir
         $this->filter = function(\splFileInfo $file) {
             return strtolower($file->getExtension()) === "php";
         };
+    }
+
+    public function getFiles()
+    {
+        return $this->files;
     }
 
     public function setFilter(\Closure $callback)
@@ -90,6 +96,7 @@ class Dir
             foreach ($cached['cache'] as $annotation) {
                 $obj = Annotation::Instantiate($annotation['meta'], $annotation['data'], $annotations);
                 $annotations[] = $obj;
+                $this->files[] = $annotation['meta']['file'];
             }
             return $annotations;
         }
@@ -100,6 +107,7 @@ class Dir
             if (!$file->isfile() || ($filter && !$filter($file))) {
                 continue;
             }
+            $this->files[] = realpath($file->getPathname());
             $file = new File($file->getPathname());
             $file->getAnnotations($annotations);
         } 
