@@ -36,11 +36,10 @@
 */
 namespace Notoj;
 
-
 /**
  *  @autoload("Annotation")
  */
-class Notoj
+class Notoj extends Cacheable
 {
     const T_CLASS = 1;
     const T_FUNCTION = 2;
@@ -50,16 +49,12 @@ class Notoj
     protected static $parsed = array();
     protected static $internal_cache = array();
 
-    public static function registerAutoloader() {
-        require __DIR__ . "/autoload.php";
-    }
-
     public static function enableCache($file) 
     {
         Cache::init($file);
     }
 
-    public static function parseDocComment($content, &$isCached = NULL) {
+    public static function parseDocComment($content, &$isCached = NULL, $localCache = NULL) {
         if (is_object($content) && is_callable(array($content, 'getDocComment'))) {
             $content = $content->getDocComment();
         }
@@ -70,7 +65,7 @@ class Notoj
         }
 
         $isCached = false;
-        $cached   = Cache::Get($id, $found);
+        $cached   = Cache::Get($id, $found, $localCache);
         if ($found) {
             $isCached = true;
             self::$internal_cache[$id] = Annotation::Instantiate(array(), $cached);
@@ -98,7 +93,7 @@ class Notoj
             // ignore error
         }
         $struct = array_merge($buffer, $Parser->body);
-        Cache::Set($id, $struct);
+        Cache::Set($id, $struct, $localCache);
         self::$internal_cache[$id] = Annotation::Instantiate(array(), $struct);
         return self::$internal_cache[$id];
     }
@@ -114,135 +109,12 @@ class Notoj
     public function parseFile($file)
     {
         if (empty(self::$parsed[$file])) {
-            self::$parsed[$file] = $this->parse(file_get_contents($file));
+            $parser = new File($file);
+            $parser->localCache = $this->localCache;
+            self::$parsed[$file] = $parser->getAnnotations();
         }
         return self::$parsed[$file];
     }
 
-    public static function query($name) 
-    {
-        if (empty(self::$annotations[$name])) {
-            return array();
-        }
-        return self::$annotations[$name];
-    }
-
-    public function parse($string)
-    {
-        $tokens = token_get_all($string);
-        $total  = count($tokens);
-        $nodes  = array();
-        $classes = array();
-        $level  = 0;
-        $namespace = "\\";
-        for ($i=0; $i < $total; $i++) {
-            $token = $tokens[$i];
-
-            switch ($token[0]) {
-            case T_NAMESPACE:
-                $i += 2;
-                $namespace = "\\" . $tokens[$i][1] . "\\";
-                break;
-
-            case T_CLASS:
-            case T_INTERFACE:
-                for (; $i < $total; $i++) {
-                    switch ($tokens[$i][0]) {
-                    case T_STRING:
-                        $classes[] = array($namespace . $tokens[$i][1], $level);
-                        break 2;
-                    }
-                }
-                break;
-
-            case '{':
-                $level++;
-                break;
-
-            case '}':
-                $level--;
-                if (count($classes) > 0) {
-                    if ($classes[count($classes) - 1][1] ==  $level) {
-                        array_pop($classes);
-                    }
-                }
-
-                break;
-
-            case T_DOC_COMMENT:
-                $type = NULL;
-                $name = "";
-                $zdoc = self::parseDocComment($token[1]);
-                if (count($zdoc) == 0) {
-                    continue;
-                }
-                for ($i++; $i < $total; $i++) {
-                    if (!is_array($tokens[$i])) { --$i; break; }
-                    switch ($tokens[$i][0]) {
-                    case T_FUNCTION:
-                        $type = self::T_FUNCTION;
-                        break;
-                    case T_CLASS:
-                    case T_INTERFACE:
-                        $type = self::T_CLASS;
-                        break;
-                    case T_VARIABLE:
-                        $name = $tokens[$i][1];
-                        $type = self::T_PROPERTY;
-                        break;
-
-                    case T_STRING:
-                        $name = $tokens[$i][1];
-                        if ($type == self::T_CLASS) {
-                            $classes[] = array($namespace . $name, $level);
-                        }
-                        break;
-                    case T_WHITESPACE:
-                    case T_PROTECTED:
-                    case T_STATIC:
-                    case T_PUBLIC:
-                        /* ignored */
-                        break;
-                    default:
-                        --$i;
-                        break 2;
-                    }
-                }
-
-                switch ($type){
-                case self::T_FUNCTION:
-                    if (count($classes) > 0) {
-                        $class = $classes[count($classes) - 1];
-                        $node = new ReflectionMethod($class[0], $name);
-                    } else {
-                        $node = new ReflectionFunction($namespace . $name);
-                    }
-                    break;
-                case self::T_PROPERTY:
-                    if (count($classes) > 0) {
-                        $class = $classes[count($classes) - 1];
-                        $node = new ReflectionProperty($class[0], substr($name,1));
-                    }
-                    break;
-                case self::T_CLASS:
-                    $node = new ReflectionClass($namespace . $name);
-                    break;
-                }
-                if (!empty($node)) {
-                    $nodes[] = $node;
-                    foreach ($zdoc as  $doc) {
-                        $name = $doc['method'];
-                        if (empty(self::$annotations[$name])) {
-                            self::$annotations[$name] = array();
-                        }
-                        self::$annotations[$name][] = $node;
-                    }
-                    unset($node);
-                }
-                break;
-            }
-        }
-        return $nodes;
-    }
 }
 

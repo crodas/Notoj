@@ -2,9 +2,7 @@
 use Notoj\ReflectionClass,
     Notoj\ReflectionMethod;
 
-require __DIR__ . "/../lib/Notoj/Notoj.php";
-
-\Notoj\Notoj::registerAutoloader();
+require __DIR__ . "/../lib/Notoj/autoload.php";
 
 function getReflection($class) 
 {

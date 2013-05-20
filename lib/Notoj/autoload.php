@@ -7,7 +7,6 @@
  *  This is a generated file, do not modify it.
  */
 
-
 spl_autoload_register(function ($class) {
     /*
         This array has a map of (class => file)
@@ -15,92 +14,107 @@ spl_autoload_register(function ($class) {
 
     // classes {{{
     static $classes = array (
-  'notoj\\notoj' => '/Notoj.php',
-  'notoj\\annotation' => '/Annotation.php',
-  'notoj\\file' => '/File.php',
-  'notoj\\annotations' => '/Annotations.php',
-  'notoj\\annotation\\base' => '/Annotation/Base.php',
-  'notoj\\annotation\\annclass' => '/Annotation/AnnClass.php',
   'notoj\\tokenizer' => '/Tokenizer.php',
-  'notoj\\cache' => '/Cache.php',
+  'notoj\\notoj' => '/Notoj.php',
+  'notoj\\reflectionproperty' => '/ReflectionProperty.php',
+  'notoj\\annotations' => '/Annotations.php',
+  'notoj\\annotation' => '/Annotation.php',
+  'notoj\\annotation\\base' => '/Annotation/Base.php',
+  'notoj\\reflectionfunction' => '/ReflectionFunction.php',
+  'notoj\\reflectionmethod' => '/ReflectionMethod.php',
+  'notoj\\file' => '/File.php',
+  'notoj\\cacheable' => '/Cacheable.php',
   'notoj\\dir' => '/Dir.php',
+  'notoj\\reflectionclass' => '/ReflectionClass.php',
+  'notoj\\reflectionobject' => '/ReflectionObject.php',
   'notoj_yytoken' => '/Parser.php',
   'notoj_yystackentry' => '/Parser.php',
   'notoj_parser' => '/Parser.php',
-  'notoj\\reflectionfunction' => '/ReflectionFunction.php',
-  'notoj\\reflectionproperty' => '/ReflectionProperty.php',
-  'notoj\\reflectionmethod' => '/ReflectionMethod.php',
-  'notoj\\reflectionclass' => '/ReflectionClass.php',
-  'notoj\\reflectionobject' => '/ReflectionObject.php',
+  'notoj\\annotation\\annclass' => '/Annotation/AnnClass.php',
+  'notoj\\cache' => '/Cache.php',
 );
     // }}}
 
     // deps {{{
     static $deps    = array (
+  'notoj\\tokenizer' => 
+  array (
+    0 => 'notoj\\cacheable',
+    1 => 'notoj\\annotation\\base',
+    2 => 'notoj\\annotation',
+    3 => 'notoj\\notoj',
+  ),
   'notoj\\notoj' => 
   array (
-    0 => 'notoj\\annotation\\base',
-    1 => 'notoj\\annotation',
-  ),
-  'notoj\\annotation' => 
-  array (
-    0 => 'notoj\\annotation\\base',
-  ),
-  'notoj\\file' => 
-  array (
-    0 => 'notoj\\annotation\\base',
+    0 => 'notoj\\cacheable',
+    1 => 'notoj\\annotation\\base',
     2 => 'notoj\\annotation',
-    3 => 'notoj\\annotations',
-    5 => 'notoj\\notoj',
+  ),
+  'notoj\\reflectionproperty' => 
+  array (
+    0 => 'notoj\\cacheable',
+    1 => 'notoj\\annotation\\base',
+    2 => 'notoj\\annotation',
+    3 => 'notoj\\notoj',
   ),
   'notoj\\annotations' => 
   array (
     0 => 'notoj\\annotation\\base',
     2 => 'notoj\\annotation',
   ),
-  'notoj\\tokenizer' => 
+  'notoj\\annotation' => 
   array (
     0 => 'notoj\\annotation\\base',
-    1 => 'notoj\\annotation',
-    2 => 'notoj\\notoj',
-  ),
-  'notoj\\dir' => 
-  array (
-    0 => 'notoj\\annotation\\base',
-    2 => 'notoj\\annotation',
-    3 => 'notoj\\annotations',
-    5 => 'notoj\\notoj',
-    6 => 'notoj\\file',
   ),
   'notoj\\reflectionfunction' => 
   array (
-    0 => 'notoj\\annotation\\base',
-    1 => 'notoj\\annotation',
-    2 => 'notoj\\notoj',
-  ),
-  'notoj\\reflectionproperty' => 
-  array (
-    0 => 'notoj\\annotation\\base',
-    1 => 'notoj\\annotation',
-    2 => 'notoj\\notoj',
+    0 => 'notoj\\cacheable',
+    1 => 'notoj\\annotation\\base',
+    2 => 'notoj\\annotation',
+    3 => 'notoj\\notoj',
   ),
   'notoj\\reflectionmethod' => 
   array (
-    0 => 'notoj\\annotation\\base',
-    1 => 'notoj\\annotation',
-    2 => 'notoj\\notoj',
+    0 => 'notoj\\cacheable',
+    1 => 'notoj\\annotation\\base',
+    2 => 'notoj\\annotation',
+    3 => 'notoj\\notoj',
+  ),
+  'notoj\\file' => 
+  array (
+    0 => 'notoj\\cacheable',
+    1 => 'notoj\\annotation\\base',
+    3 => 'notoj\\annotation',
+    4 => 'notoj\\annotations',
+    7 => 'notoj\\notoj',
+  ),
+  'notoj\\dir' => 
+  array (
+    0 => 'notoj\\cacheable',
+    2 => 'notoj\\annotation\\base',
+    4 => 'notoj\\annotation',
+    5 => 'notoj\\annotations',
+    8 => 'notoj\\notoj',
+    9 => 'notoj\\file',
   ),
   'notoj\\reflectionclass' => 
   array (
-    0 => 'notoj\\annotation\\base',
-    1 => 'notoj\\annotation',
-    2 => 'notoj\\notoj',
+    0 => 'notoj\\cacheable',
+    1 => 'notoj\\annotation\\base',
+    2 => 'notoj\\annotation',
+    3 => 'notoj\\notoj',
   ),
   'notoj\\reflectionobject' => 
   array (
+    0 => 'notoj\\cacheable',
+    1 => 'notoj\\annotation\\base',
+    2 => 'notoj\\annotation',
+    3 => 'notoj\\notoj',
+  ),
+  'notoj\\annotation\\annclass' => 
+  array (
     0 => 'notoj\\annotation\\base',
     1 => 'notoj\\annotation',
-    2 => 'notoj\\notoj',
   ),
 );
     // }}}

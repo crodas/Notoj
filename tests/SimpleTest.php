@@ -159,33 +159,6 @@ class simpletest extends \phpunit_framework_testcase
         $this->assertEquals(0, count($annotations));
     }
 
-    function testNotojParseFiles() {
-        $notoj = new \Notoj\Notoj;
-        $annotations = $notoj->parseFile(__FILE__);
-        $this->assertTrue(is_array($annotations));
-        $this->assertTrue(count($annotations) >= 4);
-        $hasProperty = false;
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof ReflectionClass) {
-                $this->AssertEquals($annotation->getName(), __CLASS__);
-            } else if ($annotation instanceof ReflectionMethod) {
-                $name = $annotation->getName();
-                $this->assertTrue(is_callable(array($this, $name)));
-            } else if ($annotation instanceof ReflectionProperty) {
-                $hasProperty = true;
-            }
-        }
-        $this->assertTrue($hasProperty);
-    }
-
-    public function testNotojQuery()
-    {
-        \Notoj\Notoj::parseAll();
-        $annotations = \Notoj\Notoj::query('zzexpect');
-        $this->assertEquals(count($annotations), 3);
-    }
-
-
     public static function fileProvider() 
     {
         $args = array();

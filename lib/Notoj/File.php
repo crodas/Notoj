@@ -40,7 +40,7 @@ namespace Notoj;
 /**
  *  @autoload("Notoj", "Annotations")
  */
-class File
+class File extends Cacheable
 {
     /**
      *  @type string
@@ -68,7 +68,7 @@ class File
         }
 
         $modtime = filemtime($this->path);
-        $cached = Cache::get('file://' . $this->path, $found);
+        $cached = Cache::get('file://' . $this->path, $found, $this->localCache);
         if ($found && $cached['modtime'] >= $modtime) {
             $this->cached = true;
             foreach ((array)$cached['cache'] as $annotation) {
@@ -114,7 +114,7 @@ class File
                 $classes[$level+1] = $name;
                 break;
             case T_DOC_COMMENT:
-                $annotation = Notoj::parseDocComment($token[1]);
+                $annotation = Notoj::parseDocComment($token[1], $foo, $this->localCache);
                 $e = $i; /* copy the cursor */
                 while (in_array($tokens[++$e][0], $allow));
                 $token = $tokens[$e];
@@ -181,7 +181,7 @@ class File
         }
 
 
-        $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'));
+        $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'), $this->localCache);
         return $annotations;
     }
 }

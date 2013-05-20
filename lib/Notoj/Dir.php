@@ -44,7 +44,7 @@ use RecursiveDirectoryIterator,
 /**
  *  @autoload("File")
  */
-class Dir
+class Dir extends Cacheable
 {
     protected $filter;
     protected $cached;
@@ -88,7 +88,7 @@ class Dir
         $annotations = new Annotations;
         $filter  = $this->filter;
         $modtime = filemtime($path);
-        $cached  = Cache::get('dir://' . $path);
+        $cached  = Cache::get('dir://' . $path, $foo, $this->localCache);
         if ($cached && $cached['modtime'] >= $modtime) {
             if ($this->cacheTs < $modtime) {
                 $this->cacheTs = $modtime;
@@ -109,11 +109,12 @@ class Dir
             }
             $this->files[] = realpath($file->getPathname());
             $file = new File($file->getPathname());
+            $file->localCache = $this->localCache;
             $file->getAnnotations($annotations);
         } 
 
         $cache = $annotations->toCache();
-        Cache::set('dir://' . $path, compact('modtime', 'cache'));
+        Cache::set('dir://' . $path, compact('modtime', 'cache'), $this->localCache);
         return $annotations;
     }
 

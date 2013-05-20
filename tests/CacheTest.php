@@ -24,8 +24,8 @@ class CacheTest extends \phpunit_framework_testcase
     function testCacheContent() {
         $obj = new ReflectionClass(__CLASS__);
         $arr = $obj->getAnnotations();
-        $this->assertTrue(\Notoj\Cache::save());
-        $this->assertFalse(\Notoj\Cache::save());
+        $this->assertEquals(1, \Notoj\Cache::save());
+        $this->assertEquals(0, \Notoj\Cache::save());
         $content = file_get_contents(CACHE);
         $this->assertTrue(strpos($content, sha1($obj->getDocComment())) !== FALSE);
     }
@@ -38,6 +38,25 @@ class CacheTest extends \phpunit_framework_testcase
         $raw = getReflection(__METHOD__)->getDocComment();
         Notoj::parseDocComment($raw, $isCached);
         $this->assertTrue($isCached);
+    }
+
+    function testLocalCache()
+    {
+        @unlink(__DIR__ . '/tmp.cache');
+        $dir = new \Notoj\Dir(__DIR__);
+        $dir->setCache(__DIR__ . '/tmp.cache');
+        $annotations = $dir->getAnnotations();
+        $this->assertFalse($dir->isCached());
+
+        $dir = new \Notoj\Dir(__DIR__);
+        $dir->setCache(__DIR__ . '/tmp.cache');
+        $annotations = $dir->getAnnotations();
+        $this->assertTrue($dir->isCached());
+
+        $dir = new \Notoj\Dir(__DIR__);
+        $dir->setCache(__DIR__ . '/tmp.cache');
+        $annotations = $dir->getAnnotations();
+        $this->assertTrue($dir->isCached());
     }
 
 }
