@@ -34,25 +34,26 @@ class CacheTest extends \phpunit_framework_testcase
     /** @depends testCacheContent */
     function testLocalCache()
     {
-        $tmp = __DIR__ . '/tmp.cache';
+        $tmp    = __DIR__ . '/tmp.cache';
+        $target = __DIR__ . '/fixtures'; 
         @unlink($tmp);
 
-        $dir = new \Notoj\Dir(__DIR__);
+        $dir = new \Notoj\Dir($target);
         $dir->setCache($tmp);
         $annotations = $dir->getAnnotations();
         $this->assertFalse($dir->isCached());
 
-        $dir = new \Notoj\Dir(__DIR__);
+        $dir = new \Notoj\Dir($target);
         $annotations = $dir->getAnnotations();
         $this->assertFalse($dir->isCached());
 
 
-        $dir = new \Notoj\Dir(__DIR__);
+        $dir = new \Notoj\Dir($target);
         $dir->setCache($tmp);
         $annotations = $dir->getAnnotations();
         $this->assertTrue($dir->isCached());
 
-        $dir = new \Notoj\Dir(__DIR__);
+        $dir = new \Notoj\Dir($target);
         $dir->setCache($tmp);
         $annotations = $dir->getAnnotations();
         $this->assertTrue($dir->isCached());
