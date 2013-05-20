@@ -112,4 +112,9 @@ class Cache
         }
         return $i;
     }
+
+    public static function debug(){
+        //var_dump(self::$path, self::$data);exit;
+    }
+
 }

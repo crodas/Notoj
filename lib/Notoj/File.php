@@ -69,6 +69,7 @@ class File extends Cacheable
 
         $modtime = filemtime($this->path);
         $cached = Cache::get('file://' . $this->path, $found, $this->localCache);
+
         if ($found && $cached['modtime'] >= $modtime) {
             $this->cached = true;
             foreach ((array)$cached['cache'] as $annotation) {
@@ -179,7 +180,6 @@ class File extends Cacheable
                 break;
             }
         }
-
 
         $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'), $this->localCache);
         return $annotations;

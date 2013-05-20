@@ -89,6 +89,7 @@ class Dir extends Cacheable
         $filter  = $this->filter;
         $modtime = filemtime($path);
         $cached  = Cache::get('dir://' . $path, $foo, $this->localCache);
+
         if ($cached && $cached['modtime'] >= $modtime) {
             if ($this->cacheTs < $modtime) {
                 $this->cacheTs = $modtime;
