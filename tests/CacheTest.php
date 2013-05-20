@@ -34,7 +34,6 @@ class CacheTest extends \phpunit_framework_testcase
     /** @depends testCacheContent */
     function testLocalCache()
     {
-        return;
         $tmp = __DIR__ . '/tmp.cache';
         @unlink($tmp);
 
