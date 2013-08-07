@@ -135,7 +135,7 @@ class File extends Cacheable
                         case T_PRIVATE:
                         case T_STATIC:
                         case T_PROTECTED:
-                            $visibility[] = substr(strtolower(token_name(T_PUBLIC)), 2);
+                            $visibility[] = substr(strtolower(token_name($tokens[$x][0])), 2);
                             break;
                         }
                     }
