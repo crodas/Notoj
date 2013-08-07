@@ -114,22 +114,39 @@ class File extends Cacheable
                 $name = $namespace . $tokens[$i][1];
                 $classes[$level+1] = $name;
                 break;
+
             case T_DOC_COMMENT:
                 $annotation = Notoj::parseDocComment($token[1], $foo, $this->localCache);
                 $e = $i; /* copy the cursor */
                 while (in_array($tokens[++$e][0], $allow));
                 $token = $tokens[$e];
+
                 switch ($token[0]) {
                 case T_VARIABLE:
                     if (!isset($classes[$level])) {
                         break;
                     }
+
+                    $visibility = array();
+                    for ($x=$e-1; $x > 0; $x--) {
+                        if (!in_array($tokens[$x][0], $allow)) break;
+                        switch ($tokens[$x][0]) {
+                        case T_PUBLIC:
+                        case T_PRIVATE:
+                        case T_STATIC:
+                        case T_PROTECTED:
+                            $visibility[] = substr(strtolower(token_name(T_PUBLIC)), 2);
+                            break;
+                        }
+                    }
+
                     $annotation->setMetadata(array(
                         'type'     => 'property',
                         'property' => substr($token[1],1),
-                        'class' => $classes[$level],
-                        'file'  => $this->path,
-                        'line'  => $tokens[$e][2],
+                        'class'  => $classes[$level],
+                        'file'   => $this->path,
+                        'line'   => $tokens[$e][2],
+                        'visibility' => $visibility,
                     ));
                     $annotations[] = $annotation->getInstance($annotations);
                     $cache[] = $annotation->toCache();

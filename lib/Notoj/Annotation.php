@@ -39,7 +39,9 @@ namespace Notoj;
 
 class Annotation extends Annotation\Base
 {
+    /** @Test */
     protected $annotations;
+
     protected $args;
     protected $meta = array();
 
