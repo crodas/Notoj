@@ -56,7 +56,7 @@ class Annotation extends Annotation\Base
     public static function Instantiate(Array $meta, Array $args, Annotations $parent = NULL)
     {
         if (!empty($meta['type'])) {
-            $class = '\\Notoj\\Annotation\\Ann' . $meta['type'];
+            $class = '\\Notoj\\Annotation\\Ann' . ucfirst($meta['type']);
             if (class_exists($class)) {
                 $obj = new $class($args, $parent);
             }
