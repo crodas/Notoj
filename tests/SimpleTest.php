@@ -181,6 +181,8 @@ class simpletest extends \phpunit_framework_testcase
                 $refl = new ReflectionClass($annotations['class']);
             } else if ($annotations->isProperty()) {
                 $refl = new ReflectionProperty($annotations['class'], $annotations['property']);
+                $this->assertTrue(is_array($annotations['visibility']));
+                $this->assertTrue(count($annotations['visibility']) >= 1);
             } else if (isset($annotations['function'])) {
                 die("I'm not implemented yet!");
             }
