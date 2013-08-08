@@ -155,6 +155,22 @@ class File extends Cacheable
                 case T_INTERFACE:
                 case $traits:
                 case T_FUNCTION:
+
+                    $visibility = array();
+                    for ($x=$e-1; $x > 0; $x--) {
+                        if (!in_array($tokens[$x][0], $allow)) break;
+                        switch ($tokens[$x][0]) {
+                        case T_PUBLIC:
+                        case T_PRIVATE:
+                        case T_STATIC:
+                        case T_PROTECTED:
+                        case T_ABSTRACT:
+                        case T_FINAL:
+                            $visibility[] = substr(strtolower(token_name($tokens[$x][0])), 2);
+                            break;
+                        }
+                    }
+
                     while ($tokens[$e][0] != T_STRING) $e++;
                     if ($token[0] == T_FUNCTION) {
                         $def  = array(
@@ -177,6 +193,8 @@ class File extends Cacheable
                             'line'  => $tokens[$e][2],
                         );
                     }
+
+                    $def['visibility'] = $visibility;
                     $annotation->setMetadata($def);
                     $annotations[] = $annotation->getInstance($annotations);
                     $cache[] = $annotation->toCache();
