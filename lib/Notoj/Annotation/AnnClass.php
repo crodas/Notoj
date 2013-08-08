@@ -57,12 +57,18 @@ class AnnClass extends Annotation
     public function getProperties()
     {
         $classInfo = $this->parent->getClassInfo($this['class']);
+        if (empty($classInfo['property'])) {
+            return array();
+        }
         return $classInfo['property'];
     }
 
     public function getMethods()
     {
         $classInfo = $this->parent->getClassInfo($this['class']);
-        return $classInfo['property'];
+        if (empty($classInfo['method'])) {
+            return array();
+        }
+        return $classInfo['method'];
     }
 }
