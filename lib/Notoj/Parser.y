@@ -81,6 +81,7 @@ named_arg(A) ::= term(B) T_EQ expr(C) . { A = array(B => C); }
 /* some day we might care about expressions rather than term */
 expr(A) ::= term(B) . { A = B; }
 expr(A) ::= json(B) . { A = B; }
+expr(A) ::= code(C) . { A = new \Notoj\Annotation\Base(C); }
 
 term(A) ::= T_ALPHA(B)  . { A = trim(B); }
 term(A) ::= T_NULL      . { A = NULL; }
