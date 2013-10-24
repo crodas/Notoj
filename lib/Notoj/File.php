@@ -97,6 +97,9 @@ class File extends Cacheable
                     'file'  => $this->path,
                     'visibility' => $object->getMods(),
                 );
+                if ($parent = $object->getParent()) {
+                    $def['parent'] = $object->getParent();
+                }
             } else if ($object instanceof TFunction)  {
                 $def = array(
                     'type'     => 'function',
@@ -121,8 +124,8 @@ class File extends Cacheable
             }
 
             $annotation->setMetadata($def);
-            $annotations[] = $annotation->getInstance($annotations);
-            $cache[] = $annotation->toCache();
+            $annotations[]  = $annotation->getInstance($annotations);
+            $cache[]        = $annotation->toCache();
         }
 
         $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'), $this->localCache);
