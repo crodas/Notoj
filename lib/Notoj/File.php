@@ -86,8 +86,14 @@ class File extends Cacheable
 
         $this->cached = false;
 
-        $parser = new ClassInfo($this->path);
-        $cache  = array();
+        try {
+            $parser = new ClassInfo($this->path);
+        } catch(\Exception $e) {
+            // Internal error, probably parsing buggy/invalid php code
+            return $annotations;
+        }
+
+        $cache = array();
         foreach ($parser->getPHPDocs() as $object) {
             $annotation = Notoj::parseDocComment($object->GetPHPDoc(), $foo, $this->localCache);
             if ($object instanceof TClass) {
