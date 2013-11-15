@@ -47,6 +47,20 @@ class Base extends ArrayObject
     
     protected $hasCache = array();
 
+    public static function __set_state(Array $args)
+    {
+        $self = new self;
+        foreach ($args as $key => $value) {
+            $self->$key = $value;
+        }
+        return $self;
+    }
+
+    public function toCache()
+    {
+        return array('data' => $this->annotations, 'meta' => $this->meta);
+    }
+
     protected function add($key, $value)
     {
         $index = count($this->values);
