@@ -1,9 +1,11 @@
 <?php
 
 /** @XX */
-class xxyyzz {
+class xxyyzz
+{
 }
 
 /** @Foobar(@Foobar('foobar'), 'foobar') */
-class extended extends xxyyzz {
+class extended extends xxyyzz
+{
 }
