@@ -12,7 +12,7 @@
         "crodas/class-info": "~0.1"
     },
     "license": "BSD-4-Clause",
-    "version": "v0.1.8",
+    "version": "v0.1.9",
     "autoload": {
         "psr-0": {
             "Notoj": "lib/"
