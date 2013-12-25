@@ -81,7 +81,7 @@ class AnnClass extends Annotation
             if ($p = $this['parent']->GetParent()) {
                 $args['parent'] = $p;
             }
-            $ann = new self([], $this->parent);
+            $ann = new self(array(), $this->parent);
             $ann->setMetadata($args);
             return $ann;
         }
