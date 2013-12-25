@@ -65,9 +65,25 @@ class AnnClass extends Annotation
 
     public function getParent()
     {
-        $classInfo = $this->parent->getClassInfo($this['parent']);
-        if (empty($classInfo)) {
+        if (empty($this['parent'])) {
             return NULL;
+        }
+        $classInfo = $this->parent->getClassInfo($this['parent']->getName());
+        if (empty($classInfo)) {
+            // This class has no annotation at all,
+            // we will still create an 
+            $args = array(
+                'type'  => 'class',
+                'class' => $this['parent']->getName(),
+                'file'  => $this['parent']->getFile(),
+                'visibility' => $this['parent']->getMods(),
+            );
+            if ($p = $this['parent']->GetParent()) {
+                $args['parent'] = $p;
+            }
+            $ann = new self(array(), $this->parent);
+            $ann->setMetadata($args);
+            return $ann;
         }
         return $classInfo['class'];
     }
