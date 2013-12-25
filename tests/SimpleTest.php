@@ -278,6 +278,23 @@ class simpletest extends \phpunit_framework_testcase
         }
     }
 
+    public function testParentClass2()
+    {
+        $foo = new \Notoj\File(__DIR__ . "/fixtures/extended.php");
+        $annotations = $foo->getAnnotations();
+        foreach ($annotations->get('Foo') as $object) {
+            $parent = $object->getParent()->getParent()->getParent();
+            $this->assertEquals(null, $object->getParent()->getParent()->getParent()->getParent());
+            $this->assertNotNull($parent);
+            $here = 0;
+            foreach($parent as $ann) {
+                $this->assertEquals($ann, array('method' => 'XX', 'args' => NULL));
+                $here++;
+            }
+            $this->assertEquals(1, $here);
+        }
+    }
+
     public function testNestedAnnatations()
     {
         require __DIR__ . '/fixtures/extended.php';
