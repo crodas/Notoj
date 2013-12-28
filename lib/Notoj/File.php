@@ -104,7 +104,24 @@ class File extends Cacheable
                     'visibility' => $object->getMods(),
                 );
                 if ($parent = $object->getParent()) {
-                    $def['parent'] = $parent;
+                    $def['parent'] = array(
+                        'type'  => 'class',
+                        'class' => $parent->getName(),
+                        'file'  => $parent->getFile(),
+                        'visibility' => $parent->getMods(),
+                    );
+
+                    $pdef = &$def['parent'];
+                    while ($parent = $parent->getParent()) {
+                        $array = array(
+                            'type'  => 'class',
+                            'class' => $parent->getName(),
+                            'file'  => $parent->getFile(),
+                            'visibility' => $parent->getMods(),
+                        );
+                        $pdef['parent'] = $array;
+                        $pdef = &$pdef['parent'];
+                    }
                 }
             } else if ($object instanceof TFunction)  {
                 $def = array(
