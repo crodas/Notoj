@@ -69,7 +69,7 @@ class AnnClass extends Annotation
             return NULL;
         }
         $classInfo = $this->parent->getClassInfo($this['parent']['class']);
-        if (empty($classInfo)) {
+        if (empty($classInfo) || empty($classInfo['class'])) {
             // This class has no annotation at all,
             // we will still create an 
             $args = $this['parent'];
