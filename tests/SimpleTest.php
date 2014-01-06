@@ -94,6 +94,7 @@ class simpletest extends \phpunit_framework_testcase
         $this->assertEquals(1, count($annotation));
         $this->assertEquals($annotation[0]['method'], 'zzexpect');
         $this->assertEquals($annotation[0]['args'][0], true);
+        $this->assertEquals($function->getStartLine(), 9);
     }
 
     /** yet another comment {{{
