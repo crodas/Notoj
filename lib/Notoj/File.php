@@ -102,13 +102,16 @@ class File extends Cacheable
                     'class' => $object->getName(),
                     'file'  => $this->path,
                     'visibility' => $object->getMods(),
+                    'line' => $object->getStartLine(),
                 );
+
                 if ($parent = $object->getParent()) {
                     $def['parent'] = array(
                         'type'  => 'class',
                         'class' => $parent->getName(),
                         'file'  => $parent->getFile(),
                         'visibility' => $parent->getMods(),
+                        'line' => $parent->getStartLine(),
                     );
 
                     $pdef = &$def['parent'];
@@ -118,6 +121,7 @@ class File extends Cacheable
                             'class' => $parent->getName(),
                             'file'  => $parent->getFile(),
                             'visibility' => $parent->getMods(),
+                            'line' => $parent->getStartLine(),
                         );
                         $pdef['parent'] = $array;
                         $pdef = &$pdef['parent'];
@@ -125,9 +129,10 @@ class File extends Cacheable
                 }
             } else if ($object instanceof TFunction)  {
                 $def = array(
-                    'type'     => 'function',
-                    'function' => $object->GetName(),
-                    'file'  => $this->path,
+                    'type'      => 'function',
+                    'function'  => $object->GetName(),
+                    'file'      => $this->path,
+                    'line'      => $object->getStartLine(),
                 );
                 if (!empty($object->class)) {
                     $def = array_merge($def, array(
@@ -143,6 +148,7 @@ class File extends Cacheable
                     'property'      => substr($object->getName(), 1),
                     'file'          => $this->path,
                     'visibility'    => $object->GetMods(), 
+                    'line'          => $object->getStartLine(),
                 );
             }
 
