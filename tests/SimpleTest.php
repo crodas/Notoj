@@ -224,7 +224,11 @@ class simpletest extends \phpunit_framework_testcase
         $annotations = $foo->getAnnotations();
 
         $this->assertEquals($annotations->get('fooinvalid'), array());
-        foreach ($annotations->get('foobar') as $annotation) {
+        $this->assertEquals(
+            $annotations->getOne('xxxdasdaysdasadjhasjd,foobar,barfoo'),
+            array('method' => 'foobar', 'args' => null)
+        );
+        foreach ($annotations->get('foobar,barfoo') as $annotation) {
             $this->assertTrue($annotation instanceof \Notoj\Annotation);
             $this->assertTrue( file_exists($annotation->getFile()) );
             $this->assertTrue($annotation->isClass());
