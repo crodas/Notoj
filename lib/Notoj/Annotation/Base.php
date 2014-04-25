@@ -92,8 +92,33 @@ class Base extends ArrayObject
         return $this->hasCache[$key];
     }
 
+    protected function checkManyCalls($index,  $cs, $method, &$return, $single = false)
+    {
+        if (strpos($index, ',')  === false) {
+            return false;
+        }
+        $return = array();
+        foreach (array_filter(array_unique(explode(",", $index))) as $name) {
+            if (!$this->has($name, $cs)) {
+                continue;
+            }
+
+            $value = $this->$method($name, $cs);
+            if ($single) {
+                $return = array('method' => $name, 'args' => $value);
+                return true;
+            }
+            $return = array_merge($return, $value);
+        }
+
+        return true;
+    }
+
     public function getOne($index, $caseSensitive = true)
     {
+        if ($this->checkManyCalls($index, $caseSensitive, 'getOne', $return, true))  {
+            return $return;
+        }
         if (!$this->has($index, $caseSensitive)) {
             return array();
         }
@@ -108,6 +133,9 @@ class Base extends ArrayObject
 
     public function get($index, $caseSensitive = true)
     {
+        if ($this->checkManyCalls($index, $caseSensitive, 'get', $return))  {
+            return $return;
+        }
         if (!$this->has($index, $caseSensitive)) {
             return array();
         }
