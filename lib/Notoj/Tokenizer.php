@@ -36,8 +36,10 @@
 */
 namespace Notoj;
 
+use Notoj_Parser as TParser;
+
 /**
- *  @autoload("Notoj", "\Notoj_Parser")
+ *  @autoload("Notoj", "TParser")
  */ 
 class Tokenizer
 {
@@ -46,22 +48,23 @@ class Tokenizer
     protected $line = 0;
     protected $valid = false;
     protected $symbols = array(
-        '@' => \Notoj_Parser::T_AT,
-        ',' => \Notoj_Parser::T_COMMA,
-        '(' => \Notoj_Parser::T_PAR_LEFT,
-        ')' => \Notoj_Parser::T_PAR_RIGHT,
-        '=' => \Notoj_Parser::T_EQ,
-        '{' => \Notoj_Parser::T_CURLY_OPEN,
-        '}' => \Notoj_Parser::T_CURLY_CLOSE,
-        '[' => \Notoj_Parser::T_SUBSCR_OPEN,
-        ']' => \Notoj_Parser::T_SUBSCR_CLOSE,
-        ':' => \Notoj_Parser::T_COLON,
+        '@' => TParser::T_AT,
+        ',' => TParser::T_COMMA,
+        '(' => TParser::T_PAR_LEFT,
+        ')' => TParser::T_PAR_RIGHT,
+        '=' => TParser::T_EQ,
+        '{' => TParser::T_CURLY_OPEN,
+        '}' => TParser::T_CURLY_CLOSE,
+        '[' => TParser::T_SUBSCR_OPEN,
+        ']' => TParser::T_SUBSCR_CLOSE,
+        ':' => TParser::T_COLON,
+        '>'  => TParser::T_GT,
     );
 
     protected $keywords = array(
-        'true'  => \Notoj_Parser::T_TRUE,
-        'false' => \Notoj_Parser::T_FALSE,
-        'null'  => \Notoj_Parser::T_NULL,
+        'true'  => TParser::T_TRUE,
+        'false' => TParser::T_FALSE,
+        'null'  => TParser::T_NULL,
     );
 
 
@@ -123,7 +126,7 @@ class Tokenizer
                 if ($body[$e] !== $end) {
                     throw new \Exception("Unexpected end of line, expected {$end} in line {$body}");
                 }
-                $found = array(\Notoj_Parser::T_STRING, $data);
+                $found = array(TParser::T_STRING, $data);
                 break;
                 /* }}} */
 
@@ -143,11 +146,11 @@ class Tokenizer
 
                     $e--;
                     if (is_numeric($data[0]) && is_numeric($data)) {
-                        $found = array(\Notoj_Parser::T_NUMBER, $data + 0);
+                        $found = array(TParser::T_NUMBER, $data + 0);
                     } else if (!empty($keywords[strtolower($data)])) {
                         $found = array($keywords[strtolower($data)], $data);
                     } else {
-                        $found = array(\Notoj_Parser::T_ALPHA, $data);
+                        $found = array(TParser::T_ALPHA, $data);
                     }
                 }
                 break;
@@ -183,7 +186,7 @@ class Tokenizer
                     if ($line[$e] !== $end) {
                         throw new \Exception("Unexpected end of line, expected {$end} in line {$line}");
                     }
-                    $found = array(\Notoj_Parser::T_STRING, $data);
+                    $found = array(TParser::T_STRING, $data);
                     break;
                 default:
                     if (!empty($symbols[$line[$e]])) {
@@ -202,11 +205,11 @@ class Tokenizer
                         $e--;
 
                         if (is_numeric($data[0]) && is_numeric($data)) {
-                            $found = array(\Notoj_Parser::T_NUMBER, $data + 0);
+                            $found = array(TParser::T_NUMBER, $data + 0);
                         } else if (!empty($keywords[strtolower($data)])) {
                             $found = array($keywords[strtolower($data)], $data);
                         } else {
-                            $found = array(\Notoj_Parser::T_ALPHA, $data);
+                            $found = array(TParser::T_ALPHA, $data);
                         }
                     }
                     break;
@@ -214,7 +217,7 @@ class Tokenizer
             }
             if ($found) {
                 if (!$this->valid) {
-                    if ($found[0] !== \Notoj_Parser::T_AT) {
+                    if ($found[0] !== TParser::T_AT) {
                         $this->pos = 0;
                         continue;
                     }
