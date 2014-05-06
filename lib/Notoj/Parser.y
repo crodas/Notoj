@@ -75,7 +75,9 @@ args_body(A) ::= expr(C) . { A = array(C); }
 args_body(A) ::= named_arg(C) . { A = C; }
 args_body(A) ::= . { A = array(); }
 
+named_arg(A) ::= term(B) T_EQ T_GT expr(C) . { A = array(B => C); }
 named_arg(A) ::= term(B) T_EQ expr(C) . { A = array(B => C); }
+named_arg(A) ::= term(B) T_COLON expr(C) . { A = array(B => C); }
 
 
 /* some day we might care about expressions rather than term */

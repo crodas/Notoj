@@ -5,6 +5,24 @@ use notoj\reflectionclass,
 /** @test */
 class ArgumentsTest extends \phpunit_framework_testcase
 {
+    /** @some_function(foo:bar, bar:xxx) */
+    function testNamedArgs2() 
+    {
+        $reflection  = getReflection(__METHOD__);
+        $annotations = $reflection->getAnnotations();
+        $args        = $annotations[0]['args'];
+        $this->assertEquals(array('foo' => 'bar', 'bar' => 'xxx'), $args);
+    }
+
+    /** @some_function(foo=bar, bar=xxx) */
+    function testNamedArgs1() 
+    {
+        $reflection  = getReflection(__METHOD__);
+        $annotations = $reflection->getAnnotations();
+        $args        = $annotations[0]['args'];
+        $this->assertEquals(array('foo' => 'bar', 'bar' => 'xxx'), $args);
+    }
+
     /** @some_function(foo="bar", bar="xxx") */
     function testNamedArgs() 
     {
