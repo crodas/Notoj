@@ -225,6 +225,14 @@ class simpletest extends \phpunit_framework_testcase
 
         $this->assertEquals($annotations->get('fooinvalid'), array());
         $this->assertEquals(
+            $annotations->has('xxxdasdaysdasadjhasjd,barfoo'),
+            false
+        );
+        $this->assertEquals(
+            $annotations->has('xxxdasdaysdasadjhasjd,foobar,barfoo'),
+            true
+        );
+        $this->assertEquals(
             $annotations->getOne('xxxdasdaysdasadjhasjd,foobar,barfoo'),
             array('method' => 'foobar', 'args' => null)
         );

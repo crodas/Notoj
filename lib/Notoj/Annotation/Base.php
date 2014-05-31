@@ -80,6 +80,9 @@ class Base extends ArrayObject
 
     public function has($index, $caseSensitive = true)
     {
+        if ($this->checkManyCalls($index, $caseSensitive, 'has', $return, true))  {
+            return !empty($return);
+        }
         $key = $index . ($caseSensitive ? "_0"  : "_1");
         if (!array_key_exists($key, $this->hasCache)) {
             $source = $caseSensitive ? $this->keys : $this->ikeys;
