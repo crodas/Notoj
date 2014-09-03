@@ -28,7 +28,7 @@ class simpletest extends \phpunit_framework_testcase
      *  @test({
      *      "foo": "bar",
      *      "bar": "foobar",
-     *      99: [12, "foobar",
+     *      99: [0, 12, "foobar",
                 [99]]
     **  }, "something else")
      */
@@ -38,7 +38,7 @@ class simpletest extends \phpunit_framework_testcase
             array(
                 'foo' => 'bar',
                 'bar' => 'foobar',
-                99  => array(12, "foobar", array(99)),
+                99  => array(0, 12, "foobar", array(99)),
             ),
             "something else"
         );
