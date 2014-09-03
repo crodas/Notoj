@@ -140,7 +140,7 @@ class Tokenizer
                         $data .= $body[$e++];
                     }
 
-                    if (empty($data)) {
+                    if (strlen($data) == 0) {
                         continue;
                     }
 
@@ -157,78 +157,6 @@ class Tokenizer
             }
         }
 
-        return $found;
-
-        $found = false;
-        for ($i=&$this->line; $i < count($this->lines); $i++) {
-            $line  = $this->lines[$i];
-            $len   = strlen($line);
-            $found = false;
-            for ($e = $this->pos; !$found && $e < $len; $e++) {
-                if ($e == 0) {
-                    // remove the junk
-                    while ($e < $len && in_array($line[$e++], array('/', '*')));
-                    if ($e >= $len) break;
-                    $e--;
-                }
-                switch ($line[$e]) {
-                case '\r': case ' ': case '\f': case '\t':
-                    break;
-                case '"': case "'":
-                    $end  = $line[$e];
-                    $data = "";
-                    while ($e < $len && $line[++$e] !== $end) {
-                        if ($line[$e] == "\\") {
-                            ++$e;
-                        }
-                        $data .= $line[$e];
-                    }
-                    if ($line[$e] !== $end) {
-                        throw new \Exception("Unexpected end of line, expected {$end} in line {$line}");
-                    }
-                    $found = array(TParser::T_STRING, $data);
-                    break;
-                default:
-                    if (!empty($symbols[$line[$e]])) {
-                        $found = array($symbols[$line[$e]], $line[$e]);
-                    } else {
-                        $data = "";
-                        while ($e < $len && empty($symbols[$line[$e]])
-                            && trim($line[$e]) !== "") {
-                            $data .= $line[$e++];
-                        }
-
-                        if (empty($data)) {
-                            continue;
-                        }
-
-                        $e--;
-
-                        if (is_numeric($data[0]) && is_numeric($data)) {
-                            $found = array(TParser::T_NUMBER, $data + 0);
-                        } else if (!empty($keywords[strtolower($data)])) {
-                            $found = array($keywords[strtolower($data)], $data);
-                        } else {
-                            $found = array(TParser::T_ALPHA, $data);
-                        }
-                    }
-                    break;
-                }
-            }
-            if ($found) {
-                if (!$this->valid) {
-                    if ($found[0] !== TParser::T_AT) {
-                        $this->pos = 0;
-                        continue;
-                    }
-                    $this->valid = true;
-                }
-                $this->pos = $e;
-                break;
-            }
-            $this->pos = 0;
-            $this->valid = false;
-        }
         return $found;
     }
 
