@@ -1,8 +1,9 @@
 <?php
+namespace Notoj\Test;
+
 use Notoj\ReflectionClass,
     Notoj\ReflectionMethod;
 
-require __DIR__ . "/../lib/Notoj/autoload.php";
 require __DIR__ . "/../vendor/autoload.php";
 
 function getReflection($class) 

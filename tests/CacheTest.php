@@ -1,4 +1,6 @@
 <?php
+
+namespace Notoj\Test;
 use Notoj\Notoj,
     Notoj\ReflectionClass,
     Notoj\ReflectionObject,
