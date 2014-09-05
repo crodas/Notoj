@@ -1,4 +1,6 @@
 <?php
+namespace Notoj\Test;
+
 use Notoj\ReflectionClass,
     Notoj\ReflectionObject,
     Notoj\ReflectionFunction,
@@ -89,12 +91,12 @@ class simpletest extends \phpunit_framework_testcase
     /* }}} */
 
     public function testFunction() {
-        $function   = new ReflectionFunction('someFunction');
+        $function   = new ReflectionFunction(__NAMESPACE__ . '\someFunction');
         $annotation = $function->getAnnotations();
         $this->assertEquals(1, count($annotation));
         $this->assertEquals($annotation[0]['method'], 'zzexpect');
         $this->assertEquals($annotation[0]['args'][0], true);
-        $this->assertEquals($function->getStartLine(), 9);
+        $this->assertEquals($function->getStartLine(), 11);
     }
 
     /** yet another comment {{{
