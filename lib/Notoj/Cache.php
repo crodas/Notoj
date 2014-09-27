@@ -37,7 +37,7 @@
 
 namespace Notoj;
 
-use crodas\FileUtil\File;
+use crodas\FileUtil\File as zFile;
 
 class Cache
 {
@@ -110,7 +110,7 @@ class Cache
         foreach (self::$path as $ns => $file) {
             if (!self::$isDirty[$ns]) continue;
             self::$isDirty[$ns] = false;
-            File::dumpArray($file, array(
+            zFile::dumpArray($file, array(
                 "version" => self::CACHE_VERSION, 
                 "data" => self::$data[$ns]
             ));

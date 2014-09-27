@@ -9,7 +9,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "crodas/class-info": ">=0.1.9",
+        "crodas/class-info": ">=0.1.10",
         "crodas/file-util": ">=0.1.9"
     },
     "license": "BSD-4-Clause",
