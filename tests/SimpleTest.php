@@ -168,6 +168,7 @@ class simpletest extends \phpunit_framework_testcase
         foreach (glob(__DIR__ . "/../lib/Notoj/*.php") as $file) {
             $args[] = array($file);
         }
+        $args[] = array(__FILE__);
         return array_merge($args, $args);
     }
 
@@ -180,14 +181,24 @@ class simpletest extends \phpunit_framework_testcase
         foreach ($obj->getAnnotations() as $annotations) {
             if ($annotations->isMethod()) {
                 $refl = new ReflectionMethod($annotations['class'], $annotations['function']);
-            } else if ($annotations->isClass()) {
-                $refl = new ReflectionClass($annotations['class']);
+                $meta = $refl->getAnnotations()->getMetadata();
+                $this->assertTrue(is_array($meta['params']));
+                foreach ($meta['params'] as $param) {
+                    $this->assertEquals('$', $param[0]);
+                }
             } else if ($annotations->isProperty()) {
                 $refl = new ReflectionProperty($annotations['class'], $annotations['property']);
                 $this->assertTrue(is_array($annotations['visibility']));
                 $this->assertTrue(count($annotations['visibility']) >= 1);
             } else if (isset($annotations['function'])) {
-                die("I'm not implemented yet!");
+                $refl = new ReflectionFunction($annotations['function']);
+                $meta = $refl->getAnnotations()->getMetadata();
+                $this->assertTrue(is_array($meta['params']));
+                foreach ($meta['params'] as $param) {
+                    $this->assertEquals('$', $param[0]);
+                }
+            } elseif ($annotations->isClass()) {
+                $refl = new ReflectionClass($annotations['class']);
             }
 
             $this->assertEquals((array)$refl->getAnnotations(), (array)$annotations['annotations']);
