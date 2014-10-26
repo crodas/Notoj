@@ -130,6 +130,7 @@ class File extends Cacheable
             } else if ($object instanceof TFunction)  {
                 $def = array(
                     'type'      => 'function',
+                    'params'    => $object->getParameters(),
                     'function'  => $object->GetName(),
                     'file'      => $this->path,
                     'line'      => $object->getStartLine(),
