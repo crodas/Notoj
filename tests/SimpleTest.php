@@ -236,6 +236,9 @@ class simpletest extends \phpunit_framework_testcase
         $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
         $annotations = $foo->getAnnotations();
 
+        $this->AssertTrue($annotations[0]->hasAnnotation('foobar'));
+        $this->AssertFalse($annotations[0]->hasAnnotation('foobardasdas'));
+
         $this->assertEquals($annotations->get('fooinvalid'), array());
         $this->assertEquals(
             $annotations->has('xxxdasdaysdasadjhasjd,barfoo'),
