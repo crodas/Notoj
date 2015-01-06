@@ -54,6 +54,21 @@ class Annotation extends Annotation\Base
 
         return $this;
     }
+
+    public function hasAnnotation($name, $caseSensitive = true)
+    {
+        if (!$caseSensitive) {
+            $name = strtolower($name);
+        }
+        foreach ($this->values as $annotation) {
+            if ($annotation['method'] === $name 
+                || (!$caseSensitive && strtolower($annotation['method']) === $name)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
     
     public static function Instantiate(Array $meta, Array $args, Annotations $parent = NULL)
     {
