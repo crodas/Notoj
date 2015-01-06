@@ -253,7 +253,7 @@ class simpletest extends \phpunit_framework_testcase
             array('method' => 'foobar', 'args' => null)
         );
         foreach ($annotations->get('foobar,barfoo') as $annotation) {
-            $this->assertTrue($annotation instanceof \Notoj\Annotation);
+            $this->assertTrue($annotation instanceof \Notoj\Annotation\Object);
             $this->assertTrue( file_exists($annotation->getFile()) );
             $this->assertTrue($annotation->isClass());
             $this->assertFalse($annotation->isMethod());

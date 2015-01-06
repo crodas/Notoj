@@ -34,10 +34,9 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
+namespace Notoj\Annotation;
 
-namespace Notoj;
-
-class Annotation extends Annotation\Base
+class Object extends Base
 {
     /** @Test */
     protected $annotations;
@@ -70,10 +69,10 @@ class Annotation extends Annotation\Base
         return false;
     }
     
-    public static function Instantiate(Array $meta, Array $args, Annotations $parent = NULL)
+    public static function Instantiate(Array $meta, Array $args, Set $parent = NULL)
     {
         if (!empty($meta['type'])) {
-            $class = '\\Notoj\\Annotation\\Ann' . ucfirst($meta['type']);
+            $class = '\\Notoj\\t' . ucfirst($meta['type']);
             if (class_exists($class)) {
                 $obj = new $class($args, $parent);
             }

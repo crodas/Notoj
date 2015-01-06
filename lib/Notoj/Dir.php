@@ -85,7 +85,7 @@ class Dir extends Cacheable
 
     public function readDirectory($path)
     {
-        $annotations = new Annotations;
+        $annotations = new Annotation\Set;
         $filter  = $this->filter;
         $modtime = filemtime($path);
         $cached  = Cache::get('dir://' . $path, $foo, $this->localCache);
@@ -95,7 +95,7 @@ class Dir extends Cacheable
                 $this->cacheTs = $modtime;
             }
             foreach ($cached['cache'] as $annotation) {
-                $obj = Annotation::Instantiate($annotation['meta'], $annotation['data'], $annotations);
+                $obj = Annotation\Object::Instantiate($annotation['meta'], $annotation['data'], $annotations);
                 $annotations[] = $obj;
                 $this->files[] = $annotation['meta']['file'];
             }
@@ -119,12 +119,12 @@ class Dir extends Cacheable
         return $annotations;
     }
 
-    public function getAnnotations(Annotations $annotations = NULL)
+    public function getAnnotations(Annotation\Set $annotations = NULL)
     {
         $this->cached  = true;
         $this->cacheTs = 0;
         if (is_null($annotations)) {
-            $annotations = new Annotations;
+            $annotations = new Annotation\Set;
         }
 
         $annotations->merge($this->readDirectory($this->dir));

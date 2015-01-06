@@ -42,9 +42,6 @@ use crodas\ClassInfo\ClassInfo,
     crodas\ClassInfo\Definition\TFunction,
     crodas\ClassInfo\Definition\TProperty;
 
-/**
- *  @autoload("Notoj", "Annotations")
- */
 class File extends Cacheable
 {
     /**
@@ -66,10 +63,10 @@ class File extends Cacheable
         return $this->cached;
     }
 
-    public function getAnnotations(Annotations $annotations = NULL)
+    public function getAnnotations(Annotation\Set $annotations = NULL)
     {
         if (is_null($annotations)) {
-            $annotations = new Annotations;
+            $annotations = new Annotation\Set;
         }
 
         $modtime = filemtime($this->path);
@@ -78,7 +75,7 @@ class File extends Cacheable
         if ($found && $cached['modtime'] >= $modtime) {
             $this->cached = true;
             foreach ((array)$cached['cache'] as $annotation) {
-                $obj = Annotation::Instantiate($annotation['meta'], $annotation['data'], $annotations);
+                $obj = Annotation\Object::Instantiate($annotation['meta'], $annotation['data'], $annotations);
                 $annotations[] = $obj;
             }
             return $annotations;

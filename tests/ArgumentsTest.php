@@ -111,7 +111,7 @@ class ArgumentsTest extends \phpunit_framework_testcase
      */
     public function testAnnotationArguments()
     {
-        $f = new \Notoj\Annotation(array());
+        $f = new \Notoj\Annotation\Object(array());
         $f['foo'] = 'bar';
     }
 
@@ -120,7 +120,7 @@ class ArgumentsTest extends \phpunit_framework_testcase
      */
     public function testAnnotationInvalidMeta()
     {
-        $f = new \Notoj\Annotation(array());
+        $f = new \Notoj\Annotation\Object(array());
         $f->setMetadata(array('foo'));
     }
 

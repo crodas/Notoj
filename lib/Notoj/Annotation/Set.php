@@ -34,58 +34,92 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-
 namespace Notoj\Annotation;
 
-use Notoj\Annotation,
-    Notoj\Annotations,
-    RuntimeException,
+use RuntimeException,
     InvalidArgumentException;
 
-/**
- *  @autoload("Annotation")
- */
-class AnnClass extends Annotation
+class Set extends Base
 {
-    protected $parent;
-    public function __construct(Array $args, Annotations $parent)
-    {
-        $this->parent = $parent;
-        parent::__construct($args);
-    }
+    protected $lastId = 0;
+    protected $classes = array();
+    protected $functions = array();
 
-    public function getProperties()
+    public function toCache()
     {
-        $classInfo = $this->parent->getClassInfo($this['class']);
-        if (empty($classInfo['property'])) {
-            return array();
+        $cache = array();
+        foreach ($this as $key => $value) {
+            $cache[$key] = $value->toCache();
         }
-        return $classInfo['property'];
+        return $cache;
     }
 
-    public function getParent()
+    public function getClassInfo($class)
     {
-        if (empty($this['parent'])) {
+        if (empty($this->classes[$class])) {
             return NULL;
         }
-        $classInfo = $this->parent->getClassInfo($this['parent']['class']);
-        if (empty($classInfo) || empty($classInfo['class'])) {
-            // This class has no annotation at all,
-            // we will still create an 
-            $args = $this['parent'];
-            $ann = new self(array(), $this->parent);
-            $ann->setMetadata($args);
-            return $ann;
-        }
-        return $classInfo['class'];
+        return $this->classes[$class];
     }
 
-    public function getMethods()
+    public function getFunction($name)
     {
-        $classInfo = $this->parent->getClassInfo($this['class']);
-        if (empty($classInfo['method'])) {
-            return array();
+        if (empty($this->functions[$name])) {
+            return NULL;
         }
-        return $classInfo['method'];
+        return $this->functions[$name];
     }
+
+    public function offsetSet($index, $value)
+    {
+        if (!($value instanceof Object)) {
+            throw new InvalidArgumentException("Annotations object only accept Annotation objects");
+        }
+        
+        if ($index) {
+            if ($this->offsetExists($index)) {
+                throw new RuntimeException("You cannot modify annotations objects");
+            }
+            if (is_numeric($index)) {
+                throw new InvalidArgumentException("Annotations object do not accept numeric index");
+            }
+        } else {
+            $index = $this->lastId++;
+        }
+
+        foreach ($value->getKeys() as $key) {
+            $this->add($key, $value);
+        }
+
+        $meta = $value->getMetadata();
+        if (!empty($meta)) {
+            switch ($meta['type']) {
+            case 'class':
+            case 'property':
+            case 'method':
+                if (empty($this->classes[$meta['class']])) {
+                    $this->classes[$meta['class']] = array();
+                }
+
+                if ($meta['type'] == 'class') {
+                    $this->classes[$meta['class']][$meta['type']] = $value;
+                } else {
+                    $this->classes[$meta['class']][$meta['type']][] = $value;
+                }
+                break;
+            default:
+                $this->functions[$meta['function']] = $value;
+                break;
+            }
+        }
+        parent::offsetSet($index, $value);
+    }
+
+    public function merge(self $another) 
+    {
+        foreach ($another as $annotation) {
+            $this[] = $annotation;
+        }
+    }
+
 }

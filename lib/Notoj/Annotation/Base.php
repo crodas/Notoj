@@ -34,7 +34,6 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-
 namespace Notoj\Annotation;
 
 use ArrayObject;

@@ -36,82 +36,53 @@
 */
 namespace Notoj;
 
-class Notoj extends Cacheable
+use RuntimeException;
+use InvalidArgumentException;
+
+/**
+ *  @autoload("Annotation")
+ */
+class tClass extends Annotation\Object
 {
-    const T_CLASS = 1;
-    const T_FUNCTION = 2;
-    const T_PROPERTY = 3;
-
-    protected static $annotations = array();
-    protected static $parsed = array();
-    protected static $internal_cache = array();
-
-    public static function enableCache($file) 
+    protected $parent;
+    public function __construct(Array $args, Annotation\Set $parent)
     {
-        Cache::init($file);
+        $this->parent = $parent;
+        parent::__construct($args);
     }
 
-    public static function parseDocComment($content, &$isCached = NULL, $localCache = NULL) {
-        if (is_object($content) && is_callable(array($content, 'getDocComment'))) {
-            $content = $content->getDocComment();
-        }
-        $id = sha1($content);
-        if (isset(self::$internal_cache[$id])) {
-            $isCached = true;
-            return self::$internal_cache[$id];
-        }
-
-        $isCached = false;
-        $cached   = Cache::Get($id, $found, $localCache);
-        if ($found) {
-            $isCached = true;
-            self::$internal_cache[$id] = AnnotationObject::Instantiate(array(), $cached);
-            return self::$internal_cache[$id];
-        }
-        $pzToken = new Tokenizer($content);
-        $Parser  = new \Notoj_Parser;
-        $buffer  = array();
-        $isNew   = true;
-        do {
-            try {
-                $token = $pzToken->getToken($isNew);
-                if (!$token) break;
-                $isNew = false;
-                $Parser->doParse($token[0], $token[1]);
-            } catch (\Exception $e) {
-                $buffer = array_merge($buffer, $Parser->body);
-                $Parser = new \Notoj_Parser;
-                $isNew  = true;
-            }
-        } while(true);
-        try {
-            $Parser->doParse(0, 0);
-        } catch (\Exception $e) {
-            // ignore error
-        }
-        $struct = array_merge($buffer, $Parser->body);
-        Cache::Set($id, $struct, $localCache);
-        self::$internal_cache[$id] = Annotation\Object::Instantiate(array(), $struct);
-        return self::$internal_cache[$id];
-    }
-
-    public static function parseAll() 
+    public function getProperties()
     {
-        $class = new self;
-        foreach (get_included_files() as $file) {
-            $class->parseFile($file);
+        $classInfo = $this->parent->getClassInfo($this['class']);
+        if (empty($classInfo['property'])) {
+            return array();
         }
+        return $classInfo['property'];
     }
 
-    public function parseFile($file)
+    public function getParent()
     {
-        if (empty(self::$parsed[$file])) {
-            $parser = new File($file);
-            $parser->localCache = $this->localCache;
-            self::$parsed[$file] = $parser->getAnnotations();
+        if (empty($this['parent'])) {
+            return NULL;
         }
-        return self::$parsed[$file];
+        $classInfo = $this->parent->getClassInfo($this['parent']['class']);
+        if (empty($classInfo) || empty($classInfo['class'])) {
+            // This class has no annotation at all,
+            // we will still create an 
+            $args = $this['parent'];
+            $ann = new self(array(), $this->parent);
+            $ann->setMetadata($args);
+            return $ann;
+        }
+        return $classInfo['class'];
     }
 
+    public function getMethods()
+    {
+        $classInfo = $this->parent->getClassInfo($this['class']);
+        if (empty($classInfo['method'])) {
+            return array();
+        }
+        return $classInfo['method'];
+    }
 }
-
