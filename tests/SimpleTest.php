@@ -175,6 +175,27 @@ class simpletest extends \phpunit_framework_testcase
     /**
      *  @dataProvider fileProvider
      */
+    public function testNotojFileGetBys($file) 
+    {
+        $obj = new \Notoj\File($file);
+        $methods = array(
+            'getClasses' => 'tClass', 
+            'getFunctions' => 'tFunction', 
+            'getMethods'  => 'tMethod',
+            'getProperties' => 'tProperty',
+        );
+        foreach ($methods as $method  => $class) {
+            $class = "Notoj\\$class";
+            foreach ($obj->$method() as $annotations) {
+                $this->assertTrue($annotations instanceof $class);
+            }
+        }
+    }
+
+
+    /**
+     *  @dataProvider fileProvider
+     */
     public function testNotojFile($file) 
     {
         $obj = new \Notoj\File($file);

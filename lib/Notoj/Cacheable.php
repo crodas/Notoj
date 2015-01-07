@@ -46,4 +46,37 @@ abstract class Cacheable
         return $this;
     }
 
+    protected function getBy($filter, $class)
+    {
+        $objects = array();
+
+        foreach ($this->getAnnotations() as $object) {
+            if ($object instanceof $class) {
+                $objects[] = $object;
+            }
+        }
+
+        return $objects;
+    }
+
+    public function getFunctions($filter = '')
+    {
+        return $this->getBy($filter, 'Notoj\tFunction');
+    }
+
+    public function getMethods($filter = '')
+    {
+        return $this->getBy($filter, 'Notoj\tMethod');
+    }
+
+    public function getProperties($filter = '')
+    {
+        return $this->getBy($filter, 'Notoj\tProperty');
+    }
+
+    public function getClasses($filter = '')
+    {
+        return $this->getBy($filter, 'Notoj\tClass');
+    }
+
 }
