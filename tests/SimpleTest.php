@@ -71,11 +71,11 @@ class simpletest extends \phpunit_framework_testcase
                 $annotation = $method->getAnnotations();
                 $this->assertEquals(3, count($annotation));
                 $this->assertEquals($annotation[0]->getName(), 'zzexpect');
-                $this->assertEquals($annotation[0]->getArgs()[0], true);
+                $this->assertEquals(current($annotation[0]->getArgs()), true);
                 $this->assertequals($annotation[1]->getName(), 'bar');
-                $this->assertEquals($annotation[1]->getArgs()[0], false);
+                $this->assertEquals(current($annotation[1]->getArgs()), false);
                 $this->assertequals($annotation[2]->getName(), 'bar');
-                $this->assertEquals($annotation[2]->getArgs()[0], 'hola que tal?');
+                $this->assertEquals(current($annotation[2]->getArgs()), 'hola que tal?');
             }
         }
 
@@ -84,7 +84,7 @@ class simpletest extends \phpunit_framework_testcase
             if ($property->getName() === 'bar') {
                 $annotation = $property->getAnnotations();
                 $this->assertEquals($annotation[0]->getName(), 'var_name');
-                $this->assertEquals($annotation[0]->getArgs()[0], 'foo');
+                $this->assertEquals(current($annotation[0]->getArgs()), 'foo');
             }
         }
     }
@@ -95,7 +95,7 @@ class simpletest extends \phpunit_framework_testcase
         $annotation = $function->getAnnotations();
         $this->assertEquals(1, count($annotation));
         $this->assertEquals($annotation[0]->getName(), 'zzexpect');
-        $this->assertEquals($annotation[0]->getArgs()[0], true);
+        $this->assertEquals(current($annotation[0]->getArgs()), true);
         $this->assertEquals($function->getStartLine(), 11);
     }
 
@@ -120,11 +120,11 @@ class simpletest extends \phpunit_framework_testcase
                 $annotation = $method->getAnnotations();
                 $this->assertEquals(3, count($annotation));
                 $this->assertEquals($annotation[0]->getName(), 'zzexpect');
-                $this->assertEquals($annotation[0]->getArgs()[0], true);
+                $this->assertEquals(current($annotation[0]->getArgs()), true);
                 $this->assertequals($annotation[1]->getName(), 'bar');
-                $this->assertEquals($annotation[1]->getArgs()[0], false);
+                $this->assertEquals(current($annotation[1]->getArgs()), false);
                 $this->assertequals($annotation[2]->getName(), 'bar');
-                $this->assertEquals($annotation[2]->getArgs()[0], 'hola que tal?');
+                $this->assertEquals(current($annotation[2]->getArgs()), 'hola que tal?');
             }
         }
 
@@ -133,7 +133,7 @@ class simpletest extends \phpunit_framework_testcase
             if ($property->getName() === 'bar') {
                 $annotation = $property->getAnnotations();
                 $this->assertEquals($annotation[0]->getName(), 'var_name');
-                $this->assertEquals($annotation[0]->getArgs()[0], 'foo');
+                $this->assertEquals(current($annotation[0]->getArgs()), 'foo');
             }
         }
     }
