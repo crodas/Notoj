@@ -268,6 +268,17 @@ class simpletest extends \phpunit_framework_testcase
         new \Notoj\File(__DIR__ . "/fixtures/not-found/");
     }
 
+    public function testNotojDirProviders() 
+    {
+        $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
+        $i   = 0;
+        foreach ($foo->getClasses('foobar') as $class) {
+            $this->assertTrue($class instanceof \Notoj\tClass);
+            $i++;
+        }
+        $this->assertTrue($i > 0);
+    }
+
     public function testNotojDir() 
     {
         $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
