@@ -38,7 +38,7 @@ namespace Notoj\Annotation;
 
 use ArrayObject;
 
-class Base extends ArrayObject
+abstract class Base extends ArrayObject
 {
     protected $keys   = array();
     protected $ikeys  = array();
@@ -54,7 +54,7 @@ class Base extends ArrayObject
         }
         return $self;
     }
-
+    
     public function toCache()
     {
         return array('data' => $this->annotations, 'meta' => $this->meta);

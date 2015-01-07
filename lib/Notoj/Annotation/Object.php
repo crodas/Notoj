@@ -39,7 +39,8 @@ namespace Notoj\Annotation;
 class Object extends Base
 {
     /** @Test */
-    protected $annotations;
+    protected $annotations = array();
+    protected $annotationsByName = array();
 
     protected $args;
     protected $meta = array();
@@ -60,8 +61,8 @@ class Object extends Base
             $name = strtolower($name);
         }
         foreach ($this->values as $annotation) {
-            if ($annotation['method'] === $name 
-                || (!$caseSensitive && strtolower($annotation['method']) === $name)) {
+            if ($annotation->getName() === $name 
+                || (!$caseSensitive && $annotation->getName() === $name)) {
                 return true;
             }
         }
@@ -89,7 +90,8 @@ class Object extends Base
     public function __construct(Array $args = array())
     {
         foreach ($args as $arg) {
-            $this->add($arg['method'], $arg);
+            $this->add($arg->getName(), $arg);
+            $this->annotationsByName['@' . $arg->getName()][] = $arg;
         }
         $this->annotations = $args;
         parent::__construct($args);
@@ -149,6 +151,10 @@ class Object extends Base
             return true;
         }
 
+        if ($index[0] === '@') {
+            return !empty($this->annotationsByName[$index]);
+        }
+
         return false;
     }
 
@@ -157,6 +163,10 @@ class Object extends Base
         if ($index === 'annotations') {
             // backwards compatiblility
             return $this;
+        }
+
+        if ($index[0] === '@') {
+            return current($this->annotationsByName[$index]);
         }
 
         if (array_key_exists($index, $this->meta)) {

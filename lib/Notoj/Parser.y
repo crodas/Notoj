@@ -58,11 +58,11 @@ start ::= body.
 body ::= body code(C). { $this->body[] = C; }
 body ::= . { $this->body = array(); }
 
-code(A) ::= T_AT T_ALPHA(B) args(C) . { A = array('method' => trim(B), 'args' => C); }
+code(A) ::= T_AT T_ALPHA(B) args(C) . { A = new \Notoj\Annotation(trim(B), C); }
 
 args(A) ::= T_PAR_LEFT args_body(C) T_PAR_RIGHT . { A = C; }
 args(A) ::= term_array(B) . { A = array(implode(' ', B)); }
-args(A) ::= . { A = NULL; }
+args(A) ::= . { A = array(); }
 
 term_array(A) ::= term_array(B)  catch_all(C) . { A = B; A[] = C; }
 term_array(A) ::= . { A = array(); }
@@ -83,7 +83,7 @@ named_arg(A) ::= term(B) T_COLON expr(C) . { A = array(B => C); }
 /* some day we might care about expressions rather than term */
 expr(A) ::= term(B) . { A = B; }
 expr(A) ::= json(B) . { A = B; }
-expr(A) ::= code(C) . { A = new \Notoj\Annotation\Base(C); }
+expr(A) ::= code(C) . { A = C; }
 
 term(A) ::= T_ALPHA(B)  . { A = trim(B); }
 term(A) ::= T_NULL      . { A = NULL; }

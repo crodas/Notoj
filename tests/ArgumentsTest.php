@@ -12,7 +12,7 @@ class ArgumentsTest extends \phpunit_framework_testcase
     {
         $reflection  = getReflection(__METHOD__);
         $annotations = $reflection->getAnnotations();
-        $args        = $annotations[0]['args'];
+        $args        = $annotations[0]->getArgs();
         $this->assertEquals(array('foo' => 'bar', 'bar' => 'xxx'), $args);
     }
 
@@ -21,7 +21,7 @@ class ArgumentsTest extends \phpunit_framework_testcase
     {
         $reflection  = getReflection(__METHOD__);
         $annotations = $reflection->getAnnotations();
-        $args        = $annotations[0]['args'];
+        $args        = $annotations[0]->getArgs();
         $this->assertEquals(array('foo' => 'bar', 'bar' => 'xxx'), $args);
     }
 
@@ -30,7 +30,7 @@ class ArgumentsTest extends \phpunit_framework_testcase
     {
         $reflection  = getReflection(__METHOD__);
         $annotations = $reflection->getAnnotations();
-        $args        = $annotations[0]['args'];
+        $args        = $annotations[0]->getArgs();
         $this->assertEquals(array('foo' => 'bar', 'bar' => 'xxx'), $args);
     }
 
@@ -39,7 +39,7 @@ class ArgumentsTest extends \phpunit_framework_testcase
     {
         $reflection  = getReflection(__METHOD__);
         $annotations = $reflection->getAnnotations();
-        $args        = $annotations[0]['args'];
+        $args        = $annotations[0]->getArgs();
         $this->assertEquals(array(1.99, 'foo' => 'bar', 'bar' => 'xxx'), $args);
     }
 
@@ -48,7 +48,7 @@ class ArgumentsTest extends \phpunit_framework_testcase
     {
         $reflection  = getReflection(__METHOD__);
         $annotations = $reflection->getAnnotations();
-        $args        = $annotations[0]['args'];
+        $args        = $annotations[0]->getArgs();
         $this->assertEquals(array(1,2,3), $args);
     }
 
@@ -57,7 +57,7 @@ class ArgumentsTest extends \phpunit_framework_testcase
     {
         $reflection  = getReflection(__METHOD__);
         $annotations = $reflection->getAnnotations();
-        $args        = $annotations[0]['args'];
+        $args        = $annotations[0]->getArgs();
         $expected    = array (
           array (
             'foo' => 'bar',
@@ -84,7 +84,7 @@ class ArgumentsTest extends \phpunit_framework_testcase
     {
         $reflection  = getReflection(__METHOD__);
         $annotations = $reflection->getAnnotations();
-        $args        = $annotations[0]['args'];
+        $args        = $annotations[0]->getArgs();
         $expected    = array (
           'foo' => array (
             'foo' => 'bar',
