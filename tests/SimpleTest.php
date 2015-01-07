@@ -179,7 +179,18 @@ class simpletest extends \phpunit_framework_testcase
     {
         $obj = new \Notoj\File($file);
         foreach ($obj->getAnnotations() as $annotations) {
+            $this->AssertEquals(realpath($file), $annotations->GetFile());
             if ($annotations->isMethod()) {
+                $this->assertTrue($annotations instanceof \Notoj\tMethod);
+                $this->assertTrue($annotations->isPublic());
+                if (!preg_match('/Parser.php/', $file)) {
+                    $this->assertEquals(
+                        $annotations->isStatic(),
+                        in_array($annotations->getName(), array('tokenName', 'getInstance')),
+                        $annotations->GetName() . ' on ' . $file
+                    );
+                }
+
                 $refl = new ReflectionMethod($annotations['class'], $annotations['function']);
                 $meta = $refl->getAnnotations()->getMetadata();
                 $this->assertTrue(is_array($meta['params']));
@@ -187,10 +198,12 @@ class simpletest extends \phpunit_framework_testcase
                     $this->assertEquals('$', $param[0]);
                 }
             } else if ($annotations->isProperty()) {
+                $this->assertTrue($annotations instanceof \Notoj\tProperty);
                 $refl = new ReflectionProperty($annotations['class'], $annotations['property']);
                 $this->assertTrue(is_array($annotations['visibility']));
                 $this->assertTrue(count($annotations['visibility']) >= 1);
             } else if (isset($annotations['function'])) {
+                $this->assertTrue($annotations instanceof \Notoj\tFunction);
                 $refl = new ReflectionFunction($annotations['function']);
                 $meta = $refl->getAnnotations()->getMetadata();
                 $this->assertTrue(is_array($meta['params']));
@@ -198,6 +211,9 @@ class simpletest extends \phpunit_framework_testcase
                     $this->assertEquals('$', $param[0]);
                 }
             } elseif ($annotations->isClass()) {
+                $this->assertTrue($annotations instanceof \Notoj\tClass);
+                $this->assertFalse($annotations->isAbstract());
+                $this->assertFalse($annotations->isFinal());
                 $refl = new ReflectionClass($annotations['class']);
             }
 

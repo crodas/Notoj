@@ -36,6 +36,15 @@
 */
 namespace Notoj;
 
-class tMethod extends Annotation\Object
+class tMethod extends Annotation\ClassMember
 {
+    public function isMethod()
+    {
+        return true;
+    }
+
+    public function getName()
+    {
+        return $this['function'];
+    }
 }

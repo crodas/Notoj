@@ -34,17 +34,29 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj;
+namespace Notoj\Annotation;
 
-class tProperty extends Annotation\ClassMember
+class ClassMember extends Object
 {
-    public function isProperty()
+    public function isPrivate()
     {
-        return true;
+        return in_array('private', $this->meta['visibility']);
     }
 
-    public function getName()
+    public function isProtected()
     {
-        return $this['property'];
+        return in_array('protected', $this->meta['visibility']);
+    }
+
+    public function isStatic()
+    {
+        return in_array('static', $this->meta['visibility']);
+    }
+
+    public function isPublic()
+    {
+        return in_array('public', $this->meta['visibility']) ||
+            !($this->isPrivate() || $this->isProtected());
     }
 }
+

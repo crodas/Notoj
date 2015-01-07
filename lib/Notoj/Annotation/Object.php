@@ -115,28 +115,17 @@ class Object extends Base
         return array_keys($this->keys);
     }
 
-    public function isClass()
+    public function __call($name, Array $args)
     {
-        $meta = $this->meta;
-        return $meta['type'] == 'class';
-    }
+        $zname = strtolower($name);
+        if (substr($zname, 0, 2) == 'is') {
+            $zname = substr($zname, 2);
+            if (in_array($zname, array('property', 'class', 'function', 'method'))) {
+                return false;
+            }
+        }
 
-    public function isMethod()
-    {
-        $meta = $this->meta;
-        return $meta['type'] == 'method';
-    }
-
-    public function isFunction()
-    {
-        $meta = $this->meta;
-        return $meta['type'] == 'function';
-    }
-
-    public function isProperty()
-    {
-        $meta = $this->meta;
-        return $meta['type'] == 'property';
+        throw new \BadMethodCallException("$name is not a valid method"); 
     }
 
     public function getFile()

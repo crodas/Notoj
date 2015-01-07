@@ -51,6 +51,11 @@ class tClass extends Annotation\Object
         parent::__construct($args);
     }
 
+    public function getName()
+    {
+        return $this['class'];
+    }
+
     public function getProperties()
     {
         $classInfo = $this->parent->getClassInfo($this['class']);
@@ -75,6 +80,21 @@ class tClass extends Annotation\Object
             return $ann;
         }
         return $classInfo['class'];
+    }
+
+    public function isClass()
+    {
+        return true;
+    }
+
+    public function isAbstract()
+    {
+        return in_array('final', $this->meta['visibility']);
+    }
+
+    public function isFinal()
+    {
+        return in_array('final', $this->meta['visibility']);
     }
 
     public function getMethods()

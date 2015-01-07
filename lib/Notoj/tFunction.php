@@ -38,5 +38,10 @@ namespace Notoj;
 
 class tFunction extends Annotation\Object
 {
+    public function getName()
+    {
+        return $this['function'];
+    }
+
 }
 
