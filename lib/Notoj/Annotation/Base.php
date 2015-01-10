@@ -40,10 +40,9 @@ use ArrayObject;
 
 abstract class Base extends ArrayObject
 {
-    protected $keys   = array();
-    protected $ikeys  = array();
-    protected $values = array();
-    
+    /** @Test */
+    protected $annotations = array();
+    protected $annotationsByName = array();
     protected $hasCache = array();
 
     public static function __set_state(Array $args)
@@ -60,54 +59,44 @@ abstract class Base extends ArrayObject
         return array('data' => $this->annotations, 'meta' => $this->meta);
     }
 
-    protected function add($key, $value)
+    public function getAnnotations()
     {
-        $index = count($this->values);
-        $this->values[$index] = $value;
-
-        if (empty($this->keys[$key])) {
-            $this->keys[$key] = array();
-        }
-        $this->keys[$key][] = $index;
-
-        $key = strtolower($key);
-        if (empty($this->ikeys[$key])) {
-            $this->ikeys[$key] = array();
-        }
-        $this->ikeys[$key][] = $index;
+        return $this->annotations;
     }
 
-    public function has($index, $caseSensitive = true)
+    protected function add(\Notoj\Annotation $value)
     {
-        if ($this->checkManyCalls($index, $caseSensitive, 'has', $return, true))  {
+        $this->annotationsByName[$value->getName()][] = $value;
+        $this->annotations[] = $value;
+    }
+
+    public function has($index)
+    {
+        $index = strtolower($index);
+        if ($this->checkManyCalls($index, 'has', $return, true))  {
             return !empty($return);
         }
-        $key = $index . ($caseSensitive ? "_0"  : "_1");
-        if (!array_key_exists($key, $this->hasCache)) {
-            $source = $caseSensitive ? $this->keys : $this->ikeys;
-            if (!$caseSensitive) {
-                $index = strtolower($index);
-            }
-            $this->hasCache[$key] = array_key_exists($index, $source);
+        if (!array_key_exists($index, $this->hasCache)) {
+            $this->hasCache[$index] = array_key_exists($index, $this->annotations);
         }
 
-        return $this->hasCache[$key];
+        return $this->hasCache[$index];
     }
 
-    protected function checkManyCalls($index,  $cs, $method, &$return, $single = false)
+    protected function checkManyCalls($index,  $method, &$return, $single = false)
     {
         if (strpos($index, ',')  === false) {
             return false;
         }
         $return = array();
         foreach (array_filter(array_unique(explode(",", $index))) as $name) {
-            if (!$this->has($name, $cs)) {
+            if (!$this->has($name)) {
                 continue;
             }
 
-            $value = $this->$method($name, $cs);
+            $value = $this->$method($name);
             if ($single) {
-                $return = array('method' => $name, 'args' => $value);
+                $return = $value;
                 return true;
             }
             $return = array_merge($return, $value);
@@ -116,40 +105,30 @@ abstract class Base extends ArrayObject
         return true;
     }
 
-    public function getOne($index, $caseSensitive = true)
+    public function getOne($index)
     {
-        if ($this->checkManyCalls($index, $caseSensitive, 'getOne', $return, true))  {
+        $index = strtolower($index);
+        if ($this->checkManyCalls($index, 'getOne', $return, true))  {
             return $return;
         }
-        if (!$this->has($index, $caseSensitive)) {
-            return array();
+
+        if (!$this->has($index)) {
+            return NULL;
         }
 
-        $return = array();
-        $source = $caseSensitive ? $this->keys : $this->ikeys;
-        if (!$caseSensitive) {
-            $index = strtolower($index);
-        }
-        return $this->values[$source[$index][0]]['args'];
+        return current($this->annotations[$index]);
     }
 
-    public function get($index, $caseSensitive = true)
+    public function get($index)
     {
-        if ($this->checkManyCalls($index, $caseSensitive, 'get', $return))  {
+        $index = strtolower($index);
+        if ($this->checkManyCalls($index, 'get', $return))  {
             return $return;
         }
-        if (!$this->has($index, $caseSensitive)) {
+        if (!$this->has($index)) {
             return array();
         }
 
-        $return = array();
-        $source = $caseSensitive ? $this->keys : $this->ikeys;
-        if (!$caseSensitive) {
-            $index = strtolower($index);
-        }
-        foreach ($source[$index] as $id) {
-            $return[] = $this->values[$id];
-        }
-        return $return;
+        return $this->annotations[$index];
     }
 }

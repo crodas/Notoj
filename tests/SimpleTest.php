@@ -272,7 +272,7 @@ class simpletest extends \phpunit_framework_testcase
     {
         $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
         $i   = 0;
-        foreach ($foo->getClasses('foobar') as $class) {
+        foreach ($foo->getClasses('FOOBAR') as $class) {
             $this->assertTrue($class instanceof \Notoj\tClass);
             $this->assertTrue(!empty($class['@foobar']));
             $this->assertTrue($class['@foobar'] instanceof \Notoj\Annotation);
@@ -300,7 +300,7 @@ class simpletest extends \phpunit_framework_testcase
         );
         $this->assertEquals(
             $annotations->getOne('xxxdasdaysdasadjhasjd,foobar,barfoo'),
-            array('method' => 'foobar', 'args' => null)
+            new \Notoj\Annotation('foobar')
         );
         foreach ($annotations->get('foobar,barfoo') as $annotation) {
             $this->assertTrue($annotation instanceof \Notoj\Annotation\Object);

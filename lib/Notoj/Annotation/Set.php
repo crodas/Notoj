@@ -87,8 +87,8 @@ class Set extends Base
             $index = $this->lastId++;
         }
 
-        foreach ($value->getKeys() as $key) {
-            $this->add($key, $value);
+        foreach ($value->GetAnnotations() as $ann) {
+            $this->add($ann);
         }
 
         $meta = $value->getMetadata();

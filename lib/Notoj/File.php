@@ -37,10 +37,10 @@
 
 namespace Notoj;
 
-use crodas\ClassInfo\ClassInfo,
-    crodas\ClassInfo\Definition\TClass,
-    crodas\ClassInfo\Definition\TFunction,
-    crodas\ClassInfo\Definition\TProperty;
+use crodas\ClassInfo\ClassInfo;
+use crodas\ClassInfo\Definition\TClass;
+use crodas\ClassInfo\Definition\TFunction;
+use crodas\ClassInfo\Definition\TProperty;
 
 class File extends Cacheable
 {
@@ -75,7 +75,7 @@ class File extends Cacheable
         if ($found && $cached['modtime'] >= $modtime) {
             $this->cached = true;
             foreach ((array)$cached['cache'] as $annotation) {
-                $obj = Annotation\Object::Instantiate($annotation['meta'], $annotation['data'], $annotations);
+                die('cache');
                 $annotations[] = $obj;
             }
             return $annotations;
@@ -93,66 +93,10 @@ class File extends Cacheable
         $cache = array();
         foreach ($parser->getPHPDocs() as $object) {
             $annotation = Notoj::parseDocComment($object->GetPHPDoc(), $foo, $this->localCache);
-            if ($object instanceof TClass) {
-                $def  = array(
-                    'type'  => 'class',
-                    'class' => $object->getName(),
-                    'file'  => $this->path,
-                    'visibility' => $object->getMods(),
-                    'line' => $object->getStartLine(),
-                );
+            $type = __NAMESPACE__ . '\Object\z' . substr(strstr(get_class($object), "\\T"), 2);
 
-                if ($parent = $object->getParent()) {
-                    $def['parent'] = array(
-                        'type'  => 'class',
-                        'class' => $parent->getName(),
-                        'file'  => $parent->getFile(),
-                        'visibility' => $parent->getMods(),
-                        'line' => $parent->getStartLine(),
-                    );
-
-                    $pdef = &$def['parent'];
-                    while ($parent = $parent->getParent()) {
-                        $array = array(
-                            'type'  => 'class',
-                            'class' => $parent->getName(),
-                            'file'  => $parent->getFile(),
-                            'visibility' => $parent->getMods(),
-                            'line' => $parent->getStartLine(),
-                        );
-                        $pdef['parent'] = $array;
-                        $pdef = &$pdef['parent'];
-                    }
-                }
-            } else if ($object instanceof TFunction)  {
-                $def = array(
-                    'type'      => 'function',
-                    'params'    => $object->getParameters(),
-                    'function'  => $object->GetName(),
-                    'file'      => $this->path,
-                    'line'      => $object->getStartLine(),
-                );
-                if (!empty($object->class)) {
-                    $def = array_merge($def, array(
-                        'type'          => 'method',
-                        'visibility'    => $object->GetMods(), 
-                        'class'         => $object->class->getName(),
-                    ));
-                }
-            } else {
-                $def = array(
-                    'class'         => $object->class->getName(),
-                    'type'          => 'property',
-                    'property'      => substr($object->getName(), 1),
-                    'file'          => $this->path,
-                    'visibility'    => $object->GetMods(), 
-                    'line'          => $object->getStartLine(),
-                );
-            }
-
-            $annotation->setMetadata($def);
-            $annotations[]  = $annotation->getInstance($annotations);
-            $cache[]        = $annotation->toCache();
+            $object = new $type($object, $annotation);
+            var_dump($object);exit;
         }
 
         $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'), $this->localCache);

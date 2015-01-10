@@ -65,7 +65,7 @@ class Notoj extends Cacheable
         $cached   = Cache::Get($id, $found, $localCache);
         if ($found) {
             $isCached = true;
-            self::$internal_cache[$id] = AnnotationObject::Instantiate(array(), $cached);
+            self::$internal_cache[$id] = $cached;
             return self::$internal_cache[$id];
         }
         $pzToken = new Tokenizer($content);
@@ -91,7 +91,7 @@ class Notoj extends Cacheable
         }
         $struct = array_merge($buffer, $Parser->body);
         Cache::Set($id, $struct, $localCache);
-        self::$internal_cache[$id] = Annotation\Object::Instantiate(array(), $struct);
+        self::$internal_cache[$id] = $struct;
         return self::$internal_cache[$id];
     }
 
