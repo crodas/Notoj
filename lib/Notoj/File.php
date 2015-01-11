@@ -63,10 +63,10 @@ class File extends Cacheable
         return $this->cached;
     }
 
-    public function getAnnotations(Annotation\Set $annotations = NULL)
+    public function getAnnotations(Annotations $annotations = NULL)
     {
         if (is_null($annotations)) {
-            $annotations = new Annotation\Set;
+            $annotations = new Annotations;
         }
 
         $modtime = filemtime($this->path);
@@ -92,11 +92,9 @@ class File extends Cacheable
 
         $cache = array();
         foreach ($parser->getPHPDocs() as $object) {
-            $annotation = Notoj::parseDocComment($object->GetPHPDoc(), $foo, $this->localCache);
+            $ann = $annotations->merge(Notoj::parseDocComment($object->GetPHPDoc(), $foo, $this->localCache));
             $type = __NAMESPACE__ . '\Object\z' . substr(strstr(get_class($object), "\\T"), 2);
-
-            $object = new $type($object, $annotation);
-            var_dump($object);exit;
+            $object = new $type($object, $ann);
         }
 
         $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'), $this->localCache);

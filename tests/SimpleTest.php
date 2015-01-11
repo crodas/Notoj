@@ -44,7 +44,7 @@ class simpletest extends \phpunit_framework_testcase
             ),
             "something else"
         );
-        $this->assertEquals(1, count($annotations));
+        $this->assertEquals(1, $annotations->count());
         $this->assertEquals("test", $annotations[0]->getName());
         $this->assertEquals($args, $annotations[0]->getArgs());
     }
@@ -61,7 +61,7 @@ class simpletest extends \phpunit_framework_testcase
     {
         $reflection = new ReflectionClass($this);
         $annotation = $reflection->getAnnotations();
-        $this->assertEquals(1, count($annotation));
+        $this->assertEquals(1, $annotation->count());
         $this->assertEquals($annotation[0]->getName(), 'test');
         $this->assertEquals($annotation[0]->getArgs(), array(array("foobar")));
         
@@ -69,7 +69,7 @@ class simpletest extends \phpunit_framework_testcase
             $this->assertTrue($method instanceof \Notoj\ReflectionMethod);
             if ($method->getName() == 'testClass') {
                 $annotation = $method->getAnnotations();
-                $this->assertEquals(3, count($annotation));
+                $this->assertEquals(3, $annotation->count());
                 $this->assertEquals($annotation[0]->getName(), 'zzexpect');
                 $this->assertEquals(current($annotation[0]->getArgs()), true);
                 $this->assertequals($annotation[1]->getName(), 'bar');
@@ -93,7 +93,7 @@ class simpletest extends \phpunit_framework_testcase
     public function testFunction() {
         $function   = new ReflectionFunction(__NAMESPACE__ . '\someFunction');
         $annotation = $function->getAnnotations();
-        $this->assertEquals(1, count($annotation));
+        $this->assertEquals(1, $annotation->count());
         $this->assertEquals($annotation[0]->getName(), 'zzexpect');
         $this->assertEquals(current($annotation[0]->getArgs()), true);
         $this->assertEquals($function->getStartLine(), 11);
@@ -110,7 +110,7 @@ class simpletest extends \phpunit_framework_testcase
     {
         $reflection = new ReflectionObject($this);
         $annotation = $reflection->getAnnotations();
-        $this->assertEquals(1, count($annotation));
+        $this->assertEquals(1, $annotation->count());
         $this->assertEquals($annotation[0]->getName(), 'test');
         $this->assertEquals($annotation[0]->getArgs(), array(array("foobar")));
         
@@ -118,7 +118,7 @@ class simpletest extends \phpunit_framework_testcase
             $this->assertTrue($method instanceof \Notoj\ReflectionMethod);
             if ($method->getName() == 'testObject') {
                 $annotation = $method->getAnnotations();
-                $this->assertEquals(3, count($annotation));
+                $this->assertEquals(3, $annotation->count());
                 $this->assertEquals($annotation[0]->getName(), 'zzexpect');
                 $this->assertEquals(current($annotation[0]->getArgs()), true);
                 $this->assertequals($annotation[1]->getName(), 'bar');
@@ -143,7 +143,7 @@ class simpletest extends \phpunit_framework_testcase
     /** @test( dasda @bar) */
     function testError() {
         $annotations = getReflection(__METHOD__)->getAnnotations();
-        $this->assertEquals(0, count($annotations));
+        $this->assertEquals(0, $annotations->count());
     }
 
     /**
@@ -154,12 +154,12 @@ class simpletest extends \phpunit_framework_testcase
     function testStrErrorNicely()
     {
         $annotations = getReflection(__METHOD__)->getAnnotations();
-        $this->assertEquals(1, count($annotations));
+        $this->assertEquals(1, $annotations->count());
     }
 
     function testNoAnnotations() {
         $annotations = getReflection(__METHOD__)->getAnnotations();
-        $this->assertEquals(0, count($annotations));
+        $this->assertEquals(0, $annotations->count());
     }
 
     public static function fileProvider() 

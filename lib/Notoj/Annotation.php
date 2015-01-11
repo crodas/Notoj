@@ -24,11 +24,6 @@ class Annotation
         return $this->object;
     }
 
-    public function setObject(Object\Base $object)
-    {
-        $this->object = $object;
-    }
-
     public function getArgs()
     {
         return $this->args;

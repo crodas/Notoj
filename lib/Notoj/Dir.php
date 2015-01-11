@@ -85,7 +85,6 @@ class Dir extends Cacheable
 
     public function readDirectory($path)
     {
-        $annotations = new Annotation\Set;
         $filter  = $this->filter;
         $modtime = filemtime($path);
         $cached  = Cache::get('dir://' . $path, $foo, $this->localCache);
@@ -94,14 +93,10 @@ class Dir extends Cacheable
             if ($this->cacheTs < $modtime) {
                 $this->cacheTs = $modtime;
             }
-            foreach ($cached['cache'] as $annotation) {
-                $obj = Annotation\Object::Instantiate($annotation['meta'], $annotation['data'], $annotations);
-                $annotations[] = $obj;
-                $this->files[] = $annotation['meta']['file'];
-            }
-            return $annotations;
+            return unserialize($cached['cache']);
         }
             
+        $annotations = new Annotations;
         $this->cached = false;
         $iter = new RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS);
         foreach (new RecursiveIteratorIterator($iter) as $file) {
@@ -119,12 +114,12 @@ class Dir extends Cacheable
         return $annotations;
     }
 
-    public function getAnnotations(Annotation\Set $annotations = NULL)
+    public function getAnnotations(Annotations $annotations = NULL)
     {
         $this->cached  = true;
         $this->cacheTs = 0;
         if (is_null($annotations)) {
-            $annotations = new Annotation\Set;
+            $annotations = new Annotations;
         }
 
         $annotations->merge($this->readDirectory($this->dir));

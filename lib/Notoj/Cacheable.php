@@ -51,7 +51,7 @@ abstract class Cacheable
         $objects = array();
 
         foreach ($this->getAnnotations() as $object) {
-            var_dump($object);exit;
+            var_dump($object, get_class($this));exit;
             if ($object->getObject() instanceof $class && 
                 (!$filter || $object->has($filter))) {
                 $objects[] = $object;
