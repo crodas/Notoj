@@ -42,7 +42,6 @@ class Notoj extends Cacheable
     const T_FUNCTION = 2;
     const T_PROPERTY = 3;
 
-    protected static $annotations = array();
     protected static $parsed = array();
     protected static $internal_cache = array();
 

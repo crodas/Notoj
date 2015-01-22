@@ -60,6 +60,7 @@ class Dir extends Cacheable
         $this->filter = function(\splFileInfo $file) {
             return strtolower($file->getExtension()) === "php";
         };
+        $this->annotations = $this->doParse();
     }
 
     public function getFiles()
@@ -87,43 +88,43 @@ class Dir extends Cacheable
     {
         $filter  = $this->filter;
         $modtime = filemtime($path);
-        $cached  = Cache::get('dir://' . $path, $foo, $this->localCache);
+        $cached  = Cache::get('dir://' . $path, $has, $this->localCache);
 
-        if ($cached && $cached['modtime'] >= $modtime) {
+        if ($has && $cached['modtime'] >= $modtime) {
             if ($this->cacheTs < $modtime) {
                 $this->cacheTs = $modtime;
             }
-            return unserialize($cached['cache']);
+            return;
+            var_dump($cached);exit;
+
+            return Annotations::fromCache($cached['cache']);
         }
             
         $annotations = new Annotations;
         $this->cached = false;
         $iter = new RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS);
+        $cache = array();
         foreach (new RecursiveIteratorIterator($iter) as $file) {
             if (!$file->isfile() || ($filter && !$filter($file))) {
                 continue;
             }
-            $this->files[] = realpath($file->getPathname());
-            $file = new File($file->getPathname());
-            $file->localCache = $this->localCache;
-            $file->getAnnotations($annotations);
+            $rpath = realpath($file->getPathname());
+            $this->files[] = $rpath;
+            $file = new File($file->getPathname(), $this->localCache);
+            foreach ($file as $annotation) {
+                var_dump($annotation);exit;
+            }
+            $cache[$rpath] = $file->ToCache();
         } 
 
-        $cache = $annotations->toCache();
         Cache::set('dir://' . $path, compact('modtime', 'cache'), $this->localCache);
         return $annotations;
     }
 
-    public function getAnnotations(Annotations $annotations = NULL)
+    protected function doParse()
     {
         $this->cached  = true;
         $this->cacheTs = 0;
-        if (is_null($annotations)) {
-            $annotations = new Annotations;
-        }
-
-        $annotations->merge($this->readDirectory($this->dir));
-
-        return $annotations;
+        $this->readDirectory($this->dir);
     }
 }

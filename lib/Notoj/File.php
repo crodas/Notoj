@@ -50,12 +50,19 @@ class File extends Cacheable
     protected $path;
     protected $cached;
 
-    public function __construct($filePath)
+    public function __construct($filePath, $localCache = null)
     {
         if (!is_file($filePath) || !is_readable($filePath)) {
             throw new \RuntimeException("{$filePath} is not a file or cannot be read");
         }
         $this->path = realpath($filePath);
+        $this->localCache  = $localCache;
+        $this->doParse();
+    }
+
+    public function toCache()
+    {
+        return $this->annotations->toCache();
     }
 
     public function isCached()
@@ -63,19 +70,17 @@ class File extends Cacheable
         return $this->cached;
     }
 
-    public function getAnnotations(Annotations $annotations = NULL)
+    protected function doParse()
     {
-        if (is_null($annotations)) {
-            $annotations = new Annotations;
-        }
-
         $modtime = filemtime($this->path);
         $cached = Cache::get('file://' . $this->path, $found, $this->localCache);
 
+        $annotations = new Annotations;
+
         if ($found && $cached['modtime'] >= $modtime) {
             $this->cached = true;
+            die('cache');
             foreach ((array)$cached['cache'] as $annotation) {
-                die('cache');
                 $annotations[] = $obj;
             }
             return $annotations;
@@ -92,9 +97,10 @@ class File extends Cacheable
 
         $cache = array();
         foreach ($parser->getPHPDocs() as $object) {
-            $ann = $annotations->merge(Notoj::parseDocComment($object->GetPHPDoc(), $foo, $this->localCache));
             $type = __NAMESPACE__ . '\Object\z' . substr(strstr(get_class($object), "\\T"), 2);
-            $object = new $type($object, $ann);
+            $annotations   = Notoj::parseDocComment($object->GetPHPDoc(), $foo, $this->localCache);
+            $this->objs[]  = new $type($object, $annotations);
+            $this->annotations[] = $annotations;
         }
 
         $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'), $this->localCache);

@@ -96,13 +96,7 @@ class Cache
         if (empty(self::$path[$ns])) {
             return false;
         }
-        if (is_array($value)) {
-            foreach ($value as $k => $v) {
-                if (is_object($v) && is_callable(array($v, 'toCache'))) {
-                    $value[$k] = $v->toCache();
-                }
-            }
-        } else if (is_object($value) && is_callable(array($value, 'toCache'))) {
+        if (is_object($value) && is_callable(array($value, 'toCache'))) {
             $value = $value->toCache();
         }
         self::$data[$ns][$key] = $value;

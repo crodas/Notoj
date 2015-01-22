@@ -164,7 +164,7 @@ class simpletest extends \phpunit_framework_testcase
 
     public static function fileProvider() 
     {
-        $args = array();
+        $args = array(array(__FILE__));
         foreach (glob(__DIR__ . "/../lib/Notoj/*.php") as $file) {
             $args[] = array($file);
         }
@@ -179,13 +179,13 @@ class simpletest extends \phpunit_framework_testcase
     {
         $obj = new \Notoj\File($file);
         $methods = array(
-            'getClasses' => 'tClass', 
-            'getFunctions' => 'tFunction', 
-            'getMethods'  => 'tMethod',
-            'getProperties' => 'tProperty',
+            'getClasses' => 'zClass', 
+            'getFunctions' => 'zFunction', 
+            'getMethods'  => 'zMethod',
+            'getProperties' => 'zProperty',
         );
         foreach ($methods as $method  => $class) {
-            $class = "Notoj\\$class";
+            $class = "Notoj\\Object\\$class";
             foreach ($obj->$method() as $annotations) {
                 $this->assertTrue($annotations instanceof $class);
             }
@@ -272,6 +272,7 @@ class simpletest extends \phpunit_framework_testcase
     {
         $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
         $i   = 0;
+        var_dump($foo->getAnnotations(), $foo->getClasses('foobar'));exit;
         foreach ($foo->getClasses('FOOBAR') as $class) {
             $this->assertTrue($class instanceof \Notoj\tClass);
             $this->assertTrue(!empty($class['@foobar']));
