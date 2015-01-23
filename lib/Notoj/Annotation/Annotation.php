@@ -1,12 +1,13 @@
 <?php
 
-namespace Notoj;
+namespace Notoj\Annotation;
 
-class Annotation
+class Annotation extends Common
 {
     protected $name;
     protected $args;
     protected $parent; 
+
 
     public function __construct($name, Array $args = array())
     {

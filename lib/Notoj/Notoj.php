@@ -36,6 +36,9 @@
 */
 namespace Notoj;
 
+use Notoj\Annotation\Annotations;
+use Notoj\Annotation\Annotation;
+
 class Notoj extends Cacheable
 {
     const T_CLASS = 1;

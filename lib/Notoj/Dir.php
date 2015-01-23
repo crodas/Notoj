@@ -37,9 +37,11 @@
 
 namespace Notoj;
 
-use RecursiveDirectoryIterator,
-    DirectoryIterator,
-    RecursiveIteratorIterator;
+use Notoj\Annotation\Annotations;
+use Notoj\Annotation\Annotation;
+use RecursiveDirectoryIterator;
+use DirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  *  @autoload("File")
@@ -60,7 +62,7 @@ class Dir extends Cacheable
         $this->filter = function(\splFileInfo $file) {
             return strtolower($file->getExtension()) === "php";
         };
-        $this->annotations = $this->doParse();
+        $this->doParse();
     }
 
     public function getFiles()
@@ -100,7 +102,6 @@ class Dir extends Cacheable
             return Annotations::fromCache($cached['cache']);
         }
             
-        $annotations = new Annotations;
         $this->cached = false;
         $iter = new RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS);
         $cache = array();
@@ -111,20 +112,22 @@ class Dir extends Cacheable
             $rpath = realpath($file->getPathname());
             $this->files[] = $rpath;
             $file = new File($file->getPathname(), $this->localCache);
-            foreach ($file as $annotation) {
-                var_dump($annotation);exit;
-            }
+
+            $this->annotations->merge($file->getAnnotations());
+            $this->objs = array_merge($this->objs, $file->objs);
+
             $cache[$rpath] = $file->ToCache();
         } 
 
         Cache::set('dir://' . $path, compact('modtime', 'cache'), $this->localCache);
-        return $annotations;
+        return $this->annotations;
     }
 
     protected function doParse()
     {
         $this->cached  = true;
         $this->cacheTs = 0;
+        $this->annotations = new Annotations;
         $this->readDirectory($this->dir);
     }
 }

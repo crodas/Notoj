@@ -3,7 +3,7 @@
 namespace Notoj\Object;
 
 use crodas\ClassInfo\Definition\TProperty;
-use Notoj\Annotations;
+use Notoj\Annotation\Annotations;
 
 class zProperty extends Base
 {

@@ -938,7 +938,7 @@ static public $yy_action = array(
     function yy_r2(){ $this->body = array();     }
 #line 945 "lib/Notoj/Parser.php"
 #line 60 "lib/Notoj/Parser.y"
-    function yy_r3(){ $this->_retvalue = new \Notoj\Annotation(trim($this->yystack[$this->yyidx + -1]->minor), $this->yystack[$this->yyidx + 0]->minor);     }
+    function yy_r3(){ $this->_retvalue = new \Notoj\Annotation\Annotation(trim($this->yystack[$this->yyidx + -1]->minor), $this->yystack[$this->yyidx + 0]->minor);     }
 #line 948 "lib/Notoj/Parser.php"
 #line 62 "lib/Notoj/Parser.y"
     function yy_r4(){ $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor;     }

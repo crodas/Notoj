@@ -58,7 +58,7 @@ start ::= body.
 body ::= body code(C). { $this->body[] = C; }
 body ::= . { $this->body = array(); }
 
-code(A) ::= T_AT T_ALPHA(B) args(C) . { A = new \Notoj\Annotation(trim(B), C); }
+code(A) ::= T_AT T_ALPHA(B) args(C) . { A = new \Notoj\Annotation\Annotation(trim(B), C); }
 
 args(A) ::= T_PAR_LEFT args_body(C) T_PAR_RIGHT . { A = C; }
 args(A) ::= term_array(B) . { A = array(implode(' ', B)); }

@@ -35,39 +35,26 @@
   +---------------------------------------------------------------------------------+
 */
 
-namespace Notoj;
+namespace Notoj\Annotation;
 
 use RuntimeException;
 use InvalidArgumentException;
 use ArrayAccess;
 use Iterator;
+use Notoj\Object\Base;
 
-class Annotations implements ArrayAccess, Iterator
+class Annotations extends Common implements ArrayAccess, Iterator
 {
     protected $object;
     protected $aIndex = array();
     protected $annotations;
-    protected $merges = array();
+    protected $merged = false;
     protected $index = 0;
 
-    public function isClass()
+    public function merge(Annotations $a)
     {
-        return $this->object instanceof Object\zClass;
-    }
-
-    public function isFunction()
-    {
-        return $this->object instanceof Object\zFunction;
-    }
-
-    public function isProperty()
-    {
-        return $this->object instanceof Object\zProperty;
-    }
-
-    public function isMethod()
-    {
-        return $this->object instanceof Object\zMethod;
+        $this->annotations = array_merge($this->annotations, $a->annotations);
+        $this->merged  = true;
     }
 
     public function valid()
@@ -97,15 +84,18 @@ class Annotations implements ArrayAccess, Iterator
 
     public function current()
     {
-        if (!empty($this->object)) {
-            return $this->annotations[$this->index]->setObject($this->object);
-        }
         return $this->annotations[$this->index];
     }
 
-    public function setObject(Object\Base $obj)
+    public function setObject(Base $obj)
     {
+        if ($this->merged) {
+            throw new RuntimeException("You cannot setObject() on a merged object");
+        }
         $this->object = $obj;
+        foreach ($this->annotations as $ann) {
+            $ann->object = $obj;
+        }
         return $this;
     }
 
@@ -146,18 +136,16 @@ class Annotations implements ArrayAccess, Iterator
         throw new \RuntimeException("You are not allowed");
     }
 
-    protected function buildIndex()
+    protected function buildIndex($rebuild = false)
     {
+        if ($rebuild) {
+            $this->aIndex = array();
+        }
+
         if (empty($this->aIndex)) {
             foreach ($this->annotations as $ann) {
                 $this->aIndex[$ann->getName()][] = $ann;
             }
-        }
-
-        $merge = end($this->merges);
-        if ($merge) {
-            $merge->buildIndex();
-            $this->aIndex = array_merge($this->aIndex, $merge->aIndex);
         }
     }
 

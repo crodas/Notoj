@@ -41,6 +41,8 @@ use crodas\ClassInfo\ClassInfo;
 use crodas\ClassInfo\Definition\TClass;
 use crodas\ClassInfo\Definition\TFunction;
 use crodas\ClassInfo\Definition\TProperty;
+use Notoj\Annotation\Annotations;
+use Notoj\Annotation\Annotation;
 
 class File extends Cacheable
 {
@@ -75,7 +77,7 @@ class File extends Cacheable
         $modtime = filemtime($this->path);
         $cached = Cache::get('file://' . $this->path, $found, $this->localCache);
 
-        $annotations = new Annotations;
+        $this->annotations = new Annotations;
 
         if ($found && $cached['modtime'] >= $modtime) {
             $this->cached = true;
@@ -92,7 +94,7 @@ class File extends Cacheable
             $parser = new ClassInfo($this->path);
         } catch(\Exception $e) {
             // Internal error, probably parsing buggy/invalid php code
-            return $annotations;
+            return;
         }
 
         $cache = array();
@@ -100,10 +102,10 @@ class File extends Cacheable
             $type = __NAMESPACE__ . '\Object\z' . substr(strstr(get_class($object), "\\T"), 2);
             $annotations   = Notoj::parseDocComment($object->GetPHPDoc(), $foo, $this->localCache);
             $this->objs[]  = new $type($object, $annotations);
-            $this->annotations[] = $annotations;
+            $this->annotations->merge($annotations);
         }
 
         $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'), $this->localCache);
-        return $annotations;
+        return;
     }
 }
