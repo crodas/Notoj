@@ -38,6 +38,11 @@ abstract class Base implements \ArrayAccess
     }
 
 
+    public function getName()
+    {
+        return $this->object->getName();
+    }
+
     public function has($selector)
     {
         return $this->annotations->has($selector);

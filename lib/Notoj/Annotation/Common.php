@@ -2,11 +2,16 @@
 
 namespace Notoj\Annotation;
 
-use Notoj\Object\Base;
+use Notoj\Object;
 
 abstract class Common 
 {
     protected $object;
+
+    public function getObjectName()
+    {
+        return $this->object->getName();
+    }
 
     public function isClass()
     {

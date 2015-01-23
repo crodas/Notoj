@@ -308,51 +308,37 @@ class simpletest extends \phpunit_framework_testcase
             $this->assertFalse($annotation->isMethod());
             $this->assertFalse($annotation->isProperty());
         }
-
-        $this->assertEquals(NULL, $annotations->getClassInfo('not-found-class'));
-        $classInfo = $annotations->getClassInfo('foobar');
-        $this->assertEquals(gettype($classInfo), 'array');
-        $this->assertTrue(count($classInfo) > 1);
-        $this->assertEquals($classInfo['class']['type'], 'class');
-        $this->assertEquals($classInfo['method'][0]['type'], 'method');
     }
 
     public function testNotojFileNamespaces() 
     {
         $foo = new \Notoj\File(__DIR__ . "/fixtures/namespace.php");
-        $annotations = $foo->getAnnotations();
-        foreach ($annotations as $id => $annotation) {
+        foreach ($foo as $id => $annotation) {
             if ($id < 2) {
-                $expected = explode("\\", isset($annotation['class']) ? $annotation['class'] : $annotation['function']);
+                $expected = explode("\\", $annotation->getObjectName());
                 $expected = array_pop($expected);
-            } else if ($annotation->isClass()) {
-                $expected = $annotation['class'];
             } else {
-                $expected = $annotation['function'];
+                $expected = $annotation->getObjectName();
             }
-            foreach ($annotation['annotations'] as $ann) {
-                $this->assertEquals($ann->getName(), $expected);
-            }
-            $this->assertEquals($annotation->get('fooobar'), array());
-            if ($annotation->has('foobar')) {
-                $this->assertEquals($annotation->get('foobar'), array(new \Notoj\Annotation('foobar', array())));
-            }
+            $this->assertEquals($annotation->getName(), $expected);
         }
+        
+        $this->assertEquals($foo->get('fooobar'), array());
+        $this->assertTrue($foo->has('foobar'));
     }
 
     public function testParentClass()
     {
         $foo = new \Notoj\File(__DIR__ . "/fixtures/extended.php");
-        $annotations = $foo->getAnnotations();
-        foreach ($annotations->get('Foobar') as $object) {
-            $parent = $object->getParent();
+        foreach ($foo->getClasses('Foobar') as $class) {
+            $parent = $class->GetParent($foo);
             $this->assertNotNull($parent);
-            $here = 0;
-            foreach($parent as $ann) {
-                $this->assertEquals($ann, new \Notoj\Annotation('XX'));
-                $here++;
+            $total = 0;
+            foreach ($parent->getAnnotations() as $annotation) {
+                $this->assertEquals($annotation->Getname(), 'xx');
+                $total++;
             }
-            $this->assertEquals(1, $here);
+            $this->assertEquals(1, $total);
         }
     }
 

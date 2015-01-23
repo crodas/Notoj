@@ -51,6 +51,11 @@ class Annotations extends Common implements ArrayAccess, Iterator
     protected $merged = false;
     protected $index = 0;
 
+    public function getObjectName()
+    {
+        return $this->object->getName();
+    }
+
     public function merge(Annotations $a)
     {
         $this->annotations = array_merge($this->annotations, $a->annotations);

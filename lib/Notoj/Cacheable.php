@@ -74,6 +74,18 @@ abstract class Cacheable implements \IteratorAggregate
         return $this;
     }
 
+    public function getByName($name, $type)
+    {
+        $name = strtolower($name);
+        foreach ($this->objs as $obj) {
+            if ($obj instanceof $type && $obj->getName() == $name) {
+                return $obj;
+            }
+        }
+
+        return NULL;
+    }
+
     protected function getBy($filter, $class)
     {
         $objects = array();
@@ -106,6 +118,27 @@ abstract class Cacheable implements \IteratorAggregate
     public function getClasses($filter = '')
     {
         return $this->getBy($filter, 'Notoj\Object\zClass');
+    }
+
+    public function getPropertyByName($name)
+    {
+        return $this->getByName($name, 'Notoj\Object\zProperty');
+    }
+
+
+    public function getMethodByName($name)
+    {
+        return $this->getByName($name, 'Notoj\Object\zMethod');
+    }
+
+    public function getFunctionByName($name)
+    {
+        return $this->getByName($name, 'Notoj\Object\zFunction');
+    }
+
+    public function getClassByName($name)
+    {
+        return $this->getByName($name, 'Notoj\Object\zClass');
     }
 
 }

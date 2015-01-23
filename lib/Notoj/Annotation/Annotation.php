@@ -8,6 +8,11 @@ class Annotation extends Common
     protected $args;
     protected $parent; 
 
+    public function getObjectName()
+    {
+        return $this->parent->getObjectName();
+    }
+
 
     public function __construct($name, Array $args = array())
     {
