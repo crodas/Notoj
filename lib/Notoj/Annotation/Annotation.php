@@ -38,6 +38,16 @@ class Annotation extends Common
         return $this->parent;
     }
 
+    public function getFile()
+    {
+        return $this->parent->getFile();
+    }
+
+    public function getObject()
+    {
+        return $this->parent->getObject();
+    }
+
     public function getArgs()
     {
         return $this->args;

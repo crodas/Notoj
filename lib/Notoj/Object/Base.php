@@ -19,26 +19,12 @@ abstract class Base implements \ArrayAccess
 
     public function offsetExists($name)
     {
-        $name = strtolower($name);
-        foreach ($this->annotations as $annotation) {
-            if ($annotation->getName() == $name) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->annotations->has($name);
     }
 
     public function offsetGet($name)
     {
-        $name = strtolower($name);
-        foreach ($this->annotations as $annotation) {
-            if ($annotation->getName() == $name) {
-                return $annotation;
-            }
-        }
-
-        return NULL;
+        return $this->annotations->getOne($name);
     }
 
     public function getFile()
@@ -46,15 +32,15 @@ abstract class Base implements \ArrayAccess
         return $this->object->getFile();
     }
 
+    public function get($selector)
+    {
+        return $this->annotations->get($selector);
+    }
+
+
     public function has($selector)
     {
-        foreach ($this->annotations as $ann) {
-            if ($ann->has($selector)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->annotations->has($selector);
     }
 
     public function getAnnotations()

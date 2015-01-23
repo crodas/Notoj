@@ -39,8 +39,24 @@ namespace Notoj;
 abstract class Cacheable implements \IteratorAggregate 
 {
     protected $localCache;
-    protected $annotations = array();
+    protected $annotations;
     protected $objs = array();
+
+    public function getOne($name)
+    {
+        return $this->annotations->getOne($name);
+    }
+
+
+    public function get($name)
+    {
+        return $this->annotations->get($name);
+    }
+
+    public function has($name)
+    {
+        return $this->annotations->has($name);
+    }
 
     public function getIterator()
     {
@@ -63,7 +79,8 @@ abstract class Cacheable implements \IteratorAggregate
         $objects = array();
 
         foreach ($this->objs as $obj) {
-            if ($obj instanceof $class) {
+            if ($obj instanceof $class &&
+                (!$filter || $obj->has($filter))) {
                 $objects[] = $obj;
             }
         }

@@ -57,6 +57,59 @@ class Annotations extends Common implements ArrayAccess, Iterator
         $this->merged  = true;
     }
 
+    public function has($name)
+    {
+        if ($this->handleMultiple($name, __FUNCTION__, $return)) {
+            return $return;
+        }
+        return !empty($this->aIndex[$name]);
+    }
+
+    protected function hasMulti(array $names)
+    {
+        foreach ($names as $name) {
+            if (!empty($this->aIndex[$name])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function handleMultiple(&$name, $method, &$return)
+    {
+        $this->buildIndex();
+        $name = trim(strtolower($name));
+
+        if (strpos($name, ',') === -1) {
+            return false;
+        }
+
+        $method .= "Multi";
+        $return  = $this->$method(explode(",", $name));
+
+        return true;
+    }
+
+    protected function getOneMulti(array $names)
+    {
+        foreach ($names as $name) {
+            if (!empty($this->aIndex[$name])) {
+                return current($this->aIndex[$name]);
+            }
+        }
+
+        return false;
+    }
+
+    public function getOne($name)
+    {
+        if ($this->handleMultiple($name, __FUNCTION__, $return)) {
+            return $return;
+        }
+        return current($this->aIndex[$name]);
+    }
+
     public function valid()
     {
         return array_key_exists($this->index, $this->annotations);
@@ -82,6 +135,11 @@ class Annotations extends Common implements ArrayAccess, Iterator
         return $this->object->getFile();
     }
 
+    public function getObject()
+    {
+        return $this->object;
+    }
+
     public function current()
     {
         return $this->annotations[$this->index];
@@ -104,16 +162,25 @@ class Annotations extends Common implements ArrayAccess, Iterator
         return array_key_exists($index, $this->annotations);
     }
 
-    public function get($selector)
+    public function getMulti($selector)
     {
-        $aReturn = array();
-        foreach (explode(",", strtolower($selector)) as $sel) {
+        $aResult = array();
+        foreach ($selector as $sel) {
             if (!empty($this->aIndex[$sel])) {
-                $aReturn = array_merge($aReturn, $this->aIndex[$sel]);
+                $aResult = array_merge($aResult, $this->aIndex[$sel]);
             }
         }
 
-        return $aReturn;
+        return $aResult;
+    }
+
+    public function get($selector)
+    {
+        if ($this->handleMultiple($selector, __FUNCTION__, $return)) {
+            return $return;
+        }
+
+        return $this->aIndex[$selector];
     }
 
     public function count()

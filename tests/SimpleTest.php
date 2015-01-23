@@ -284,26 +284,25 @@ class simpletest extends \phpunit_framework_testcase
     public function testNotojDir() 
     {
         $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
-        $annotations = $foo->getAnnotations();
 
-        $this->AssertTrue($annotations[0]->hasAnnotation('foobar'));
-        $this->AssertFalse($annotations[0]->hasAnnotation('foobardasdas'));
+        $this->AssertTrue($foo->has('foobar'));
+        $this->AssertFalse($foo->has('foobardasdas'));
 
-        $this->assertEquals($annotations->get('fooinvalid'), array());
+        $this->assertEquals($foo->get('fooinvalid'), array());
         $this->assertEquals(
-            $annotations->has('xxxdasdaysdasadjhasjd,barfoo'),
+            $foo->has('xxxdasdaysdasadjhasjd,barfoo'),
             false
         );
         $this->assertEquals(
-            $annotations->has('xxxdasdaysdasadjhasjd,foobar,barfoo'),
+            $foo->has('xxxdasdaysdasadjhasjd,foobar,barfoo'),
             true
         );
         $this->assertEquals(
-            $annotations->getOne('xxxdasdaysdasadjhasjd,foobar,barfoo'),
-            new \Notoj\Annotation('foobar')
+            $foo->getOne('xxxdasdaysdasadjhasjd,foobar,barfoo')->getName(),
+            'foobar'
         );
-        foreach ($annotations->get('foobar,barfoo') as $annotation) {
-            $this->assertTrue($annotation instanceof \Notoj\Annotation\Object);
+        foreach ($foo->get('foobar,barfoo') as $annotation) {
+            $this->assertTrue($annotation->getObject() instanceof \Notoj\Object\Base);
             $this->assertTrue( file_exists($annotation->getFile()) );
             $this->assertTrue($annotation->isClass());
             $this->assertFalse($annotation->isMethod());
