@@ -345,17 +345,16 @@ class simpletest extends \phpunit_framework_testcase
     public function testParentClass2()
     {
         $foo = new \Notoj\File(__DIR__ . "/fixtures/extended.php");
-        $annotations = $foo->getAnnotations();
-        foreach ($annotations->get('Foo') as $object) {
-            $parent = $object->getParent()->getParent()->getParent();
-            $this->assertEquals(null, $object->getParent()->getParent()->getParent()->getParent());
+        foreach ($foo->getClasses('Foo') as $class) {
+            $parent = $class->GetParent($foo)->getParent($foo)->getParent($foo);
             $this->assertNotNull($parent);
-            $here = 0;
-            foreach($parent as $ann) {
-                $this->assertEquals($ann, new \Notoj\Annotation('XX'));
-                $here++;
+            $this->assertNull($parent->getParent($foo));
+            $total = 0;
+            foreach ($parent->getAnnotations() as $annotation) {
+                $this->assertEquals($annotation->Getname(), 'xx');
+                $total++;
             }
-            $this->assertEquals(1, $here);
+            $this->assertEquals(1, $total);
         }
     }
 
