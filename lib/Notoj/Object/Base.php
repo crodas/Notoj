@@ -2,10 +2,44 @@
 
 namespace Notoj\Object;
 
-abstract class Base
+abstract class Base implements \ArrayAccess
 {
     protected $annotations;
     protected $object;
+
+    public function offsetUnset($name)
+    {
+        throw new \BadFunctionCallException;
+    }
+
+    public function offsetSet($name, $value)
+    {
+        throw new \BadFunctionCallException;
+    }
+
+    public function offsetExists($name)
+    {
+        $name = strtolower($name);
+        foreach ($this->annotations as $annotation) {
+            if ($annotation->getName() == $name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function offsetGet($name)
+    {
+        $name = strtolower($name);
+        foreach ($this->annotations as $annotation) {
+            if ($annotation->getName() == $name) {
+                return $annotation;
+            }
+        }
+
+        return NULL;
+    }
 
     public function getFile()
     {

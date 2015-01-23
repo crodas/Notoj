@@ -272,11 +272,10 @@ class simpletest extends \phpunit_framework_testcase
     {
         $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
         $i   = 0;
-        var_dump($foo);exit;
         foreach ($foo->getClasses('FOOBAR') as $class) {
-            $this->assertTrue($class instanceof \Notoj\tClass);
-            $this->assertTrue(!empty($class['@foobar']));
-            $this->assertTrue($class['@foobar'] instanceof \Notoj\Annotation);
+            $this->assertTrue($class instanceof \Notoj\Object\zClass);
+            $this->assertTrue(!empty($class['foobar']));
+            $this->assertTrue($class['foobar'] instanceof \Notoj\Annotation\Annotation);
             $i++;
         }
         $this->assertTrue($i > 0);
