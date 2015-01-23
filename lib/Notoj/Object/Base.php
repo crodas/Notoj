@@ -2,6 +2,9 @@
 
 namespace Notoj\Object;
 
+use crodas\ClassInfo\Definition\TBase;
+use Notoj\Notoj;
+
 abstract class Base implements \ArrayAccess
 {
     protected $annotations;
@@ -30,6 +33,19 @@ abstract class Base implements \ArrayAccess
     public function getFile()
     {
         return $this->object->getFile();
+    }
+
+    protected function __construct(TBase $object, $localCache)
+    {
+        $this->object = $object;
+        $this->annotations = Notoj::parseDocComment($object->GetPHPDoc(), $foo, $localCache);
+        $this->annotations->setObject($this);
+    }
+
+    public static function create(TBase $object, $localCache)
+    {
+        $class = __NAMESPACE__ . '\z' . substr(strstr(get_class($object), "\\T"), 2);
+        return new $class($object, $localCache);
     }
 
     public function get($selector)

@@ -99,10 +99,9 @@ class File extends Cacheable
 
         $cache = array();
         foreach ($parser->getPHPDocs() as $object) {
-            $type = __NAMESPACE__ . '\Object\z' . substr(strstr(get_class($object), "\\T"), 2);
-            $annotations   = Notoj::parseDocComment($object->GetPHPDoc(), $foo, $this->localCache);
-            $this->objs[]  = new $type($object, $annotations);
-            $this->annotations->merge($annotations);
+            $obj  = Object\Base::create($object, $this->localCache);
+            $this->objs[]  = $obj;
+            $this->annotations->merge($obj->getAnnotations());
         }
 
         $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'), $this->localCache);

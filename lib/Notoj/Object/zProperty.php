@@ -7,12 +7,6 @@ use Notoj\Annotation\Annotations;
 
 class zProperty extends Base
 {
-    public function __construct(TProperty $property, Annotations $annotations)
-    {
-        $this->object      = $property;
-        $this->annotations = $annotations;
-        $annotations->setObject($this);
-    }
 }
 
 
