@@ -367,7 +367,7 @@ class simpletest extends \phpunit_framework_testcase
         $args = $annotations[0]->GetArgs();
         $this->assertTrue($args[0] instanceof \Notoj\Annotation\Annotation);
         $this->AssertEquals('foobar', $args[0]->getName());
-        $this->AssertEquals(['foobar'], $args[0]->getArgs());
+        $this->AssertEquals(array('foobar'), $args[0]->getArgs());
         $this->AssertEquals('foobar', $args[1]);
     }
 }
