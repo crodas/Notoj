@@ -53,7 +53,7 @@ class Dir extends Cacheable
     protected $cacheTs;
     protected $files = array();
 
-    public function __construct($dirPath)
+    public function __construct($dirPath, $cache = NULL)
     {
         if (!is_dir($dirPath) || !is_readable($dirPath)) {
             throw new \RuntimeException("{$dirPath} is not a dir or cannot be read");
@@ -62,6 +62,9 @@ class Dir extends Cacheable
         $this->filter = function(\splFileInfo $file) {
             return strtolower($file->getExtension()) === "php";
         };
+        if ($cache) {
+             $this->setCache($cache);
+        }
         $this->doParse();
     }
 
@@ -86,6 +89,14 @@ class Dir extends Cacheable
         return $this->cacheTs;
     }
 
+    protected function addFile(File $file)
+    {
+        $this->annotations->merge($file->getAnnotations());
+        $this->objs = array_merge($this->objs, $file->objs);
+
+        return $file;
+    }
+
     public function readDirectory($path)
     {
         $filter  = $this->filter;
@@ -96,10 +107,11 @@ class Dir extends Cacheable
             if ($this->cacheTs < $modtime) {
                 $this->cacheTs = $modtime;
             }
+            foreach ($cached['cache'] as $file => $cache) {
+                $this->files[] = $file;
+                $this->addFile(File::fromCache($file, $cache, $this->localCache));
+            }
             return;
-            var_dump($cached);exit;
-
-            return Annotations::fromCache($cached['cache']);
         }
             
         $this->cached = false;
@@ -111,11 +123,7 @@ class Dir extends Cacheable
             }
             $rpath = realpath($file->getPathname());
             $this->files[] = $rpath;
-            $file = new File($file->getPathname(), $this->localCache);
-
-            $this->annotations->merge($file->getAnnotations());
-            $this->objs = array_merge($this->objs, $file->objs);
-
+            $file = $this->addFile(new File($file->getPathname(), $this->localCache));
             $cache[$rpath] = $file->ToCache();
         } 
 

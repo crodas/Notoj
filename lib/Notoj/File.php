@@ -38,6 +38,7 @@
 namespace Notoj;
 
 use crodas\ClassInfo\ClassInfo;
+use crodas\ClassInfo\Definition\TBase;
 use crodas\ClassInfo\Definition\TClass;
 use crodas\ClassInfo\Definition\TFunction;
 use crodas\ClassInfo\Definition\TProperty;
@@ -51,9 +52,12 @@ class File extends Cacheable
      */
     protected $path;
     protected $cached;
+    protected $objAnnotation = array();
+    protected static $fromCache;
 
     public function __construct($filePath, $localCache = null)
     {
+        if (self::$fromCache) return;
         if (!is_file($filePath) || !is_readable($filePath)) {
             throw new \RuntimeException("{$filePath} is not a file or cannot be read");
         }
@@ -62,9 +66,32 @@ class File extends Cacheable
         $this->doParse();
     }
 
+    protected function addObject(TBase $object)
+    {
+        $obj  = Object\Base::create($object, $this->localCache);
+        $this->objs[] = $obj;
+        $this->objAnnotation[] = $object;
+        $this->annotations->merge($obj->getAnnotations());
+    }
+
+    public static function fromCache($file, $str, $localCache)
+    {
+        self::$fromCache = true;
+        $self = new self($file);
+        $self->path = $file;
+        $self->localCache = $localCache;
+        $self->annotations = new Annotations;
+        foreach (unserialize($str) as $object) {
+            $self->addObject($object);
+        }
+        self::$fromCache = false;;
+
+        return $self;
+    }
+
     public function toCache()
     {
-        return $this->annotations->toCache();
+        return serialize($this->objAnnotation);
     }
 
     public function isCached()
@@ -81,11 +108,10 @@ class File extends Cacheable
 
         if ($found && $cached['modtime'] >= $modtime) {
             $this->cached = true;
-            die('cache');
-            foreach ((array)$cached['cache'] as $annotation) {
-                $annotations[] = $obj;
+            foreach (unserialize($cached['cache']) as $object) {
+                $this->addObject($object);
             }
-            return $annotations;
+            return;
         }
 
         $this->cached = false;
@@ -97,13 +123,11 @@ class File extends Cacheable
             return;
         }
 
-        $cache = array();
         foreach ($parser->getPHPDocs() as $object) {
-            $obj  = Object\Base::create($object, $this->localCache);
-            $this->objs[]  = $obj;
-            $this->annotations->merge($obj->getAnnotations());
+            $this->addObject($object);
         }
 
+        $cache  = $this->toCache();
         $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'), $this->localCache);
         return;
     }
