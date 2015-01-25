@@ -287,6 +287,14 @@ class simpletest extends \phpunit_framework_testcase
         }
         $this->assertEquals(1, $i);
 
+        $i = 0;
+        foreach ($foo->getFunctions() as $function) {
+            $this->assertTrue($function instanceof \Notoj\Object\zFunction);
+            $i++;
+        }
+        $this->assertTrue($i > 0);
+
+
 
         $i   = 0;
         foreach ($foo->getClasses('FOOBAR') as $class) {
