@@ -44,7 +44,11 @@ abstract class Base implements \ArrayAccess
 
     public static function create(TBase $object, $localCache)
     {
-        $class = __NAMESPACE__ . '\z' . substr(strstr(get_class($object), "\\T"), 2);
+        $type = substr(strstr(get_class($object), "\\T"), 2);
+        if ($type == 'Function' && !empty($object->class)) {
+            $type = 'Method';
+        }
+        $class = __NAMESPACE__ . "\\z{$type}";
         return new $class($object, $localCache);
     }
 

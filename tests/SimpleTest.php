@@ -272,10 +272,35 @@ class simpletest extends \phpunit_framework_testcase
     {
         $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
         $i   = 0;
+        foreach ($foo->getProperties('fooba') as $property) {
+            $this->assertEquals($property->getName(), '$fooba');
+            $this->assertEquals($property->getClass()->getName(), "foobar");
+            $i++;
+        }
+        $this->assertTrue($i == 1);
+
+        $i   = 0;
+        foreach ($foo->getMethods('something') as $method) {
+            $this->assertEquals($method->getName(), 'something');
+            $this->assertEquals($method->getClass()->getName(), "foobar");
+            $i++;
+        }
+        $this->assertEquals(1, $i);
+
+
+        $i   = 0;
         foreach ($foo->getClasses('FOOBAR') as $class) {
             $this->assertTrue($class instanceof \Notoj\Object\zClass);
             $this->assertTrue(!empty($class['foobar']));
             $this->assertTrue($class['foobar'] instanceof \Notoj\Annotation\Annotation);
+            $this->assertEquals(array(), $class->getMethods('xxx'));
+            $this->assertEquals(array(), $class->getProperties('xxx'));
+            if ($class->getName() == '\foobar') {
+                $this->assertEquals(1, count($class->getMethods('something')));
+                $this->assertEquals(1, count($class->getMethods()));
+                $this->assertEquals(1, count($class->getProperties()));
+                $this->assertEquals(1, count($class->getProperties('fooba')));
+            }
             $i++;
         }
         $this->assertTrue($i > 0);
@@ -319,6 +344,9 @@ class simpletest extends \phpunit_framework_testcase
                 $expected = array_pop($expected);
             } else {
                 $expected = $annotation->getObjectName();
+            }
+            if ($annotation->getObject() instanceof \Notoj\Object\zProperty) {
+                $expected = substr($expected, 1);
             }
             $this->assertEquals($annotation->getName(), $expected);
         }
