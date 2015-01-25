@@ -51,14 +51,18 @@ class Dir extends Cacheable
     protected $filter;
     protected $cached;
     protected $cacheTs;
-    protected $files = array();
+    protected $dirs;
 
     public function __construct($dirPath, $cache = NULL)
     {
-        if (!is_dir($dirPath) || !is_readable($dirPath)) {
-            throw new \RuntimeException("{$dirPath} is not a dir or cannot be read");
+        $dirs = array();
+        foreach ((array)$dirPath as $dir) {
+            if (!is_dir($dir) || !is_readable($dir)) {
+                throw new \RuntimeException("{$dir} is not a dir or cannot be read");
+            }
+            $dirs[] = $dir;
         }
-        $this->dir = $dirPath;
+        $this->dirs = $dirs;
         $this->filter = function(\splFileInfo $file) {
             return strtolower($file->getExtension()) === "php";
         };
@@ -136,6 +140,8 @@ class Dir extends Cacheable
         $this->cached  = true;
         $this->cacheTs = 0;
         $this->annotations = new Annotations;
-        $this->readDirectory($this->dir);
+        foreach ($this->dirs as $dir) {
+            $this->readDirectory($dir);
+        }
     }
 }

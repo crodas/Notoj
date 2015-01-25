@@ -50,7 +50,7 @@ class File extends Cacheable
     /**
      *  @type string
      */
-    protected $path;
+    protected $files;
     protected $cached;
     protected $objAnnotation = array();
     protected static $fromCache;
@@ -58,12 +58,20 @@ class File extends Cacheable
     public function __construct($filePath, $localCache = null)
     {
         if (self::$fromCache) return;
-        if (!is_file($filePath) || !is_readable($filePath)) {
-            throw new \RuntimeException("{$filePath} is not a file or cannot be read");
+        $files = array();
+        foreach ((array)$filePath as $file) {
+            if (!is_file($file) || !is_readable($file)) {
+                throw new \RuntimeException("{$filePath} is not a file or cannot be read");
+            }
+            $files[] = realpath($file);
         }
-        $this->path = realpath($filePath);
+        $this->files = $files;
         $this->localCache  = $localCache;
-        $this->doParse();
+        $this->annotations = new Annotations;
+
+        foreach ($files as $file) {
+            $this->doParse($file);
+        }
     }
 
     protected function addObject(TBase $object)
@@ -99,12 +107,10 @@ class File extends Cacheable
         return $this->cached;
     }
 
-    protected function doParse()
+    protected function doParse($path)
     {
-        $modtime = filemtime($this->path);
-        $cached = Cache::get('file://' . $this->path, $found, $this->localCache);
-
-        $this->annotations = new Annotations;
+        $modtime = filemtime($path);
+        $cached = Cache::get('file://' . $path, $found, $this->localCache);
 
         if ($found && $cached['modtime'] >= $modtime) {
             $this->cached = true;
@@ -117,7 +123,7 @@ class File extends Cacheable
         $this->cached = false;
 
         try {
-            $parser = new ClassInfo($this->path);
+            $parser = new ClassInfo($path);
         } catch(\Exception $e) {
             // Internal error, probably parsing buggy/invalid php code
             return;
@@ -128,7 +134,7 @@ class File extends Cacheable
         }
 
         $cache  = $this->toCache();
-        $cached = Cache::set('file://' . $this->path, compact('modtime', 'cache'), $this->localCache);
+        $cached = Cache::set('file://' . $path, compact('modtime', 'cache'), $this->localCache);
         return;
     }
 }
