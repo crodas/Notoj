@@ -34,107 +34,17 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-
 namespace Notoj;
 
-use crodas\ClassInfo\ClassInfo;
-use crodas\ClassInfo\Definition\TBase;
-use crodas\ClassInfo\Definition\TClass;
-use crodas\ClassInfo\Definition\TFunction;
-use crodas\ClassInfo\Definition\TProperty;
-use Notoj\Annotation\Annotations;
-use Notoj\Annotation\Annotation;
-
-class File extends Cacheable
+class tMethod extends Annotation\ClassMember
 {
-    /**
-     *  @type string
-     */
-    protected $files;
-    protected $cached;
-    protected $objAnnotation = array();
-    protected static $fromCache;
-
-    public function __construct($filePath, $localCache = null)
+    public function isMethod()
     {
-        if (self::$fromCache) return;
-        $files = array();
-        foreach ((array)$filePath as $file) {
-            if (!is_file($file) || !is_readable($file)) {
-                throw new \RuntimeException("{$filePath} is not a file or cannot be read");
-            }
-            $files[] = realpath($file);
-        }
-        $this->files = $files;
-        $this->localCache  = $localCache;
-        $this->annotations = new Annotations;
-
-        foreach ($files as $file) {
-            $this->doParse($file);
-        }
+        return true;
     }
 
-    protected function addObject(TBase $object)
+    public function getName()
     {
-        $obj  = Object\Base::create($object, $this->localCache);
-        $this->objs[] = $obj;
-        $this->objAnnotation[] = $object;
-        $this->annotations->merge($obj->getAnnotations());
-    }
-
-    public static function fromCache($file, $str, $localCache)
-    {
-        self::$fromCache = true;
-        $self = new self($file);
-        $self->path = $file;
-        $self->localCache = $localCache;
-        $self->annotations = new Annotations;
-        foreach (unserialize($str) as $object) {
-            $self->addObject($object);
-        }
-        self::$fromCache = false;;
-
-        return $self;
-    }
-
-    public function toCache()
-    {
-        return serialize($this->objAnnotation);
-    }
-
-    public function isCached()
-    {
-        return $this->cached;
-    }
-
-    protected function doParse($path)
-    {
-        $modtime = filemtime($path);
-        $cached = Cache::get('file://' . $path, $found, $this->localCache);
-
-        if ($found && $cached['modtime'] >= $modtime) {
-            $this->cached = true;
-            foreach (unserialize($cached['cache']) as $object) {
-                $this->addObject($object);
-            }
-            return;
-        }
-
-        $this->cached = false;
-
-        try {
-            $parser = new ClassInfo($path);
-        } catch(\Exception $e) {
-            // Internal error, probably parsing buggy/invalid php code
-            return;
-        }
-
-        foreach ($parser->getPHPDocs() as $object) {
-            $this->addObject($object);
-        }
-
-        $cache  = $this->toCache();
-        $cached = Cache::set('file://' . $path, compact('modtime', 'cache'), $this->localCache);
-        return;
+        return $this['function'];
     }
 }

@@ -34,96 +34,75 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-
 namespace Notoj;
 
-use RuntimeException,
-    InvalidArgumentException;
+use RuntimeException;
+use InvalidArgumentException;
 
 /**
  *  @autoload("Annotation")
  */
-class Annotations extends Annotation\Base
+class tClass extends Annotation\Object
 {
-    protected $lastId = 0;
-    protected $classes = array();
-    protected $functions = array();
-
-    public function toCache()
+    protected $parent;
+    public function __construct(Array $args, Annotation\Set $parent)
     {
-        $cache = array();
-        foreach ($this as $key => $value) {
-            $cache[$key] = $value->toCache();
-        }
-        return $cache;
+        $this->parent = $parent;
+        parent::__construct($args);
     }
 
-    public function getClassInfo($class)
+    public function getName()
     {
-        if (empty($this->classes[$class])) {
+        return $this['class'];
+    }
+
+    public function getProperties()
+    {
+        $classInfo = $this->parent->getClassInfo($this['class']);
+        if (empty($classInfo['property'])) {
+            return array();
+        }
+        return $classInfo['property'];
+    }
+
+    public function getParent()
+    {
+        if (empty($this['parent'])) {
             return NULL;
         }
-        return $this->classes[$class];
+        $classInfo = $this->parent->getClassInfo($this['parent']['class']);
+        if (empty($classInfo) || empty($classInfo['class'])) {
+            // This class has no annotation at all,
+            // we will still create an 
+            $args = $this['parent'];
+            $ann = new self(array(), $this->parent);
+            $ann->setMetadata($args);
+            return $ann;
+        }
+        return $classInfo['class'];
     }
 
-    public function getFunction($name)
+    public function isClass()
     {
-        if (empty($this->functions[$name])) {
-            return NULL;
-        }
-        return $this->functions[$name];
+        return true;
     }
 
-    public function offsetSet($index, $value)
+    public function isAbstract()
     {
-        if (!($value instanceof Annotation)) {
-            throw new InvalidArgumentException("Annotations object only accept Annotation objects");
-        }
-        
-        if ($index) {
-            if ($this->offsetExists($index)) {
-                throw new RuntimeException("You cannot modify annotations objects");
-            }
-            if (is_numeric($index)) {
-                throw new InvalidArgumentException("Annotations object do not accept numeric index");
-            }
-        } else {
-            $index = $this->lastId++;
-        }
-
-        foreach ($value->getKeys() as $key) {
-            $this->add($key, $value);
-        }
-
-        $meta = $value->getMetadata();
-        if (!empty($meta)) {
-            switch ($meta['type']) {
-            case 'class':
-            case 'property':
-            case 'method':
-                if (empty($this->classes[$meta['class']])) {
-                    $this->classes[$meta['class']] = array();
-                }
-
-                if ($meta['type'] == 'class') {
-                    $this->classes[$meta['class']][$meta['type']] = $value;
-                } else {
-                    $this->classes[$meta['class']][$meta['type']][] = $value;
-                }
-                break;
-            default:
-                $this->functions[$meta['function']] = $value;
-                break;
-            }
-        }
-        parent::offsetSet($index, $value);
+        return in_array('final', $this->meta['visibility']);
     }
 
-    public function merge(self $another) 
+    public function isFinal()
     {
-        foreach ($another as $annotation) {
-            $this[] = $annotation;
-        }
+        return in_array('final', $this->meta['visibility']);
     }
 
+    public function getMethods()
+    {
+        $classInfo = $this->parent->getClassInfo($this['class']);
+        if (empty($classInfo['method'])) {
+            return array();
+        }
+        return $classInfo['method'];
+    }
 }

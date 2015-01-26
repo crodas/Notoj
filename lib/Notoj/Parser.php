@@ -896,16 +896,16 @@ static public $yy_action = array(
         29 => 4,
         5 => 5,
         6 => 6,
-        22 => 6,
+        8 => 6,
+        14 => 6,
+        30 => 6,
+        33 => 6,
         7 => 7,
-        8 => 8,
-        14 => 8,
-        30 => 8,
-        33 => 8,
         9 => 9,
         13 => 9,
         18 => 9,
         19 => 9,
+        20 => 9,
         25 => 9,
         10 => 10,
         11 => 11,
@@ -915,8 +915,8 @@ static public $yy_action = array(
         16 => 16,
         17 => 16,
         32 => 16,
-        20 => 20,
         21 => 21,
+        22 => 22,
         23 => 23,
         24 => 24,
         26 => 26,
@@ -938,7 +938,7 @@ static public $yy_action = array(
     function yy_r2(){ $this->body = array();     }
 #line 945 "lib/Notoj/Parser.php"
 #line 60 "lib/Notoj/Parser.y"
-    function yy_r3(){ $this->_retvalue = array('method' => trim($this->yystack[$this->yyidx + -1]->minor), 'args' => $this->yystack[$this->yyidx + 0]->minor);     }
+    function yy_r3(){ $this->_retvalue = new \Notoj\Annotation\Annotation(trim($this->yystack[$this->yyidx + -1]->minor), $this->yystack[$this->yyidx + 0]->minor);     }
 #line 948 "lib/Notoj/Parser.php"
 #line 62 "lib/Notoj/Parser.y"
     function yy_r4(){ $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor;     }
@@ -947,53 +947,50 @@ static public $yy_action = array(
     function yy_r5(){ $this->_retvalue = array(implode(' ', $this->yystack[$this->yyidx + 0]->minor));     }
 #line 954 "lib/Notoj/Parser.php"
 #line 64 "lib/Notoj/Parser.y"
-    function yy_r6(){ $this->_retvalue = NULL;     }
+    function yy_r6(){ $this->_retvalue = array();     }
 #line 957 "lib/Notoj/Parser.php"
 #line 66 "lib/Notoj/Parser.y"
     function yy_r7(){ $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor; $this->_retvalue[] = $this->yystack[$this->yyidx + 0]->minor;     }
 #line 960 "lib/Notoj/Parser.php"
-#line 67 "lib/Notoj/Parser.y"
-    function yy_r8(){ $this->_retvalue = array();     }
-#line 963 "lib/Notoj/Parser.php"
 #line 69 "lib/Notoj/Parser.y"
     function yy_r9(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor;     }
-#line 966 "lib/Notoj/Parser.php"
+#line 963 "lib/Notoj/Parser.php"
 #line 70 "lib/Notoj/Parser.y"
     function yy_r10(){ $this->_retvalue = @$this->yystack[$this->yyidx + 0]->minor;     }
-#line 969 "lib/Notoj/Parser.php"
+#line 966 "lib/Notoj/Parser.php"
 #line 72 "lib/Notoj/Parser.y"
     function yy_r11(){  $this->_retvalue = array_merge($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
-#line 972 "lib/Notoj/Parser.php"
+#line 969 "lib/Notoj/Parser.php"
 #line 73 "lib/Notoj/Parser.y"
     function yy_r12(){ $this->_retvalue = array($this->yystack[$this->yyidx + 0]->minor);     }
-#line 975 "lib/Notoj/Parser.php"
+#line 972 "lib/Notoj/Parser.php"
 #line 77 "lib/Notoj/Parser.y"
     function yy_r15(){ $this->_retvalue = array($this->yystack[$this->yyidx + -3]->minor => $this->yystack[$this->yyidx + 0]->minor);     }
-#line 978 "lib/Notoj/Parser.php"
+#line 975 "lib/Notoj/Parser.php"
 #line 78 "lib/Notoj/Parser.y"
     function yy_r16(){ $this->_retvalue = array($this->yystack[$this->yyidx + -2]->minor => $this->yystack[$this->yyidx + 0]->minor);     }
-#line 981 "lib/Notoj/Parser.php"
-#line 85 "lib/Notoj/Parser.y"
-    function yy_r20(){ $this->_retvalue = new \Notoj\Annotation\Base($this->yystack[$this->yyidx + 0]->minor);     }
-#line 984 "lib/Notoj/Parser.php"
+#line 978 "lib/Notoj/Parser.php"
 #line 87 "lib/Notoj/Parser.y"
     function yy_r21(){ $this->_retvalue = trim($this->yystack[$this->yyidx + 0]->minor);     }
-#line 987 "lib/Notoj/Parser.php"
+#line 981 "lib/Notoj/Parser.php"
+#line 88 "lib/Notoj/Parser.y"
+    function yy_r22(){ $this->_retvalue = NULL;     }
+#line 984 "lib/Notoj/Parser.php"
 #line 89 "lib/Notoj/Parser.y"
     function yy_r23(){ $this->_retvalue = TRUE;     }
-#line 990 "lib/Notoj/Parser.php"
+#line 987 "lib/Notoj/Parser.php"
 #line 90 "lib/Notoj/Parser.y"
     function yy_r24(){ $this->_retvalue = FALSE;     }
-#line 993 "lib/Notoj/Parser.php"
+#line 990 "lib/Notoj/Parser.php"
 #line 92 "lib/Notoj/Parser.y"
     function yy_r26(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor + 0;     }
-#line 996 "lib/Notoj/Parser.php"
+#line 993 "lib/Notoj/Parser.php"
 #line 93 "lib/Notoj/Parser.y"
     function yy_r27(){ $this->_retvalue = -1 * ($this->yystack[$this->yyidx + 0]->minor+0);     }
-#line 999 "lib/Notoj/Parser.php"
+#line 996 "lib/Notoj/Parser.php"
 #line 96 "lib/Notoj/Parser.y"
     function yy_r28(){ $this->_retvalue  = $this->yystack[$this->yyidx + -1]->minor;     }
-#line 1002 "lib/Notoj/Parser.php"
+#line 999 "lib/Notoj/Parser.php"
 #line 100 "lib/Notoj/Parser.y"
     function yy_r31(){
 $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor; 
@@ -1002,10 +999,10 @@ foreach ($this->yystack[$this->yyidx + 0]->minor as $k => $v) {
 }
 
     }
-#line 1011 "lib/Notoj/Parser.php"
+#line 1008 "lib/Notoj/Parser.php"
 #line 110 "lib/Notoj/Parser.y"
     function yy_r34(){ $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor; $this->_retvalue[] = $this->yystack[$this->yyidx + 0]->minor;     }
-#line 1014 "lib/Notoj/Parser.php"
+#line 1011 "lib/Notoj/Parser.php"
 
     /**
      * placeholder for the left hand side in a reduce operation.
@@ -1124,7 +1121,7 @@ foreach ($this->yystack[$this->yyidx + 0]->minor as $k => $v) {
         $expect[] = self::$yyTokenName[$token];
     }
     throw new Exception('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. ')');
-#line 1134 "lib/Notoj/Parser.php"
+#line 1131 "lib/Notoj/Parser.php"
     }
 
     /**

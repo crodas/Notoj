@@ -40,17 +40,24 @@ class CacheTest extends \phpunit_framework_testcase
         $target = __DIR__ . '/fixtures'; 
         @unlink($tmp);
 
-        $dir = new \Notoj\Dir($target, $tmp);
+        $dir = new \Notoj\Dir($target);
+        $dir->setCache($tmp);
+        $annotations = $dir->getAnnotations();
         $this->assertFalse($dir->isCached());
 
         $dir = new \Notoj\Dir($target);
+        $annotations = $dir->getAnnotations();
         $this->assertFalse($dir->isCached());
 
 
-        $dir = new \Notoj\Dir($target, $tmp);
+        $dir = new \Notoj\Dir($target);
+        $dir->setCache($tmp);
+        $annotations = $dir->getAnnotations();
         $this->assertTrue($dir->isCached());
 
-        $dir = new \Notoj\Dir($target, $tmp);
+        $dir = new \Notoj\Dir($target);
+        $dir->setCache($tmp);
+        $annotations = $dir->getAnnotations();
         $this->assertTrue($dir->isCached());
     }
 
@@ -60,7 +67,7 @@ class CacheTest extends \phpunit_framework_testcase
     function testNoContent()
     {
         $arr = getReflection(__METHOD__)->getAnnotations();
-        $this->assertEquals($arr->toCache(), array());
+        $this->assertEquals($arr->toCache(), serialize(new \Notoj\Annotations));
         $raw = getReflection(__METHOD__)->getDocComment();
         Notoj::parseDocComment($raw, $isCached);
         $this->assertTrue($isCached);

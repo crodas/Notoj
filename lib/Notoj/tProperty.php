@@ -34,58 +34,17 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
+namespace Notoj;
 
-namespace Notoj\Annotation;
-
-use Notoj\Annotation,
-    Notoj\Annotations,
-    RuntimeException,
-    InvalidArgumentException;
-
-/**
- *  @autoload("Annotation")
- */
-class AnnClass extends Annotation
+class tProperty extends Annotation\ClassMember
 {
-    protected $parent;
-    public function __construct(Array $args, Annotations $parent)
+    public function isProperty()
     {
-        $this->parent = $parent;
-        parent::__construct($args);
+        return true;
     }
 
-    public function getProperties()
+    public function getName()
     {
-        $classInfo = $this->parent->getClassInfo($this['class']);
-        if (empty($classInfo['property'])) {
-            return array();
-        }
-        return $classInfo['property'];
-    }
-
-    public function getParent()
-    {
-        if (empty($this['parent'])) {
-            return NULL;
-        }
-        $classInfo = $this->parent->getClassInfo($this['parent']['class']);
-        if (empty($classInfo) || empty($classInfo['class'])) {
-            // This class has no annotation at all,
-            // we will still create an 
-            $args = $this['parent'];
-            $ann = new self(array(), $this->parent);
-            $ann->setMetadata($args);
-            return $ann;
-        }
-        return $classInfo['class'];
-    }
-
-    public function getMethods()
-    {
-        $classInfo = $this->parent->getClassInfo($this['class']);
-        if (empty($classInfo['method'])) {
-            return array();
-        }
-        return $classInfo['method'];
+        return $this['property'];
     }
 }

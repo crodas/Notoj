@@ -12,4 +12,4 @@ function getReflection($class)
     return new ReflectionMethod($class[0], $class[1]);
 }
 
-
+@unlink(__DIR__ . "/tmp.cache");
