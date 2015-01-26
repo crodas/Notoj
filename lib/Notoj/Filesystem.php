@@ -51,7 +51,7 @@ class Filesystem extends Cacheable
         foreach ((array)$files as $file) {
             if (is_dir($file)) {
                 $this->add(new Dir($file, $cache));
-            } else {
+            } else if (is_file($file)) {
                 $this->add(new File($file, $cache));
             }
         }

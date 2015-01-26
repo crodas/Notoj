@@ -412,6 +412,7 @@ class simpletest extends \phpunit_framework_testcase
         $fs = new \Notoj\Filesystem(array(
             __DIR__,
             __DIR__ . "/../lib/Notoj/Notoj.php",
+            __DIR__ . "/xxx-yyy.php",
         ));
         $this->assertEquals(1, count($fs->getClasses('Notoj')));
         $this->assertEquals(1, count($fs->getMethods('something')));
