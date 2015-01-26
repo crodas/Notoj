@@ -241,11 +241,11 @@ class Annotations extends Common implements ArrayAccess, Iterator
 
     public function toCache()
     {
-        $objects = array();
-        foreach ($this->annotations as $ann) {
-            $objects[] = $ann->toCache();
-        }
-        return $objects;
+        $object = $this->object;
+        unset($this->object);
+        $cache = serialize($this);
+        $this->object = $object;
+        return $cache;
     }
 
     public function __construct(Array $annotations = array())

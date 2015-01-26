@@ -63,15 +63,15 @@ class Notoj extends Cacheable
         $id = sha1($content);
         if (isset(self::$internal_cache[$id])) {
             $isCached = true;
-            return self::$internal_cache[$id];
+            return unserialize(self::$internal_cache[$id]);
         }
 
         $isCached = false;
         $cached   = Cache::Get($id, $found, $localCache);
         if ($found) {
             $isCached = true;
-            self::$internal_cache[$id] = new Annotations($cached);
-            return self::$internal_cache[$id];
+            self::$internal_cache[$id] = $cached;
+            return unserialize($cached);
         }
         $pzToken = new Tokenizer($content);
         $Parser  = new \Notoj_Parser;
@@ -96,8 +96,8 @@ class Notoj extends Cacheable
         }
         $struct = new Annotations(array_merge($buffer, $Parser->body));
         Cache::Set($id, $struct, $localCache);
-        self::$internal_cache[$id] = $struct;
-        return self::$internal_cache[$id];
+        self::$internal_cache[$id] = $struct->toCache();
+        return $struct;
     }
 
     public static function parseAll() 
