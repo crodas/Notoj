@@ -74,4 +74,16 @@ class zClass extends Base
     {
         return $this->getType($filter, 'getMethods', __NAMESPACE__ . '\zMethod');
     }
+
+    public function isFinal()
+    {
+        $mods = $this->object->getMods();
+        return in_array('final', $mods);
+    }
+
+    public function isAbstract()
+    {
+        $mods = $this->object->getMods();
+        return in_array('abstract', $mods);
+    }
 }

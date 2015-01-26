@@ -417,4 +417,16 @@ class simpletest extends \phpunit_framework_testcase
         $this->assertEquals(1, count($fs->getClasses('Notoj')));
         $this->assertEquals(1, count($fs->getMethods('something')));
     }
+
+    public function testMethodVisibility()
+    {
+        $fs = new \Notoj\Filesystem(__DIR__);
+        foreach ($fs->getMethods() as $method) {
+            if ($method->isPublic()) {
+                $this->assertNotEquals($method->isPublic(), $method->isProtected());
+                $this->assertNotEquals($method->isPublic(), $method->isPrivate());
+            }
+        }
+        
+    }
 }
