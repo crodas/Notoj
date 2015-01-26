@@ -13,15 +13,10 @@
         "crodas/file-util": ">=0.1.14"
     },
     "license": "BSD-4-Clause",
-    "version": "v0.1.22",
+    "version": "v1.0.0",
     "autoload": {
         "psr-0": {
             "Notoj": "lib/"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master-2": "1.0.x-dev"
         }
     }
 }
