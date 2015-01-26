@@ -100,6 +100,14 @@ abstract class Cacheable implements \IteratorAggregate
         return $objects;
     }
 
+    public function getCallable($filter = '')
+    {
+        return array_merge(
+            $this->getFunctions($filter),
+            $this->getMethods($filter)
+        );
+    }
+
     public function getFunctions($filter = '')
     {
         return $this->getBy($filter, 'Notoj\Object\zFunction');
