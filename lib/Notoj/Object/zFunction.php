@@ -41,5 +41,9 @@ use Notoj\Annotation\Annotations;
 
 class zFunction extends Base implements zCallable
 {
+    public function isFunction()
+    {
+        return true;
+    }
 }
 

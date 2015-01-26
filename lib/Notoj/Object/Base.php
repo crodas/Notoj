@@ -107,4 +107,24 @@ abstract class Base implements \ArrayAccess
     {
         return $this->annotations;
     }
+
+    public function isMethod()
+    {
+        return false;
+    }
+
+    public function isClass()
+    {
+        return false;
+    }
+
+    public function isProperty()
+    {
+        return false;
+    }
+
+    public function isFunction()
+    {
+        return true;
+    }
 }

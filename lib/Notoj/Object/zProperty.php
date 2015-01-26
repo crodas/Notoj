@@ -38,6 +38,10 @@ namespace Notoj\Object;
 
 class zProperty extends zClassMember
 {
+    public function isProperty()
+    {
+        return true;
+    }
 }
 
 

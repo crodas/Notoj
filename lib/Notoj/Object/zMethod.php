@@ -49,4 +49,9 @@ class zMethod extends zClassMember implements zCallable
         $mods = $this->object->getMods();
         return in_array('abstract', $mods);
     }
+
+    public function isMethod()
+    {
+        return true;
+    }
 }

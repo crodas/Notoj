@@ -86,4 +86,9 @@ class zClass extends Base
         $mods = $this->object->getMods();
         return in_array('abstract', $mods);
     }
+
+    public function isClass()
+    {
+        return true;
+    }
 }
