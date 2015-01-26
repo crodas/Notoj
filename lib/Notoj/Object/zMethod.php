@@ -36,6 +36,6 @@
 */
 namespace Notoj\Object;
 
-class zMethod extends zClassMember
+class zMethod extends zClassMember implements zCallable
 {
 }

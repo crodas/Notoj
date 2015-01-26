@@ -48,9 +48,12 @@ abstract class Cacheable implements \IteratorAggregate
     }
 
 
-    public function get($name)
+    public function get($name, $type = '')
     {
-        return $this->annotations->get($name);
+        $type = ucfirst(strtolower(trim($type)));
+        return $type
+            ? $this->GetAnnotationsBy($name, 'Notoj\Object\z' . $type)
+            : $this->annotations->get($name);
     }
 
     public function has($name)
@@ -86,6 +89,21 @@ abstract class Cacheable implements \IteratorAggregate
         return NULL;
     }
 
+    protected function getAnnotationsBy($filter, $class)
+    {
+        $anns = array();
+        foreach ($this->objs as $obj) {
+            if ($obj instanceof $class) {
+                foreach ($obj->Get($filter) as $ann) {
+                    $anns[] = $ann;
+                }
+            }
+        }
+
+        return $anns;
+    }
+
+
     protected function getBy($filter, $class)
     {
         $objects = array();
@@ -102,10 +120,7 @@ abstract class Cacheable implements \IteratorAggregate
 
     public function getCallable($filter = '')
     {
-        return array_merge(
-            $this->getFunctions($filter),
-            $this->getMethods($filter)
-        );
+        return $this->getBy($filter, 'Notoj\Object\zCallable');
     }
 
     public function getFunctions($filter = '')
