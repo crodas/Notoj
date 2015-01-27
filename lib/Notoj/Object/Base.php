@@ -125,6 +125,6 @@ abstract class Base implements \ArrayAccess
 
     public function isFunction()
     {
-        return true;
+        return false;
     }
 }
