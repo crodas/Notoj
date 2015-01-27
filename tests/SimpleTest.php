@@ -273,7 +273,7 @@ class simpletest extends \phpunit_framework_testcase
         $foo = new \Notoj\Dir(__DIR__ . '/fixtures');
         $i   = 0;
         foreach ($foo->getProperties('fooba') as $property) {
-            $this->assertEquals($property->getName(), '$fooba');
+            $this->assertEquals($property->getName(), 'fooba');
             $this->assertEquals($property->getClass()->getName(), "foobar");
             $i++;
         }
@@ -352,9 +352,6 @@ class simpletest extends \phpunit_framework_testcase
                 $expected = array_pop($expected);
             } else {
                 $expected = $annotation->getObjectName();
-            }
-            if ($annotation->getObject() instanceof \Notoj\Object\zProperty) {
-                $expected = substr($expected, 1);
             }
             $this->assertEquals($annotation->getName(), $expected);
         }
