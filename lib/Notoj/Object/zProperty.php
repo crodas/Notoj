@@ -38,6 +38,11 @@ namespace Notoj\Object;
 
 class zProperty extends zClassMember
 {
+    public function getName()
+    {
+        return substr($this->object->getName(), 1);
+    }
+
     public function isProperty()
     {
         return true;
