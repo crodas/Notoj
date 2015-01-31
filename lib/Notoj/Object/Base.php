@@ -97,6 +97,10 @@ abstract class Base implements \ArrayAccess
         return $this->annotations->getOne($selector);
     }
 
+    public function getLine()
+    {
+        return $this->object->getStartLine();
+    }
 
     public function getName()
     {
