@@ -45,5 +45,10 @@ class zFunction extends Base implements zCallable
     {
         return true;
     }
+
+    public function getParameters()
+    {
+        return $this->object->getParameters();
+    }
 }
 

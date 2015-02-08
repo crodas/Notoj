@@ -38,6 +38,11 @@ namespace Notoj\Object;
 
 class zMethod extends zClassMember implements zCallable
 {
+    public function getParameters()
+    {
+        return $this->object->getParameters();
+    }
+
     public function isFinal()
     {
         $mods = $this->object->getMods();
