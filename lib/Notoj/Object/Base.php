@@ -92,6 +92,11 @@ abstract class Base implements \ArrayAccess
         return $this->annotations->get($selector);
     }
 
+    public function getAll()
+    {
+        return $this->annotations;
+    }
+
     public function getOne($selector)
     {
         return $this->annotations->getOne($selector);
