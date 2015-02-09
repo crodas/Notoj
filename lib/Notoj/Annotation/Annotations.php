@@ -107,8 +107,11 @@ class Annotations extends Common implements ArrayAccess, Iterator
         return false;
     }
 
-    public function getOne($name)
+    public function getOne($name = '')
     {
+        if (empty($selector)) {
+            return current($this->annotations);
+        }
         if ($this->handleMultiple($name, __FUNCTION__, $return)) {
             return $return;
         }
@@ -179,8 +182,11 @@ class Annotations extends Common implements ArrayAccess, Iterator
         return $aResult;
     }
 
-    public function get($selector)
+    public function get($selector = '')
     {
+        if (empty($selector)) {
+            return $this->annotations;
+        }
         if ($this->handleMultiple($selector, __FUNCTION__, $return)) {
             return $return;
         }

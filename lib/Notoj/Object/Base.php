@@ -87,17 +87,13 @@ abstract class Base implements \ArrayAccess
         return new $class($object, $localCache);
     }
 
-    public function get($selector)
+    public function get($selector = '')
     {
         return $this->annotations->get($selector);
     }
 
-    public function getAll()
-    {
-        return $this->annotations;
-    }
 
-    public function getOne($selector)
+    public function getOne($selector = '')
     {
         return $this->annotations->getOne($selector);
     }
