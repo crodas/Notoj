@@ -110,7 +110,7 @@ class Annotations extends Common implements ArrayAccess, Iterator
     public function getOne($name = '')
     {
         if (empty($name)) {
-            return current($this->annotations);
+            return end($this->annotations);
         }
         if ($this->handleMultiple($name, __FUNCTION__, $return)) {
             return $return;
