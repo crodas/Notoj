@@ -59,4 +59,21 @@ class zMethod extends zClassMember implements zCallable
     {
         return true;
     }
+
+    public function exec()
+    {
+        $class  = $this->object->class->getName();
+        $method = $this->object->getName(); 
+        if (!class_exists($class, true)) {
+            require $this->object->getFile();
+        }
+
+        if ($this->object->isStatic()) {
+            $callback = array($class, $method);
+        } else {
+            $callback = array(new $class, $method);
+        }
+
+        return call_user_func_array($this->object->getName(), func_get_args());
+    }
 }
