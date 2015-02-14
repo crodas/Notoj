@@ -74,6 +74,6 @@ class zMethod extends zClassMember implements zCallable
             $callback = array(new $class, $method);
         }
 
-        return call_user_func_array($this->object->getName(), func_get_args());
+        return call_user_func_array($callback, func_get_args());
     }
 }
