@@ -65,6 +65,11 @@ class zClass extends Base
         return $members;
     }
 
+    public function getTraits($filter = '')
+    {
+        return $this->getType($filter, 'getTraits', __NAMESPACE__ . '\zClass');
+    }
+
     public function getProperties($filter = '')
     {
         return $this->getType($filter, 'getProperties', __NAMESPACE__ . '\zProperty');
@@ -73,5 +78,22 @@ class zClass extends Base
     public function getMethods($filter = '')
     {
         return $this->getType($filter, 'getMethods', __NAMESPACE__ . '\zMethod');
+    }
+
+    public function isFinal()
+    {
+        $mods = $this->object->getMods();
+        return in_array('final', $mods);
+    }
+
+    public function isAbstract()
+    {
+        $mods = $this->object->getMods();
+        return in_array('abstract', $mods);
+    }
+
+    public function isClass()
+    {
+        return true;
     }
 }

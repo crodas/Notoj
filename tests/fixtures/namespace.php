@@ -18,7 +18,7 @@ namespace {
         public $fooba;
 
         /** @something */
-        public function something() {}
+        static protected function something() {}
     }
 
     function xxx() {
