@@ -76,9 +76,12 @@ class File extends Cacheable
 
     protected function addObject(TBase $object)
     {
+        $cache = strtolower(get_class($object) . '::' . $object->getName());
+        if (!empty($this->objs[$cache])) return;
+
         $obj  = Object\Base::create($object, $this->localCache);
-        $this->objs[] = $obj;
-        $this->objAnnotation[] = $object;
+        $this->objs[$cache] = $obj;
+        $this->objAnnotation[$cache] = $object;
         $this->annotations->merge($obj->getAnnotations());
     }
 
