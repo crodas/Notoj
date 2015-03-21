@@ -277,7 +277,7 @@ class simpletest extends \phpunit_framework_testcase
             $this->assertEquals($property->getClass()->getName(), "foobar");
             $i++;
         }
-        $this->assertTrue($i == 1);
+        $this->assertEquals($i, 1);
 
         $i   = 0;
         foreach ($foo->getMethods('something') as $method) {
