@@ -60,7 +60,7 @@ class CacheTest extends \phpunit_framework_testcase
     function testNoContent()
     {
         $arr = getReflection(__METHOD__)->getAnnotations();
-        $this->assertEquals($arr->toCache(), array());
+        $this->assertEquals(unserialize($arr->toCache()), new \Notoj\Annotation\Annotations);
         $raw = getReflection(__METHOD__)->getDocComment();
         Notoj::parseDocComment($raw, $isCached);
         $this->assertTrue($isCached);

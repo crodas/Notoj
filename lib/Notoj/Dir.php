@@ -42,6 +42,7 @@ use Notoj\Annotation\Annotation;
 use RecursiveDirectoryIterator;
 use DirectoryIterator;
 use RecursiveIteratorIterator;
+use crodas\ClassInfo\ClassInfo;
 
 /**
  *  @autoload("File")
@@ -51,6 +52,7 @@ class Dir extends Cacheable
     protected $filter;
     protected $cached;
     protected $cacheTs;
+    protected $Parser;
     protected $dirs;
 
     public function __construct($dirPath, $cache = NULL)
@@ -127,7 +129,7 @@ class Dir extends Cacheable
             }
             $rpath = realpath($file->getPathname());
             $this->files[] = $rpath;
-            $file = $this->addFile(new File($file->getPathname(), $this->localCache));
+            $file = $this->addFile(new File($file->getPathname(), $this->localCache, $this->Parser));
             $cache[$rpath] = $file->ToCache();
         } 
 
@@ -139,6 +141,7 @@ class Dir extends Cacheable
     {
         $this->cached  = true;
         $this->cacheTs = 0;
+        $this->Parser  = new ClassInfo;
         $this->annotations = new Annotations;
         foreach ($this->dirs as $dir) {
             $this->readDirectory($dir);

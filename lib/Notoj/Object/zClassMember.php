@@ -42,4 +42,30 @@ abstract class zClassMember extends Base
     {
         return new zClass($this->object->class, NULL);
     }
+
+    public function isStatic()
+    {
+        $mods = $this->object->getMods();
+        return in_array('static', $mods);
+    }
+
+
+    public function isProtected()
+    {
+        $mods = $this->object->getMods();
+        return in_array('protected', $mods);
+    }
+
+    public function isPrivate()
+    {
+        $mods = $this->object->getMods();
+        return in_array('private', $mods);
+    }
+
+    public function isPublic()
+    {
+        $mods = $this->object->getMods();
+        return !in_array('protected', $mods)
+            && !in_array('private', $mods);
+    }
 }

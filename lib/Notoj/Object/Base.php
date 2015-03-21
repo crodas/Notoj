@@ -45,6 +45,11 @@ abstract class Base implements \ArrayAccess
     protected $annotations;
     protected $object;
 
+    public function getObject()
+    {
+        return $this->object;
+    }
+
     public function offsetUnset($name)
     {
         throw new \BadFunctionCallException;
@@ -87,11 +92,21 @@ abstract class Base implements \ArrayAccess
         return new $class($object, $localCache);
     }
 
-    public function get($selector)
+    public function get($selector = '')
     {
         return $this->annotations->get($selector);
     }
 
+
+    public function getOne($selector = '')
+    {
+        return $this->annotations->getOne($selector);
+    }
+
+    public function getLine()
+    {
+        return $this->object->getStartLine();
+    }
 
     public function getName()
     {
@@ -106,5 +121,25 @@ abstract class Base implements \ArrayAccess
     public function getAnnotations()
     {
         return $this->annotations;
+    }
+
+    public function isMethod()
+    {
+        return false;
+    }
+
+    public function isClass()
+    {
+        return false;
+    }
+
+    public function isProperty()
+    {
+        return false;
+    }
+
+    public function isFunction()
+    {
+        return false;
     }
 }

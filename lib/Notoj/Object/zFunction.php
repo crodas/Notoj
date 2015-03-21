@@ -39,7 +39,25 @@ namespace Notoj\Object;
 use crodas\ClassInfo\Definition\TFunction;
 use Notoj\Annotation\Annotations;
 
-class zFunction extends Base
+class zFunction extends Base implements zCallable
 {
+    public function isFunction()
+    {
+        return true;
+    }
+
+    public function exec()
+    {
+        $function = $this->object->getName();
+        if (!is_callable($function)) {
+            require $this->object->GetFile();
+        }
+        return call_user_func_array($name, func_get_args());
+    }
+
+    public function getParameters()
+    {
+        return $this->object->getParameters();
+    }
 }
 

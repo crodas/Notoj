@@ -1,7 +1,7 @@
 <?php
 /*
   +---------------------------------------------------------------------------------+
-  | Copyright (c) 2012 César Rodas                                                  |
+  | Copyright (c) 2014 César Rodas                                                  |
   +---------------------------------------------------------------------------------+
   | Redistribution and use in source and binary forms, with or without              |
   | modification, are permitted provided that the following conditions are met:     |
@@ -34,89 +34,8 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj;
+namespace Notoj\Object;
 
-use Notoj\Annotation\Annotations;
-use Notoj\Annotation\Annotation;
-
-/**
- *  @Notoj
- */
-class Notoj extends Cacheable
+interface zCallable
 {
-    const T_CLASS = 1;
-    const T_FUNCTION = 2;
-    const T_PROPERTY = 3;
-
-    protected static $parsed = array();
-    protected static $internal_cache = array();
-
-    public static function enableCache($file) 
-    {
-        Cache::init($file);
-    }
-
-    public static function parseDocComment($content, &$isCached = NULL, $localCache = NULL) {
-        if (is_object($content) && is_callable(array($content, 'getDocComment'))) {
-            $content = $content->getDocComment();
-        }
-        $id = sha1($content);
-        if (isset(self::$internal_cache[$id])) {
-            $isCached = true;
-            return unserialize(self::$internal_cache[$id]);
-        }
-
-        $isCached = false;
-        $cached   = Cache::Get($id, $found, $localCache);
-        if ($found) {
-            $isCached = true;
-            self::$internal_cache[$id] = $cached;
-            return unserialize($cached);
-        }
-        $pzToken = new Tokenizer($content);
-        $Parser  = new \Notoj_Parser;
-        $buffer  = array();
-        $isNew   = true;
-        do {
-            try {
-                $token = $pzToken->getToken($isNew);
-                if (!$token) break;
-                $isNew = false;
-                $Parser->doParse($token[0], $token[1]);
-            } catch (\Exception $e) {
-                $buffer = array_merge($buffer, $Parser->body);
-                $Parser = new \Notoj_Parser;
-                $isNew  = true;
-            }
-        } while(true);
-        try {
-            $Parser->doParse(0, 0);
-        } catch (\Exception $e) {
-            // ignore error
-        }
-        $struct = new Annotations(array_merge($buffer, $Parser->body));
-        Cache::Set($id, $struct, $localCache);
-        self::$internal_cache[$id] = $struct->toCache();
-        return $struct;
-    }
-
-    public static function parseAll() 
-    {
-        $class = new self;
-        foreach (get_included_files() as $file) {
-            $class->parseFile($file);
-        }
-    }
-
-    public function parseFile($file)
-    {
-        if (empty(self::$parsed[$file])) {
-            $parser = new File($file);
-            $parser->localCache = $this->localCache;
-            self::$parsed[$file] = $parser->getAnnotations();
-        }
-        return self::$parsed[$file];
-    }
-
 }
-

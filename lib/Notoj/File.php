@@ -55,7 +55,7 @@ class File extends Cacheable
     protected $objAnnotation = array();
     protected static $fromCache;
 
-    public function __construct($filePath, $localCache = null)
+    public function __construct($filePath, $localCache = null, $parser = null)
     {
         if (self::$fromCache) return;
         $files = array();
@@ -70,7 +70,7 @@ class File extends Cacheable
         $this->annotations = new Annotations;
 
         foreach ($files as $file) {
-            $this->doParse($file);
+            $this->doParse($file, $parser);
         }
     }
 
@@ -97,9 +97,11 @@ class File extends Cacheable
         return $self;
     }
 
-    public function toCache()
+    public function toCache($filter = null)
     {
-        return serialize($this->objAnnotation);
+        $filter = $filter ?: function() { return true; };
+        $toSerialize = array_filter($this->objAnnotation, $filter);
+        return serialize($toSerialize);
     }
 
     public function isCached()
@@ -107,7 +109,7 @@ class File extends Cacheable
         return $this->cached;
     }
 
-    protected function doParse($path)
+    protected function doParse($path, $parser = null)
     {
         $modtime = filemtime($path);
         $cached = Cache::get('file://' . $path, $found, $this->localCache);
@@ -123,7 +125,8 @@ class File extends Cacheable
         $this->cached = false;
 
         try {
-            $parser = new ClassInfo($path);
+            $parser = $parser ? $parser : new ClassInfo;
+            $parser->parse($path);
         } catch(\Exception $e) {
             // Internal error, probably parsing buggy/invalid php code
             return;
@@ -133,7 +136,9 @@ class File extends Cacheable
             $this->addObject($object);
         }
 
-        $cache  = $this->toCache();
+        $cache  = $this->toCache(function($e) use ($path) {
+            return $e->getFile() == $path;
+        });
         $cached = Cache::set('file://' . $path, compact('modtime', 'cache'), $this->localCache);
         return;
     }

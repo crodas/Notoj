@@ -36,6 +36,44 @@
 */
 namespace Notoj\Object;
 
-class zMethod extends zClassMember
+class zMethod extends zClassMember implements zCallable
 {
+    public function getParameters()
+    {
+        return $this->object->getParameters();
+    }
+
+    public function isFinal()
+    {
+        $mods = $this->object->getMods();
+        return in_array('final', $mods);
+    }
+
+    public function isAbstract()
+    {
+        $mods = $this->object->getMods();
+        return in_array('abstract', $mods);
+    }
+
+    public function isMethod()
+    {
+        return true;
+    }
+
+    public function exec()
+    {
+        $class  = $this->object->class->getName();
+        $method = $this->object->getName(); 
+        if (!class_exists($class, true)) {
+            require $this->object->getFile();
+        }
+
+        if ($this->object->isStatic()) {
+            $callback = array($class, $method);
+        } else {
+            $callback = array(new $class, $method);
+        }
+
+        return call_user_func_array($callback, func_get_args());
+    }
 }
