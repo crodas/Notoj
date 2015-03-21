@@ -45,6 +45,11 @@ abstract class Base implements \ArrayAccess
     protected $annotations;
     protected $object;
 
+    public function getObject()
+    {
+        return $this->object;
+    }
+
     public function offsetUnset($name)
     {
         throw new \BadFunctionCallException;
