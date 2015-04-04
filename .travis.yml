@@ -1,5 +1,5 @@
 language: php
-script: phpunit .
+script: phpunit tests
 
 php:
   - hhvm
