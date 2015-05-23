@@ -426,4 +426,10 @@ class simpletest extends \phpunit_framework_testcase
         }
         
     }
+
+    public function testBugDuplicateAnnotations()
+    {
+        $fs = new \Notoj\Dir(__DIR__);
+        $this->assertEquals(1, count($fs->get('weird_alone')));
+    }
 }

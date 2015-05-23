@@ -43,6 +43,8 @@ class CacheTest extends \phpunit_framework_testcase
         $dir = new \Notoj\Dir($target, $tmp);
         $this->assertFalse($dir->isCached());
 
+        $this->assertEquals(1, count($dir->get('weird_alone')));
+
         $dir = new \Notoj\Dir($target);
         $this->assertFalse($dir->isCached());
 
