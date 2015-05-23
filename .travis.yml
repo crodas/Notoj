@@ -1,7 +1,8 @@
 language: php
-script: phpunit .
+script: phpunit tests
 
 php:
+  - hhvm
   - 5.3
   - 5.4
   - 5.5

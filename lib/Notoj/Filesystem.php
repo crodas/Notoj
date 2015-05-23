@@ -37,6 +37,8 @@
 
 namespace Notoj;
 
+use crodas\ClassInfo\ClassInfo;
+
 class Filesystem extends Cacheable
 {
     public function add(Cacheable $fs)
@@ -48,11 +50,12 @@ class Filesystem extends Cacheable
     public function __construct($files, $cache = NULL)
     {
         $this->annotations = new Annotation\Annotations;
+        $parser = new ClassInfo;
         foreach ((array)$files as $file) {
             if (is_dir($file)) {
-                $this->add(new Dir($file, $cache));
+                $this->add(new Dir($file, $cache, $parser));
             } else if (is_file($file)) {
-                $this->add(new File($file, $cache));
+                $this->add(new File($file, $cache, $parser));
             }
         }
     }

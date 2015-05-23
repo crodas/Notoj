@@ -69,7 +69,7 @@ class File extends Cacheable
         $this->localCache  = $localCache;
         $this->annotations = new Annotations;
 
-        foreach ($files as $file) {
+        foreach($files as $file) {
             $this->doParse($file, $parser);
         }
     }
@@ -136,7 +136,9 @@ class File extends Cacheable
         }
 
         foreach ($parser->getPHPDocs() as $object) {
-            $this->addObject($object);
+            if ($object->GetFile() == $path) {
+                $this->addObject($object);
+            }
         }
 
         $cache  = $this->toCache(function($e) use ($path) {

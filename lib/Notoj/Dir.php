@@ -55,7 +55,7 @@ class Dir extends Cacheable
     protected $Parser;
     protected $dirs;
 
-    public function __construct($dirPath, $cache = NULL)
+    public function __construct($dirPath, $cache = NULL, $parser = NULL)
     {
         $dirs = array();
         foreach ((array)$dirPath as $dir) {
@@ -71,6 +71,7 @@ class Dir extends Cacheable
         if ($cache) {
              $this->setCache($cache);
         }
+        $this->Parser  = $parser ? $parser : new ClassInfo;
         $this->doParse();
     }
 
@@ -141,7 +142,6 @@ class Dir extends Cacheable
     {
         $this->cached  = true;
         $this->cacheTs = 0;
-        $this->Parser  = new ClassInfo;
         $this->annotations = new Annotations;
         foreach ($this->dirs as $dir) {
             $this->readDirectory($dir);
