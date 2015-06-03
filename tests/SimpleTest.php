@@ -415,6 +415,24 @@ class simpletest extends \phpunit_framework_testcase
         $this->assertEquals(1, count($fs->getMethods('something')));
     }
 
+    public function testCallableMethodStatic()
+    {
+        $fs  = new \Notoj\Filesystem([__DIR__]); 
+        $this->assertEquals(3, $fs->getOne('callable_method_static')->getObject()->exec());
+    }
+
+    public function testCallableMethod()
+    {
+        $fs  = new \Notoj\Filesystem([__DIR__]); 
+        $this->assertEquals(2, $fs->getOne('callable_method')->getObject()->exec());
+    }
+
+    public function testCallableFunction()
+    {
+        $fs  = new \Notoj\Filesystem([__DIR__]); 
+        $this->assertEquals(1, $fs->getOne('callable')->getObject()->exec());
+    }
+
     public function testMethodVisibility()
     {
         $fs = new \Notoj\Filesystem(__DIR__);
