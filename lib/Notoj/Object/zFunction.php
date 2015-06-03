@@ -52,7 +52,7 @@ class zFunction extends Base implements zCallable
         if (!is_callable($function)) {
             require $this->object->GetFile();
         }
-        return call_user_func_array($name, func_get_args());
+        return call_user_func_array($function, func_get_args());
     }
 
     public function getParameters()
