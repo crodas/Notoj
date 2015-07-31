@@ -37,6 +37,7 @@
 
 namespace Notoj;
 
+use crodas\FileUtil\Path;
 use Notoj\Annotation\Annotations;
 use Notoj\Annotation\Annotation;
 use RecursiveDirectoryIterator;
@@ -128,7 +129,7 @@ class Dir extends Cacheable
             if (!$file->isfile() || ($filter && !$filter($file))) {
                 continue;
             }
-            $rpath = realpath($file->getPathname());
+            $rpath = Path::normalize($file->getPathname());
             $this->files[] = $rpath;
             $file = $this->addFile(new File($file->getPathname(), $this->localCache, $this->Parser));
             $cache[$rpath] = $file->ToCache();

@@ -37,6 +37,7 @@
 
 namespace Notoj;
 
+use crodas\FileUtil\Path;
 use crodas\ClassInfo\ClassInfo;
 use crodas\ClassInfo\Definition\TBase;
 use crodas\ClassInfo\Definition\TClass;
@@ -63,7 +64,7 @@ class File extends Cacheable
             if (!is_file($file) || !is_readable($file)) {
                 throw new \RuntimeException("{$filePath} is not a file or cannot be read");
             }
-            $files[] = realpath($file);
+            $files[] = Path::normalize($file);
         }
         $this->files = $files;
         $this->localCache  = $localCache;
