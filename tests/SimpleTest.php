@@ -450,4 +450,38 @@ class simpletest extends \phpunit_framework_testcase
         $fs = new \Notoj\Dir(__DIR__);
         $this->assertEquals(1, count($fs->get('weird_alone')));
     }
+
+    /**
+     *  @bug01(name="foobar", "david")
+     *  hi there, this is a comment
+     */
+    public function testBugAnnotationWithText()
+    {
+        $fs = new \Notoj\File(__FILE__);
+        $this->assertNotFalse($fs->getOne('bug01'));
+        $this->assertEquals('foobar', $fs->getOne('bug01')->getArg());
+        $this->assertEquals('foobar', $fs->getOne('bug01')->getArg("name"));
+        $this->assertEquals('david', $fs->getOne('bug01')->getArg("1"));
+        $this->assertEquals('david', $fs->getOne('bug01')->getArg(1));
+    }
+
+    /**
+     *  @expectedException RuntimeException
+     */
+    public function testArgException2()
+    {
+        $fs = new \Notoj\File(__FILE__);
+        $this->assertNotFalse($fs->getOne('bug01'));
+        $fs->getOne('bug01')->getArg(2);
+    }
+
+    /**
+     *  @expectedException RuntimeException
+     */
+    public function testArgException()
+    {
+        $fs = new \Notoj\File(__FILE__);
+        $this->assertNotFalse($fs->getOne('bug01'));
+        $fs->getOne('bug01')->getArg("something");
+    }
 }

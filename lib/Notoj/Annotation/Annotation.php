@@ -36,6 +36,8 @@
 */
 namespace Notoj\Annotation;
 
+use RuntimeException;
+
 class Annotation extends Common
 {
     protected $name;
@@ -85,6 +87,17 @@ class Annotation extends Common
     public function getObject()
     {
         return $this->parent->getObject();
+    }
+
+    public function getArg($index = 0)
+    {
+        foreach ([array_values($this->args), $this->args] as $args) {
+            if (array_key_exists($index, $args)) {
+                return $args[$index];
+            }
+        }
+
+        throw new RuntimeException("Cannot find argument $index on annotation");
     }
 
     public function getArgs()

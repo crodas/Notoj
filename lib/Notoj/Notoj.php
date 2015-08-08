@@ -77,7 +77,8 @@ class Notoj extends Cacheable
         $Parser  = new \Notoj_Parser;
         $buffer  = array();
         $isNew   = true;
-        do {
+
+        while (true) {
             try {
                 $token = $pzToken->getToken($isNew);
                 if (!$token) break;
@@ -88,7 +89,7 @@ class Notoj extends Cacheable
                 $Parser = new \Notoj_Parser;
                 $isNew  = true;
             }
-        } while(true);
+        }
         try {
             $Parser->doParse(0, 0);
         } catch (\Exception $e) {
