@@ -44,6 +44,7 @@ use Notoj_Parser as TParser;
 class Tokenizer
 {
     protected $body;
+    protected $context = 0;
     protected $pos  = 0;
     protected $line = 0;
     protected $valid = false;
@@ -98,6 +99,7 @@ class Tokenizer
         $keywords = $this->keywords;
 
         if ($start) {
+            $this->context = 0;
             $this->jumpNextLine();
         }
 
@@ -110,6 +112,9 @@ class Tokenizer
                 break;
             case "\n":
                 $this->jumpNextLine();
+                if ($this->context == 0) {
+                    $found = array(TParser::T_NEWLINE, "\n");
+                }
                 $e--;
                 break;
 
@@ -130,7 +135,14 @@ class Tokenizer
                 break;
                 /* }}} */
 
+
             default:
+                if ($body[$e] == "(") {
+                    ++$this->context;
+                } else if ($body[$e] == ")") {
+                    --$this->context;
+                }
+
                 if (!empty($symbols[$body[$e]])) {
                     $found = array($symbols[$body[$e]], $body[$e]);
                 } else {
