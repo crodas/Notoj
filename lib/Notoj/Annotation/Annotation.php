@@ -91,7 +91,7 @@ class Annotation extends Common
 
     public function getArg($index = 0)
     {
-        foreach ([array_values($this->args), $this->args] as $args) {
+        foreach (array(array_values($this->args), $this->args) as $args) {
             if (array_key_exists($index, $args)) {
                 return $args[$index];
             }
