@@ -63,7 +63,7 @@ class Cache
 
         $ns     = $global ? 'global' : uniqid(true);
         $data   = (array)require($filepath);
-        $useful = !empty($data['vesion']) && $data['version'] == self::CACHE_VERSION;
+        $useful = !empty($data['version']) && $data['version'] == self::CACHE_VERSION;
         self::$data[$ns]    = $useful ? $data['data'] : array();
         self::$path[$ns]    = $filepath;
         self::$isDirty[$ns] = false;
