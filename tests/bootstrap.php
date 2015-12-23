@@ -6,6 +6,10 @@ use Notoj\ReflectionClass,
 
 require __DIR__ . "/../vendor/autoload.php";
 
+if (!is_callable('_')) {
+    function _($x) { return $x; }
+}
+
 function getReflection($class) 
 {
     $class = explode("::", $class);

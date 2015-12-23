@@ -84,6 +84,15 @@ named_arg(A) ::= term(B) T_COLON expr(C) . { A = array(B => C); }
 
 
 /* some day we might care about expressions rather than term */
+expr(A) ::= T_ALPHA(B) T_PAR_LEFT args_body(X) T_PAR_RIGHT . { 
+    if (is_callable(B)) {
+        A = call_user_func_array(B, X);
+    } else if (count(X) === 1) {
+        A = X[0];
+    } else {
+        A = X;
+    }
+}
 expr(A) ::= term(B) . { A = B; }
 expr(A) ::= json(B) . { A = B; }
 expr(A) ::= code . { 
