@@ -16,7 +16,7 @@ class ArgumentsTest extends \phpunit_framework_testcase
         $this->assertEquals(array('foo' => 'bar', 'bar' => 'xxx'), $args);
     }
 
-    /** @some_function(foo=bar, bar=xxx) */
+    /** @some_function(foo=bar, bar=_(xxx)) */
     function testNamedArgs1() 
     {
         $reflection  = getReflection(__METHOD__);
