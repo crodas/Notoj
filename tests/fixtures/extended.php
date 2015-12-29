@@ -29,7 +29,7 @@ function something()
     return 1;
 }
 
-class something 
+class somethingx
 {
     /** @callable_method */
     public function something()

@@ -131,6 +131,7 @@ class Notoj_yyStackEntry
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
+use Notoj\FunctionCall;
 #line 136 "lib/Notoj/Parser.php"
 
 // declare_class is output here
@@ -978,13 +979,7 @@ static public $yy_action = array(
 #line 984 "lib/Notoj/Parser.php"
 #line 86 "lib/Notoj/Parser.y"
     function yy_r19(){ 
-    if (is_callable($this->yystack[$this->yyidx + -3]->minor)) {
-        $this->_retvalue = call_user_func_array($this->yystack[$this->yyidx + -3]->minor, $this->yystack[$this->yyidx + -1]->minor);
-    } else if (count($this->yystack[$this->yyidx + -1]->minor) === 1) {
-        $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor[0];
-    } else {
-        $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor;
-    }
+        $this->_retvalue = new FunctionCall($this->yystack[$this->yyidx + -3]->minor, $this->yystack[$this->yyidx + -1]->minor);
     }
 #line 995 "lib/Notoj/Parser.php"
 #line 97 "lib/Notoj/Parser.y"

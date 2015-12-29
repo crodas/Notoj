@@ -34,90 +34,29 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj\Annotation;
+namespace Notoj;
 
-use Notoj\FunctionCall;
-use RuntimeException;
-
-class Annotation extends Common
+class FunctionCall
 {
-    protected $name;
+    protected $function;
     protected $args;
-    protected $parent; 
 
-    public function getObjectName()
+    function __construct($function, Array $args)
     {
-        return $this->parent->getObjectName();
+        $this->function = $function;
+        $this->args     = $args;
     }
 
-
-    public function __construct($name, Array $args = array())
+    public function getValue()
     {
-        $this->name = strtolower($name);
-        $this->args = $args;
-    }
-
-    public static function fromCache(Array $object)
-    {
-        $obj = new self($object[0], $object[1]);
-        $obj->object = unserialize($object[2]);
-        return $obj;
-    }
-
-    public function toCache()
-    {
-        return array($this->name, $this->args);
-    }
-
-    public function setParent(Annotations $parent)
-    {
-        $this->parent = $parent;
-        return $this;
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    public function getFile()
-    {
-        return $this->parent->getFile();
-    }
-
-    public function getObject()
-    {
-        return $this->parent->getObject();
-    }
-
-    public function getArg($index = 0)
-    {
-        foreach (array(array_values($this->args), $this->args) as $args) {
-            if (array_key_exists($index, $args)) {
-                if ($args[$index] instanceof FunctionCall) {
-                    return $args[$index]->getValue();
-                }
-                return $args[$index];
-            }
+        if (is_callable($this->function)) {
+            return call_user_func_array($this->function, $this->args);
         }
 
-        throw new RuntimeException("Cannot find argument $index on annotation");
-    }
-
-    public function getArgs()
-    {
-        $args = $this->args;
-        foreach ($args as $id => $val) {
-            if ($val instanceof FunctionCall) {
-                $args[$id] = $val->getValue();
-            }
+        if (count($this->args) === 1) {
+            return $this->args[0];
         }
 
-        return $args;
-    }
-
-    public function getName()
-    {
-        return $this->name;
+        return $this->args;
     }
 }
