@@ -10,7 +10,7 @@
     "require": {
         "php": ">=5.3.0",
         "crodas/class-info": "^0.2",
-        "crodas/file-util": "^0.1.18"
+        "crodas/file-util": ">= 0.2"
     },
     "license": "BSD-4-Clause",
     "version": "v1.2.1",
