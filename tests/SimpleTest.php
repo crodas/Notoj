@@ -368,6 +368,10 @@ class simpletest extends \phpunit_framework_testcase
 It supports multiple paragraphs as well.
 More and more texts', $annotation->getArg(0));
         }
+        $this->assertTrue($foo->has('short'));
+        foreach ($foo->get('short') as $annotation) {
+            $this->assertEquals('hi there!', $annotation->getArg(0));
+        }
     }
 
     public function testParentClass()
