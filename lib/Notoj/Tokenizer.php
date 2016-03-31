@@ -44,9 +44,11 @@ use Notoj_Parser as TParser;
 class Tokenizer
 {
     protected $body;
+    protected $state = null;
     protected $context = 0;
     protected $pos  = 0;
     protected $line = 0;
+    protected $length;
     protected $valid = false;
     protected $symbols = array(
         '@' => TParser::T_AT,
@@ -71,24 +73,48 @@ class Tokenizer
 
     public function __construct($body) {
         $this->body  = trim(substr($body, 3, -2));
+        $this->length = strlen($this->body);
+    }
+
+    protected function includeNextLine(Array & $text, &$oldPos)
+    {
+        if ($oldPos+1 > $this->length) {
+            return false;
+        }
+        $pos = strpos($this->body, "\n", $oldPos+1);
+        if ($pos === false) {
+            $line = substr($this->body, $oldPos+1);
+            $pos  = $this->length;
+        } else {
+            $line = substr($this->body, $oldPos+1, $pos - $oldPos);
+        } 
+        if (preg_match("/^(?:\s*\*)?\n/", $line, $match)) {
+            $text[] = "\n";
+            $oldPos = $pos;
+            return true;
+        } else if (preg_match("/^(?:\s*\*)\s{3,}([^\n]+)/", $line, $match)) {
+            $text[] = trim($match[1]);
+            $oldPos = $pos;
+            return true;
+        }
+        return false;
     }
 
     protected function jumpNextLine()
     {
         $body = $this->body;
         $pos  = &$this->pos;
-        $len  = strlen($body);
         if ($pos > 0) {
             $pos = strpos($body, "\n", $pos);
             if ($pos === false) {
                 // EOF
-                $pos = $len;
+                $pos = $this->length;
                 return;
             }
         }
         
         $ignore = array(" ", "\t", "\r", "\n", "*");
-        while ($pos < $len && in_array($body[$pos], $ignore)) {
+        while ($pos < $this->length && in_array($body[$pos], $ignore)) {
             $pos++;
         }
     }
@@ -97,6 +123,11 @@ class Tokenizer
     {
         $symbols  = $this->symbols;
         $keywords = $this->keywords;
+        $body  = $this->body;
+
+        if ($this->pos > $this->length) {
+            return false;
+        }
 
         if ($start) {
             $this->context = 0;
@@ -104,9 +135,7 @@ class Tokenizer
         }
 
         $found = false;
-        $body  = $this->body;
-        $len   = strlen($body);
-        for ($e = &$this->pos; !$found && $e < $len; $e++) {
+        for ($e = &$this->pos; !$found && $e < $this->length; $e++) {
             switch ($body[$e]) {
             case "\r": case " ": case "\f": case "\t":
                 break;
@@ -120,9 +149,10 @@ class Tokenizer
 
             case '"': case "'":
                 /* string {{{ */
+                $this->state = null;
                 $end  = $body[$e];
                 $data = "";
-                while ($e+1 < $len && $body[++$e] !== $end) {
+                while ($e+1 < $this->length && $body[++$e] !== $end) {
                     if ($body[$e] == "\\") {
                         ++$e;
                     }
@@ -135,9 +165,9 @@ class Tokenizer
                 break;
                 /* }}} */
 
-
             default:
                 if ($body[$e] == "(") {
+                    $this->state = null;
                     ++$this->context;
                 } else if ($body[$e] == ")") {
                     --$this->context;
@@ -145,9 +175,20 @@ class Tokenizer
 
                 if (!empty($symbols[$body[$e]])) {
                     $found = array($symbols[$body[$e]], $body[$e]);
+                    $this->state = $body[$e];
+                } else if ($this->state === "value") {
+                    $newLine = strpos($body, "\n", $e);
+                    if ($newLine === false) {
+                        $newLine = $this->length;
+                    }
+                    $text = array(trim(substr($body, $e, $newLine - $e)));
+                    while ($this->includeNextLine($text, $newLine));
+                    $found = array(TParser::T_ALPHA, str_replace(array(" \n", "\n "), "\n", implode(" ", $text)));
+                    $this->state = null;
+                    $e = $newLine-1;
                 } else {
-                    $data = "";
-                    while ($e < $len && empty($symbols[$body[$e]])
+                    $data  = "";
+                    while ($e < $this->length && empty($symbols[$body[$e]])
                         && trim($body[$e]) !== "") {
                         $data .= $body[$e++];
                     }
@@ -157,12 +198,15 @@ class Tokenizer
                     }
 
                     $e--;
-                    if (is_numeric($data[0]) && is_numeric($data)) {
-                        $found = array(TParser::T_NUMBER, $data + 0);
-                    } else if (!empty($keywords[strtolower($data)])) {
+                    if (!empty($keywords[strtolower($data)])) {
                         $found = array($keywords[strtolower($data)], $data);
+                    } else if (is_numeric($data[0]) && is_numeric($data)) {
+                        $found = array(TParser::T_NUMBER, $data + 0);
                     } else {
                         $found = array(TParser::T_ALPHA, $data);
+                        if ($this->state === "@") {
+                            $this->state = "value";
+                        }
                     }
                 }
                 break;

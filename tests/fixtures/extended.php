@@ -9,7 +9,17 @@ class xxyyzz
 function weirdo() {
 }
 
-/** @Foobar(@Foobar('foobar'), 'foobar') */
+/** 
+ * @Foobar(@Foobar('foobar'), 'foobar') 
+ * @Long    this is a very long long long text 
+ *          and perhaps
+ *          we are talking
+ *
+ *          It supports multiple paragraphs as well.
+ *
+ *          More and more texts
+ *  @Short  hi there!
+ */
 class extended extends xxyyzz
 {
 }

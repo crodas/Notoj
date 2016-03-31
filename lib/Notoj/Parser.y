@@ -66,11 +66,8 @@ code ::= T_AT T_ALPHA(B) args(C) . {
 }
 
 args(A) ::= T_PAR_LEFT args_body(C) T_PAR_RIGHT . { A = C; }
-args(A) ::= term_array(B) . { A = array(implode(' ', B)); }
+args(A) ::= termy(B) . { A = B; }
 args(A) ::= . { A = array(); }
-
-term_array(A) ::= term_array(B)  catch_all(C) . { A = B; A[] = C; }
-term_array(A) ::= . { A = array(); }
 
 catch_all(A) ::= term(B) . { A = B; }
 catch_all(A) ::= T_COMMA|T_COLON|T_CURLY_OPEN|T_CURLY_CLOSE|T_SUBSCR_OPEN|T_SUBSCR_CLOSE(X) . { A = @X; }

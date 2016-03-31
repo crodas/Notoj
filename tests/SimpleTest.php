@@ -154,7 +154,7 @@ class simpletest extends \phpunit_framework_testcase
     function testStrErrorNicely()
     {
         $annotations = getReflection(__METHOD__)->getAnnotations();
-        $this->assertEquals(1, $annotations->count());
+        $this->assertEquals(3, $annotations->count());
     }
 
     function testNoAnnotations() {
@@ -358,6 +358,20 @@ class simpletest extends \phpunit_framework_testcase
         
         $this->assertEquals($foo->get('fooobar'), array());
         $this->assertTrue($foo->has('foobar'));
+    }
+
+    public function testMultilineQuotes()
+    {
+        $foo = new \Notoj\File(__DIR__ . "/fixtures/extended.php");
+        foreach ($foo->get('long') as $annotation) {
+           $this->assertEquals('this is a very long long long text and perhaps we are talking
+It supports multiple paragraphs as well.
+More and more texts', $annotation->getArg(0));
+        }
+        $this->assertTrue($foo->has('short'));
+        foreach ($foo->get('short') as $annotation) {
+            $this->assertEquals('hi there!', $annotation->getArg(0));
+        }
     }
 
     public function testParentClass()
