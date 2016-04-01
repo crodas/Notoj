@@ -183,7 +183,7 @@ class Tokenizer
                     }
                     $text = array(trim(substr($body, $e, $newLine - $e)));
                     while ($this->includeNextLine($text, $newLine));
-                    $found = array(TParser::T_ALPHA, str_replace(array(" \n", "\n "), "\n", implode(" ", $text)));
+                    $found = array(TParser::T_ALPHA, rtrim(str_replace(array(" \n", "\n "), "\n", implode(" ", $text)), " */"));
                     $this->state = null;
                     $e = $newLine-1;
                 } else {

@@ -22,6 +22,8 @@ function weirdo() {
  */
 class extended extends xxyyzz
 {
+    /** @inline this is foo */
+    function yyy() {}
 }
 
 class parentxx extends extended
