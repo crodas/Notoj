@@ -363,6 +363,7 @@ class simpletest extends \phpunit_framework_testcase
     public function testMultilineQuotes()
     {
         $foo = new \Notoj\File(__DIR__ . "/fixtures/extended.php");
+        $this->assertEquals('this is foo', $foo->getOne('inline')->getArg(0));
         foreach ($foo->get('long') as $annotation) {
            $this->assertEquals('this is a very long long long text and perhaps we are talking
 It supports multiple paragraphs as well.
