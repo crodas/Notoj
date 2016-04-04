@@ -155,6 +155,7 @@ class simpletest extends \phpunit_framework_testcase
     {
         $annotations = getReflection(__METHOD__)->getAnnotations();
         $this->assertEquals(3, $annotations->count());
+        $this->assertEquals('Request $request object', $annotations[0]->getArg(0));
     }
 
     function testNoAnnotations() {
