@@ -48,6 +48,7 @@ class Tokenizer
     protected $context = 0;
     protected $pos  = 0;
     protected $line = 0;
+    protected $nLine = 0;
     protected $length;
     protected $valid = false;
     protected $symbols = array(
@@ -76,12 +77,13 @@ class Tokenizer
         $this->length = strlen($this->body);
     }
 
-    protected function includeNextLine(Array & $text, &$oldPos)
+    protected function includeNextLine(Array & $text, &$oldPos, $spaces)
     {
         if ($oldPos+1 > $this->length) {
             return false;
         }
         $pos = strpos($this->body, "\n", $oldPos+1);
+        $min = max($spaces -1, 0);
         if ($pos === false) {
             $line = substr($this->body, $oldPos+1);
             $pos  = $this->length;
@@ -92,7 +94,7 @@ class Tokenizer
             $text[] = "\n";
             $oldPos = $pos;
             return true;
-        } else if (preg_match("/^(?:\s*\*)\s{3,}([^\n]+)/", $line, $match)) {
+        } else if (preg_match("/^(?:\*|\s){{$min}}([^\n]+)/", $line, $match) === 1) {
             $text[] = trim($match[1]);
             $oldPos = $pos;
             return true;
@@ -140,6 +142,7 @@ class Tokenizer
             case "\r": case " ": case "\f": case "\t":
                 break;
             case "\n":
+                $this->nLine = $e+1;
                 $this->jumpNextLine();
                 if ($this->context == 0) {
                     $found = array(TParser::T_NEWLINE, "\n");
@@ -182,7 +185,7 @@ class Tokenizer
                         $newLine = $this->length;
                     }
                     $text = array(trim(substr($body, $e, $newLine - $e)));
-                    while ($this->includeNextLine($text, $newLine));
+                    while ($this->includeNextLine($text, $newLine, $e - $this->nLine));
                     $found = array(TParser::T_ALPHA, rtrim(str_replace(array(" \n", "\n "), "\n", implode(" ", $text)), " */"));
                     $this->state = null;
                     $e = $newLine-1;
