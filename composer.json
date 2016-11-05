@@ -19,5 +19,8 @@
         "psr-0": {
             "Notoj": "lib/"
         }
+    },
+    "require-dev": {
+        "johnkary/phpunit-speedtrap": "^1.0"
     }
 }
