@@ -56,7 +56,7 @@ class Dir extends Cacheable
     protected $Parser;
     protected $dirs;
 
-    public function __construct($dirPath, $cache = NULL, $parser = NULL)
+    public function __construct($dirPath, $parser = NULL)
     {
         $dirs = array();
         foreach ((array)$dirPath as $dir) {
@@ -69,9 +69,6 @@ class Dir extends Cacheable
         $this->filter = function(\splFileInfo $file) {
             return strtolower($file->getExtension()) === "php";
         };
-        if ($cache) {
-             $this->setCache($cache);
-        }
         $this->Parser  = $parser ? $parser : new ClassInfo;
         $this->doParse();
     }
@@ -109,15 +106,14 @@ class Dir extends Cacheable
     {
         $filter  = $this->filter;
         $modtime = filemtime($path);
-        $cached  = Cache::get('dir://' . $path, $has, $this->localCache);
 
-        if ($has && $cached['modtime'] >= $modtime) {
+        if (false && $has && $cached['modtime'] >= $modtime) {
             if ($this->cacheTs < $modtime) {
                 $this->cacheTs = $modtime;
             }
             foreach ($cached['cache'] as $file => $cache) {
                 $this->files[] = $file;
-                $this->addFile(File::fromCache($file, $cache, $this->localCache));
+                $this->addFile(File::fromCache($file, $cache));
             }
             return;
         }
@@ -131,11 +127,10 @@ class Dir extends Cacheable
             }
             $rpath = Path::normalize($file->getPathname());
             $this->files[] = $rpath;
-            $file = $this->addFile(new File($file->getPathname(), $this->localCache, $this->Parser));
+            $file = $this->addFile(new File($file->getPathname(), $this->Parser));
             $cache[$rpath] = $file->ToCache();
         } 
 
-        Cache::set('dir://' . $path, compact('modtime', 'cache'), $this->localCache);
         return $this->annotations;
     }
 

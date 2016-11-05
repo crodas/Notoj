@@ -1,8 +1,9 @@
 <?php
 namespace Notoj\Test;
 
-use Notoj\ReflectionClass,
-    Notoj\ReflectionMethod;
+use Notoj\ReflectionClass;
+use Notoj\ReflectionMethod;
+use Remember\Remember;
 
 require __DIR__ . "/../vendor/autoload.php";
 
@@ -17,3 +18,4 @@ function getReflection($class)
 }
 
 @unlink(__DIR__ . "/tmp.cache");
+Remember::setDirectory('/tmp/cache');
