@@ -51,12 +51,8 @@ class Notoj extends Cacheable
     protected static $parsed = array();
     protected static $internal_cache = array();
 
-    public static function enableCache($file) 
+    public static function parseDocComment($content)
     {
-        Cache::init($file);
-    }
-
-    public static function parseDocComment($content, &$isCached = NULL, $localCache = NULL) {
         if (is_object($content) && is_callable(array($content, 'getDocComment'))) {
             $content = $content->getDocComment();
         }
@@ -66,13 +62,6 @@ class Notoj extends Cacheable
             return unserialize(self::$internal_cache[$id]);
         }
 
-        $isCached = false;
-        $cached   = Cache::Get($id, $found, $localCache);
-        if ($found) {
-            $isCached = true;
-            self::$internal_cache[$id] = $cached;
-            return unserialize($cached);
-        }
         $pzToken = new Tokenizer($content);
         $Parser  = new \Notoj_Parser;
         $buffer  = array();
@@ -96,7 +85,6 @@ class Notoj extends Cacheable
             // ignore error
         }
         $struct = new Annotations(array_merge($buffer, $Parser->body));
-        Cache::Set($id, $struct, $localCache);
         self::$internal_cache[$id] = $struct->toCache();
         return $struct;
     }
@@ -113,7 +101,6 @@ class Notoj extends Cacheable
     {
         if (empty(self::$parsed[$file])) {
             $parser = new File($file);
-            $parser->localCache = $this->localCache;
             self::$parsed[$file] = $parser->getAnnotations();
         }
         return self::$parsed[$file];

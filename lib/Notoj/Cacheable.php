@@ -38,7 +38,6 @@ namespace Notoj;
 
 abstract class Cacheable implements \IteratorAggregate 
 {
-    protected $localCache;
     protected $annotations;
     protected $objs = array();
 
@@ -69,12 +68,6 @@ abstract class Cacheable implements \IteratorAggregate
     public function getAnnotations()
     {
         return $this->annotations;
-    }
-
-    public function setCache($path)
-    {
-        $this->localCache = Cache::init($path, false);
-        return $this;
     }
 
     public function getByName($name, $type)

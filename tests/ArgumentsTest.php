@@ -7,12 +7,14 @@ use notoj\reflectionclass,
 /** @test */
 class ArgumentsTest extends \phpunit_framework_testcase
 {
-    /** @some_function(foo:bar, bar:xxx) */
+    /** @SOME_function(foo:bar, bar:xxx) */
     function testNamedArgs2() 
     {
         $reflection  = getReflection(__METHOD__);
         $annotations = $reflection->getAnnotations();
         $args        = $annotations[0]->getArgs();
+        $this->assertEquals($annotations->has('SOME_function'), $annotations->has('some_function'));
+        $this->assertTrue($annotations->has('SOME_function'));
         $this->assertEquals(array('foo' => 'bar', 'bar' => 'xxx'), $args);
     }
 

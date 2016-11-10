@@ -34,9 +34,9 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-
 namespace Notoj;
 
+use Remember\Remember;
 use crodas\ClassInfo\ClassInfo;
 
 class Filesystem extends Cacheable
@@ -47,16 +47,23 @@ class Filesystem extends Cacheable
         $this->objs = array_merge($this->objs, $fs->objs);
     }
 
-    public function __construct($files, $cache = NULL)
+    public function __construct($files)
     {
         $this->annotations = new Annotation\Annotations;
-        $parser = new ClassInfo;
-        foreach ((array)$files as $file) {
-            if (is_dir($file)) {
-                $this->add(new Dir($file, $cache, $parser));
-            } else if (is_file($file)) {
-                $this->add(new File($file, $cache, $parser));
+        $loader = Remember::wrap('notoj', function($args, $files) {
+            $parser = new ClassInfo;
+            $files  = array_filter($files, 'is_file');
+            $pFiles = array();
+            foreach ($files as $file) {
+                $pFiles[] = new File($file, $parser);
             }
+
+            return serialize($pFiles);
+        });
+        $files   = is_array($files) ? $files : array($files);
+        $files[] = 'filesystem';
+        foreach (unserialize($loader($files)) as $f) {
+            $this->add($f);
         }
     }
 }
