@@ -106,7 +106,7 @@ class Dir extends Cacheable
             return serialize($classes);
         });
 
-        foreach (unserialize($wrap(['is_file', $path])) as $file => $obj) {
+        foreach (unserialize($wrap(dir('is_file', $path))) as $file => $obj) {
             if ($filter && !$filter(new SplFileInfo($file))) {
                 continue;
             }
