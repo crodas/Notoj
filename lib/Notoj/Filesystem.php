@@ -60,7 +60,9 @@ class Filesystem extends Cacheable
 
             return serialize($pFiles);
         });
-        foreach (unserialize($loader('filesystem', $files)) as $f) {
+        $files   = is_array($files) ? $files : array($files);
+        $files[] = 'filesystem';
+        foreach (unserialize($loader($files)) as $f) {
             $this->add($f);
         }
     }
