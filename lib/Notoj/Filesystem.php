@@ -53,7 +53,7 @@ class Filesystem extends Cacheable
         $loader = Remember::wrap('notoj', function($args, $files) {
             $parser = new ClassInfo;
             $files  = array_filter($files, 'is_file');
-            $pFiles = [];
+            $pFiles = array();
             foreach ($files as $file) {
                 $pFiles[] = new File($file, $parser);
             }
