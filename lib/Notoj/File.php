@@ -61,7 +61,7 @@ class File extends Cacheable
     public function __construct($filePath, $parser = null)
     {
         if (self::$fromCache) return;
-        $this->remember = Remember::init('notoj');
+        $this->remember = Remember::ns('notoj');
         $files = array();
         foreach ((array)$filePath as $file) {
             if (!is_file($file) || !is_readable($file)) {

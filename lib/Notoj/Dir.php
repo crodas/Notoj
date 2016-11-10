@@ -44,6 +44,8 @@ use RecursiveDirectoryIterator;
 use DirectoryIterator;
 use RecursiveIteratorIterator;
 use crodas\ClassInfo\ClassInfo;
+use Remember\Remember;
+use SplFileInfo;
 
 /**
  *  @autoload("File")
@@ -51,8 +53,6 @@ use crodas\ClassInfo\ClassInfo;
 class Dir extends Cacheable
 {
     protected $filter;
-    protected $cached;
-    protected $cacheTs;
     protected $Parser;
     protected $dirs;
 
@@ -84,16 +84,6 @@ class Dir extends Cacheable
         return $this;
     }
 
-    public function isCached()
-    {
-        return $this->cached;
-    }
-
-    public function getCacheTime()
-    {
-        return $this->cacheTs;
-    }
-
     protected function addFile(File $file)
     {
         $this->annotations->merge($file->getAnnotations());
@@ -105,39 +95,29 @@ class Dir extends Cacheable
     public function readDirectory($path)
     {
         $filter  = $this->filter;
-        $modtime = filemtime($path);
+        $parser  = $this->Parser;
 
-        if (false && $has && $cached['modtime'] >= $modtime) {
-            if ($this->cacheTs < $modtime) {
-                $this->cacheTs = $modtime;
+        $wrap = Remember::wrap('notoj', function($dir, $files) use ($parser) {
+            $files = array_filter($files, $dir[0]);
+            $classes = [];
+            foreach ($files as $file) {
+                $classes[$file] = new File($file, $parser);
             }
-            foreach ($cached['cache'] as $file => $cache) {
-                $this->files[] = $file;
-                $this->addFile(File::fromCache($file, $cache));
-            }
-            return;
-        }
-            
-        $this->cached = false;
-        $iter = new RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS);
-        $cache = array();
-        foreach (new RecursiveIteratorIterator($iter) as $file) {
-            if (!$file->isfile() || ($filter && !$filter($file))) {
+            return serialize($classes);
+        });
+
+        foreach (unserialize($wrap(['is_file', $path])) as $file => $obj) {
+            if ($filter && !$filter(new SplFileInfo($file))) {
                 continue;
             }
-            $rpath = Path::normalize($file->getPathname());
-            $this->files[] = $rpath;
-            $file = $this->addFile(new File($file->getPathname(), $this->Parser));
-            $cache[$rpath] = $file->ToCache();
-        } 
+            $this->addFile($obj);
+        }
 
         return $this->annotations;
     }
 
     protected function doParse()
     {
-        $this->cached  = true;
-        $this->cacheTs = 0;
         $this->annotations = new Annotations;
         foreach ($this->dirs as $dir) {
             $this->readDirectory($dir);
