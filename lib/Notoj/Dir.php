@@ -99,7 +99,7 @@ class Dir extends Cacheable
 
         $wrap = Remember::wrap('notoj', function($dir, $files) use ($parser) {
             $files = array_filter($files, $dir[0]);
-            $classes = [];
+            $classes = array();
             foreach ($files as $file) {
                 $classes[$file] = new File($file, $parser);
             }
