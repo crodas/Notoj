@@ -75,21 +75,24 @@ abstract class Base implements \ArrayAccess
         return $this->object->getFile();
     }
 
-    protected function __construct(TBase $object, $localCache)
+    protected function __construct(TBase $object)
     {
+        if (empty($object->annotations)) {
+            $object->annotations = Notoj::parseDocComment($object->GetPHPDoc());
+        }
         $this->object = $object;
-        $this->annotations = Notoj::parseDocComment($object->GetPHPDoc(), $foo, $localCache);
+        $this->annotations = $object->annotations;
         $this->annotations->setObject($this);
     }
 
-    public static function create(TBase $object, $localCache)
+    public static function create(TBase $object)
     {
         $type = substr(strstr(get_class($object), "\\T"), 2);
         if ($type == 'Function' && !empty($object->class)) {
             $type = 'Method';
         }
         $class = __NAMESPACE__ . "\\z{$type}";
-        return new $class($object, $localCache);
+        return new $class($object);
     }
 
     public function get($selector = '')

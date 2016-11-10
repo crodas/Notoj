@@ -10,7 +10,8 @@
     "require": {
         "php": ">=5.3.0",
         "crodas/class-info": "^0.2",
-        "crodas/file-util": ">= 0.2"
+        "crodas/file-util": "^0.2",
+        "crodas/remember": ">=0.3.2"
     },
     "license": "BSD-4-Clause",
     "version": "v1.3.3",
@@ -18,5 +19,8 @@
         "psr-0": {
             "Notoj": "lib/"
         }
+    },
+    "require-dev": {
+        "johnkary/phpunit-speedtrap": "^1.0"
     }
 }

@@ -41,7 +41,7 @@ namespace Notoj;
  */
 class ReflectionClass extends \ReflectionClass
 {
-    protected $annotation = array();
+    protected $annotation = NULL;
     
     static protected $properties = array();
     static protected $methods = array();
@@ -49,11 +49,13 @@ class ReflectionClass extends \ReflectionClass
     public function __construct($name) 
     {
         parent::__construct($name);
-        $this->annotation = Notoj::parseDocComment($this);
     }
 
     public function getAnnotations() 
     {
+        if ($this->annotation === NULL) {
+            $this->annotation = Notoj::parseDocComment($this);
+        }
         return $this->annotation;
     }
 
