@@ -11,10 +11,10 @@
         "php": ">=5.3.0",
         "crodas/class-info": "^0.2",
         "crodas/file-util": "^0.2",
-        "crodas/remember": ">=0.3.2"
+        "crodas/remember": ">=0.4.2"
     },
     "license": "BSD-4-Clause",
-    "version": "v1.4.1",
+    "version": "v1.4.2",
     "autoload": {
         "psr-0": {
             "Notoj": "lib/"

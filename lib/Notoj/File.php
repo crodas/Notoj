@@ -56,11 +56,9 @@ class File extends Cacheable
     protected $remember;
     protected $cached;
     protected $objAnnotation = array();
-    protected static $fromCache;
 
     public function __construct($filePath, $parser = null)
     {
-        if (self::$fromCache) return;
         $this->remember = Remember::ns('notoj');
         $files = array();
         foreach ((array)$filePath as $file) {
@@ -92,25 +90,11 @@ class File extends Cacheable
         }
     }
 
-    public static function fromCache($file, $str)
-    {
-        self::$fromCache = true;
-        $self = new self($file);
-        $self->path = $file;
-        $self->annotations = new Annotations;
-        foreach (unserialize($str) as $object) {
-            $self->addObject($object);
-        }
-        self::$fromCache = false;;
-
-        return $self;
-    }
-
     public function toCache($filter = null)
     {
         $filter = $filter ?: function() { return true; };
         $toSerialize = array_filter($this->objAnnotation, $filter);
-        return serialize($toSerialize);
+        return $toSerialize;
     }
 
     public function isCached()
@@ -123,7 +107,7 @@ class File extends Cacheable
         $cached = $this->remember->get($path, $isValid);
         if ($isValid) {
             $this->cached = true;
-            foreach (unserialize($cached) as $object) {
+            foreach ($cached as $object) {
                 $this->addObject($object);
             }
             return;
