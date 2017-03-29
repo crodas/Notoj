@@ -17,5 +17,9 @@ function getReflection($class)
     return new ReflectionMethod($class[0], $class[1]);
 }
 
+if (!class_exists('\PHPUnit_Framework_TestCase')) {
+    require __DIR__ . '/phpunit-compat.php';
+}
+
 @unlink(__DIR__ . "/tmp.cache");
 Remember::setDirectory('/tmp/cache');
