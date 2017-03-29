@@ -15,7 +15,7 @@
         "crodas/remember": ">=0.4.2"
     },
     "license": "BSD-4-Clause",
-    "version": "v1.4.2",
+    "version": "v1.5.1",
     "autoload": {
         "psr-0": {
             "Notoj": "lib/"
