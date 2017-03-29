@@ -21,7 +21,7 @@ function foo() {
  *      ["foobar"]
  * )
  */
-class simpletest extends \phpunit_framework_testcase
+class simpletest extends \PHPUnit_Framework_TestCase
 {
     /** @var_name("foo") */
     protected $bar;

@@ -5,7 +5,7 @@ use notoj\reflectionclass,
     notoj\reflectionmethod;
 
 /** @test */
-class ArgumentsTest extends \phpunit_framework_testcase
+class ArgumentsTest extends \PHPUnit_Framework_TestCase
 {
     /** @SOME_function(foo:bar, bar:xxx) */
     function testNamedArgs2() 
