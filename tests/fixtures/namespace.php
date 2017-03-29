@@ -12,6 +12,7 @@ namespace foo\name {
 }
 
 namespace {
+
     /** @foobar */
     final class foobar {
         /** @fooba */

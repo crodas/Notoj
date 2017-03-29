@@ -21,7 +21,7 @@ function foo() {
  *      ["foobar"]
  * )
  */
-class simpletest extends \phpunit_framework_testcase
+class simpletest extends \PHPUnit_Framework_TestCase
 {
     /** @var_name("foo") */
     protected $bar;
@@ -499,5 +499,37 @@ More and more texts', $annotation->getArg(0));
         $fs = new \Notoj\File(__FILE__);
         $this->assertNotFalse($fs->getOne('bug01'));
         $fs->getOne('bug01')->getArg("something");
+    }
+
+    public function testInterfaceAnnotations()
+    {
+        require_once __DIR__ . '/fixtures/interface.php';
+
+        $reflection = new ReflectionClass('foobar_interface');
+        $this->assertTrue($reflection->isInterface());
+        $this->assertTrue($reflection->getAnnotations()->has('yyey,xxx'));
+        $this->assertEquals(array(), $reflection->getAnnotations()->getOne('foobar_interface,xxx')->getArgs());
+    }
+
+    /** @dependsOn testInterfaceAnnotations */
+    public function testGetInterfaces()
+    {
+        $x = new ReflectionClass('lol');
+        $l = 0;
+        foreach ($x->getInterfaces() as $interface) {
+            $this->assertTrue($interface instanceof ReflectionClass);
+            ++$l;
+        }
+        $this->assertEquals(1, $l);
+    }
+
+    public function testParseClassConstant()
+    {
+        $x = new \Notoj\File(__DIR__ . '/fixtures/extended.php');
+        $annotation = $x->getOne('class_definition');
+        $this->assertEquals(
+            array('LOL\bar', 'xxyyzz'),
+            $annotation->getArgs()
+        );
     }
 }

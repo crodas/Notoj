@@ -1,7 +1,7 @@
 <?php
 /*
   +---------------------------------------------------------------------------------+
-  | Copyright (c) 2014 César Rodas                                                  |
+  | Copyright (c) 2016 César Rodas                                                  |
   +---------------------------------------------------------------------------------+
   | Redistribution and use in source and binary forms, with or without              |
   | modification, are permitted provided that the following conditions are met:     |
@@ -34,115 +34,80 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
+namespace Notoj;
 
-namespace Notoj\Object;
+use PhpParser\ParserFactory;
+use PhpParser;
+use PhpParser\Node\Stmt;
+use PhpParser\Node;
 
-use crodas\ClassInfo\Definition\TBase;
-use Notoj\Notoj;
-
-abstract class Base implements \ArrayAccess
+/**
+ * NamespaceVisitor
+ *
+ * Resolves `use <class>` statements and `namespace <name`> statements
+ */
+class NamespaceVisitor extends PhpParser\NodeVisitorAbstract
 {
-    protected $annotations;
-    protected $object;
+    public $classes = array();
+    public $namespace;
 
-    public function getObject()
+    public function leaveNode(Node $node)
     {
-        return $this->object;
-    }
-
-    public function offsetUnset($name)
-    {
-        throw new \BadFunctionCallException;
-    }
-
-    public function offsetSet($name, $value)
-    {
-        throw new \BadFunctionCallException;
-    }
-
-    public function offsetExists($name)
-    {
-        return $this->annotations->has($name);
-    }
-
-    public function offsetGet($name)
-    {
-        return $this->annotations->getOne($name);
-    }
-
-    public function getFile()
-    {
-        return $this->object->getFile();
-    }
-
-    protected function __construct(TBase $object)
-    {
-        if (empty($object->annotations)) {
-            $object->annotations = Notoj::parseDocComment($object->GetPHPDoc(), $object->getFile());
+        if ($node instanceof Stmt\Use_) {
+            foreach ($node->uses as $class) {
+                $this->classes[$class->alias] = (string)$class->name;
+            }
         }
-        $this->object = $object;
-        $this->annotations = $object->annotations;
-        $this->annotations->setObject($this);
-    }
-
-    public static function create(TBase $object)
-    {
-        $type = substr(strstr(get_class($object), "\\T"), 2);
-        if ($type == 'Function' && !empty($object->class)) {
-            $type = 'Method';
+        if ($node instanceof Stmt\Namespace_) {
+            $this->namespace = (string)$node->name;
         }
-        $class = __NAMESPACE__ . "\\z{$type}";
-        return new $class($object);
     }
+}
 
-    public function get($selector = '')
+class ClassReference
+{
+    /**
+     * Resolves the a class name in the context of a given file.
+     *
+     * @param string $class     Class name to resolve and get the fully qualify one
+     * @param string $file      File name
+     * 
+     * @return string
+     */
+    public static function resolve($class, $file)
     {
-        return $this->annotations->get($selector);
-    }
+        if ($class[0] === '\\') {
+            return $class;
+        }
 
+        ini_set('xdebug.max_nesting_level', 3000);
+        if (class_exists('PhpParser\Parser')) {
+            // php-parser version 1
+            $parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative);
+        } else {
+            // php-parser version 2
+            $parser = new ParserFactory;
+            $parser = $parser->create(ParserFactory::PREFER_PHP7);
+        }
 
-    public function getOne($selector = '')
-    {
-        return $this->annotations->getOne($selector);
-    }
+        $traverser = new PhpParser\NodeTraverser;
+        $visitor   = new NamespaceVisitor;
+        $traverser->addVisitor(new PhpParser\NodeVisitor\NameResolver); // we will need resolved names
+        $traverser->addVisitor($visitor);
 
-    public function getLine()
-    {
-        return $this->object->getStartLine();
-    }
+        try {
+            $stmts = $parser->parse(file_get_contents($file));
+            $traverser->traverse($stmts);
+        } catch (\Exception $e) {
+            return NULL;
+        }
 
-    public function getName()
-    {
-        return $this->object->getName();
-    }
+        $parts = array_values(array_filter(explode("\\", $class)));
+        if (!empty($visitor->classes[$parts[0]])) {
+            $parts[0] = $visitor->classes[$parts[0]];
+            return implode("\\", $parts);
+        }
 
-    public function has($selector)
-    {
-        return $this->annotations->has($selector);
-    }
-
-    public function getAnnotations()
-    {
-        return $this->annotations;
-    }
-
-    public function isMethod()
-    {
-        return false;
-    }
-
-    public function isClass()
-    {
-        return false;
-    }
-
-    public function isProperty()
-    {
-        return false;
-    }
-
-    public function isFunction()
-    {
-        return false;
+        return implode("\\", array_filter(array_merge(array($visitor->namespace), $parts)));
     }
 }

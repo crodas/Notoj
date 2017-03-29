@@ -54,9 +54,19 @@ class ReflectionClass extends \ReflectionClass
     public function getAnnotations() 
     {
         if ($this->annotation === NULL) {
-            $this->annotation = Notoj::parseDocComment($this);
+            $this->annotation = Notoj::parseDocComment($this, $this->getFileName());
         }
         return $this->annotation;
+    }
+
+    public function getInterfaces()
+    {
+        $interfaces = array();
+        foreach (parent::getInterfaces() as $interface) {
+            $interfaces[] = new self($interface->getName());
+        }
+
+        return $interfaces;
     }
 
     public function getMethods($filter = null)
