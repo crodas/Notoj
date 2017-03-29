@@ -11,3 +11,4 @@ php:
 
 before_script:
     - composer install --no-dev
+    - phpunit --version
