@@ -41,6 +41,11 @@ use PhpParser;
 use PhpParser\Node\Stmt;
 use PhpParser\Node;
 
+/**
+ * NamespaceVisitor
+ *
+ * Resolves `use <class>` statements and `namespace <name`> statements
+ */
 class NamespaceVisitor extends PhpParser\NodeVisitorAbstract
 {
     public $classes = array();
@@ -61,6 +66,14 @@ class NamespaceVisitor extends PhpParser\NodeVisitorAbstract
 
 class ClassReference
 {
+    /**
+     * Resolves the a class name in the context of a given file.
+     *
+     * @param string $class     Class name to resolve and get the fully qualify one
+     * @param string $file      File name
+     * 
+     * @return string
+     */
     public static function resolve($class, $file)
     {
         if ($class[0] === '\\') {
