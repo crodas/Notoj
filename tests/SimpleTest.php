@@ -500,4 +500,26 @@ More and more texts', $annotation->getArg(0));
         $this->assertNotFalse($fs->getOne('bug01'));
         $fs->getOne('bug01')->getArg("something");
     }
+
+    public function testInterfaceAnnotations()
+    {
+        require_once __DIR__ . '/fixtures/interface.php';
+
+        $reflection = new ReflectionClass('foobar_interface');
+        $this->assertTrue($reflection->isInterface());
+        $this->assertTrue($reflection->getAnnotations()->has('yyey,xxx'));
+        $this->assertEquals(array(), $reflection->getAnnotations()->getOne('foobar_interface,xxx')->getArgs());
+    }
+
+    /** @dependsOn testInterfaceAnnotations */
+    public function testGetInterfaces()
+    {
+        $x = new ReflectionClass('lol');
+        $l = 0;
+        foreach ($x->getInterfaces() as $interface) {
+            $this->assertTrue($interface instanceof ReflectionClass);
+            ++$l;
+        }
+        $this->assertEquals(1, $l);
+    }
 }

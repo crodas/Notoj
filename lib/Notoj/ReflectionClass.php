@@ -59,6 +59,16 @@ class ReflectionClass extends \ReflectionClass
         return $this->annotation;
     }
 
+    public function getInterfaces()
+    {
+        $interfaces = array();
+        foreach (parent::getInterfaces() as $interface) {
+            $interfaces[] = new self($interface->getName());
+        }
+
+        return $interfaces;
+    }
+
     public function getMethods($filter = null)
     {
         $class = $this->name;
