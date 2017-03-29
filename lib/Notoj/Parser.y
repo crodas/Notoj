@@ -37,6 +37,7 @@
 */
 
 use Notoj\FunctionCall;
+use Notoj\ClassReference;
 }
 
 %declare_class {class Notoj_Parser }
@@ -66,11 +67,8 @@ code ::= T_AT T_ALPHA(B) args(C) . {
 }
 
 args(A) ::= T_PAR_LEFT args_body(C) T_PAR_RIGHT . { A = C; }
-args(A) ::= termy(B) . { A = B; }
+args(A) ::= term(B) . { A = array(B); }
 args(A) ::= . { A = array(); }
-
-catch_all(A) ::= term(B) . { A = B; }
-catch_all(A) ::= T_COMMA|T_COLON|T_CURLY_OPEN|T_CURLY_CLOSE|T_SUBSCR_OPEN|T_SUBSCR_CLOSE(X) . { A = @X; }
 
 args_body(A) ::= args_body(B) T_COMMA args_body(C) . {  A = array_merge(B, C); }
 args_body(A) ::= expr(C) . { A = array(C); }
@@ -86,6 +84,14 @@ named_arg(A) ::= term(B) T_COLON expr(C) . { A = array(B => C); }
 expr(A) ::= T_ALPHA(B) T_PAR_LEFT args_body(X) T_PAR_RIGHT . { 
     A = new FunctionCall(B, X);
 }
+
+expr(A) ::= term(B) T_COLON T_COLON term(X) . { 
+    if (strtolower(X) === 'class' && $this->file) {
+        A = ClassReference::resolve(B, $this->file);
+    } 
+    A = A ? A : B . '::' . X;
+}
+
 expr(A) ::= term(B) . { A = B; }
 expr(A) ::= json(B) . { A = B; }
 expr(A) ::= code . { 

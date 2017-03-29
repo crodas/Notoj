@@ -21,7 +21,7 @@ function foo() {
  *      ["foobar"]
  * )
  */
-class simpletest extends \phpunit_framework_testcase
+class simpletest extends \PHPUnit_Framework_TestCase
 {
     /** @var_name("foo") */
     protected $bar;
@@ -521,5 +521,15 @@ More and more texts', $annotation->getArg(0));
             ++$l;
         }
         $this->assertEquals(1, $l);
+    }
+
+    public function testParseClassConstant()
+    {
+        $x = new \Notoj\File(__DIR__ . '/fixtures/extended.php');
+        $annotation = $x->getOne('class_definition');
+        $this->assertEquals(
+            array('LOL\bar', 'xxyyzz'),
+            $annotation->getArgs()
+        );
     }
 }

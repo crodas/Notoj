@@ -13,10 +13,6 @@ namespace foo\name {
 
 namespace {
 
-    /** @foobar_interface */
-    interface foobar_interface {
-    }
-
     /** @foobar */
     final class foobar {
         /** @fooba */
