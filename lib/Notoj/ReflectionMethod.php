@@ -48,10 +48,16 @@ class ReflectionMethod extends \ReflectionMethod
         parent::__construct($name, $class);
     }
 
+    public function getDeclaringClass()
+    {
+        return new ReflectionClass($this->getDeclaringClass()->getName());
+    }
+
+
     public function getAnnotations() 
     {
         if ($this->annotation === NULL) {
-            $this->annotation = Notoj::parseDocComment($this);
+            $this->annotation = Notoj::parseDocComment($this, $this->getFileName());
         }
         return $this->annotation;
     }

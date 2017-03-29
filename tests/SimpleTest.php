@@ -522,4 +522,14 @@ More and more texts', $annotation->getArg(0));
         }
         $this->assertEquals(1, $l);
     }
+
+    public function testParseClassConstant()
+    {
+        $x = new \Notoj\File(__DIR__ . '/fixtures/extended.php');
+        $annotation = $x->getOne('class_definition');
+        $this->assertEquals(
+            array('LOL\bar', 'xxyyzz'),
+            $annotation->getArgs()
+        );
+    }
 }

@@ -78,7 +78,7 @@ abstract class Base implements \ArrayAccess
     protected function __construct(TBase $object)
     {
         if (empty($object->annotations)) {
-            $object->annotations = Notoj::parseDocComment($object->GetPHPDoc());
+            $object->annotations = Notoj::parseDocComment($object->GetPHPDoc(), $object->getFile());
         }
         $this->object = $object;
         $this->annotations = $object->annotations;

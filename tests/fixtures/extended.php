@@ -1,11 +1,16 @@
 <?php
 
+use LOL\bar;
+
 /** @XX */
 class xxyyzz
 {
 }
 
-/**  @weird_alone */
+
+/** 
+ * @weird_alone @class_definition(bar::class, xxyyzz::class)
+ */
 function weirdo() {
 }
 

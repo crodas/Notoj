@@ -133,18 +133,19 @@ class Notoj_yyStackEntry
 */
 
 use Notoj\FunctionCall;
-#line 138 "lib/Notoj/Parser.php"
+use Notoj\ClassReference;
+#line 139 "lib/Notoj/Parser.php"
 
 // declare_class is output here
-#line 41 "lib/Notoj/Parser.y"
-class Notoj_Parser #line 143 "lib/Notoj/Parser.php"
+#line 42 "lib/Notoj/Parser.y"
+class Notoj_Parser #line 144 "lib/Notoj/Parser.php"
 {
 /* First off, code is included which follows the "include_class" declaration
 ** in the input file. */
-#line 42 "lib/Notoj/Parser.y"
+#line 43 "lib/Notoj/Parser.y"
 
     public $body = array();
-#line 151 "lib/Notoj/Parser.php"
+#line 152 "lib/Notoj/Parser.php"
 
 /* Next is all token values, as class constants
 */
@@ -174,9 +175,9 @@ class Notoj_Parser #line 143 "lib/Notoj/Parser.php"
     const T_CURLY_CLOSE                  = 17;
     const T_SUBSCR_OPEN                  = 18;
     const T_SUBSCR_CLOSE                 = 19;
-    const YY_NO_ACTION = 87;
-    const YY_ACCEPT_ACTION = 86;
-    const YY_ERROR_ACTION = 85;
+    const YY_NO_ACTION = 91;
+    const YY_ACCEPT_ACTION = 90;
+    const YY_ERROR_ACTION = 89;
 
 /* Next are that tables used to determine what action to take based on the
 ** current state and lookahead token.  These tables are used to implement
@@ -228,49 +229,53 @@ class Notoj_Parser #line 143 "lib/Notoj/Parser.php"
 **                          shifting non-terminals after a reduce.
 **  self::$yy_default       Default action for each state.
 */
-    const YY_SZ_ACTTAB = 124;
+    const YY_SZ_ACTTAB = 141;
 static public $yy_action = array(
- /*     0 */    35,   20,   19,    5,    9,    8,    6,   11,   45,   46,
- /*    10 */    32,   48,   49,   22,   12,    3,    4,   35,   20,   19,
- /*    20 */    41,    7,   25,   30,   47,   45,   46,   32,   48,   49,
- /*    30 */    22,   12,    3,    4,   33,    2,   42,   37,   86,   13,
- /*    40 */    45,   46,   32,   48,   49,   22,   33,   21,   36,    1,
- /*    50 */    50,   18,   45,   46,   32,   48,   49,   22,   44,   10,
- /*    60 */    14,   16,   39,   40,   43,   68,   44,   68,   15,   16,
- /*    70 */    39,   40,   43,   21,   35,   20,   44,   28,   38,   16,
- /*    80 */    39,   40,   43,   68,   44,   68,   68,   27,   26,   68,
- /*    90 */    43,   68,   17,   44,   68,   68,   27,   34,   68,   43,
- /*   100 */    44,   68,   68,   27,   31,   44,   43,   68,   27,   23,
- /*   110 */    68,   43,   44,   68,   68,   27,   29,   44,   43,   68,
- /*   120 */    27,   24,   68,   43,
+ /*     0 */    37,   23,   21,    5,   12,    6,    7,   13,   47,   48,
+ /*    10 */    49,   34,   51,   24,   11,   13,    4,   37,   23,   21,
+ /*    20 */    35,   90,   14,    9,   27,   47,   48,   49,   34,   51,
+ /*    30 */    24,   11,    2,    4,   37,   23,   21,   39,   37,   23,
+ /*    40 */    52,   10,   47,   48,   49,   34,   51,   24,   11,    2,
+ /*    50 */     4,   45,    1,   38,   36,   53,    3,   47,   48,   49,
+ /*    60 */    34,   51,   24,   45,   25,    8,   50,   20,   32,   47,
+ /*    70 */    48,   49,   34,   51,   24,   46,   33,   17,   15,   41,
+ /*    80 */    42,   44,   69,   46,   69,   40,   15,   41,   42,   44,
+ /*    90 */    25,   69,   69,   46,   19,   16,   15,   41,   42,   44,
+ /*   100 */    69,   46,   69,   69,   22,   30,   69,   44,   69,   18,
+ /*   110 */    46,   69,   69,   22,   43,   69,   44,   46,   69,   69,
+ /*   120 */    22,   31,   46,   44,   69,   22,   26,   69,   44,   46,
+ /*   130 */    69,   69,   22,   29,   46,   44,   69,   22,   28,   69,
+ /*   140 */    44,
     );
     static public $yy_lookahead = array(
- /*     0 */     2,    3,    4,    7,    1,    9,    8,    1,   10,   11,
- /*    10 */    12,   13,   14,   15,   16,    1,   18,    2,    3,    4,
- /*    20 */     6,    9,   19,   17,   23,   10,   11,   12,   13,   14,
- /*    30 */    15,   16,    1,   18,    4,    5,   14,    6,   21,   22,
- /*    40 */    10,   11,   12,   13,   14,   15,    4,   26,   24,    5,
- /*    50 */    26,   30,   10,   11,   12,   13,   14,   15,   23,    4,
- /*    60 */    25,   26,   27,   28,   29,   32,   23,   32,   25,   26,
- /*    70 */    27,   28,   29,   26,    2,    3,   23,   30,   25,   26,
- /*    80 */    27,   28,   29,   32,   23,   32,   32,   26,   27,   32,
- /*    90 */    29,   32,   31,   23,   32,   32,   26,   27,   32,   29,
- /*   100 */    23,   32,   32,   26,   27,   23,   29,   32,   26,   27,
- /*   110 */    32,   29,   23,   32,   32,   26,   27,   23,   29,   32,
- /*   120 */    26,   27,   32,   29,
+ /*     0 */     2,    3,    4,    7,    1,    9,    1,    9,   10,   11,
+ /*    10 */    12,   13,   14,   15,   16,    9,   18,    2,    3,    4,
+ /*    20 */    17,   21,   22,    8,   19,   10,   11,   12,   13,   14,
+ /*    30 */    15,   16,    1,   18,    2,    3,    4,    6,    2,    3,
+ /*    40 */    14,    4,   10,   11,   12,   13,   14,   15,   16,    1,
+ /*    50 */    18,    4,    5,   24,    6,   26,    5,   10,   11,   12,
+ /*    60 */    13,   14,   15,    4,   26,    9,   23,    9,   30,   10,
+ /*    70 */    11,   12,   13,   14,   15,   23,   26,   25,   26,   27,
+ /*    80 */    28,   29,   32,   23,   32,   25,   26,   27,   28,   29,
+ /*    90 */    26,   32,   32,   23,   30,   25,   26,   27,   28,   29,
+ /*   100 */    32,   23,   32,   32,   26,   27,   32,   29,   32,   31,
+ /*   110 */    23,   32,   32,   26,   27,   32,   29,   23,   32,   32,
+ /*   120 */    26,   27,   23,   29,   32,   26,   27,   32,   29,   23,
+ /*   130 */    32,   32,   26,   27,   23,   29,   32,   26,   27,   32,
+ /*   140 */    29,
 );
     const YY_SHIFT_USE_DFLT = -5;
-    const YY_SHIFT_MAX = 22;
+    const YY_SHIFT_MAX = 25;
     static public $yy_shift_ofst = array(
- /*     0 */    -5,   15,   15,   15,   15,   -2,   15,   15,   15,   15,
- /*    10 */    30,   42,   42,   72,   14,   31,   -4,    3,    6,   44,
- /*    20 */    55,   12,   22,
+ /*     0 */    -5,   32,   32,   32,   32,   15,   -2,   32,   32,   32,
+ /*    10 */    47,   59,   59,   59,   36,   -4,   48,   31,    5,    3,
+ /*    20 */     6,   51,   58,   37,   26,   56,
 );
     const YY_REDUCE_USE_DFLT = -1;
-    const YY_REDUCE_MAX = 13;
+    const YY_REDUCE_MAX = 14;
     static public $yy_reduce_ofst = array(
- /*     0 */    17,   35,   43,   53,   61,   82,   70,   94,   89,   77,
- /*    10 */    24,   47,   21,    1,
+ /*     0 */     0,   52,   60,   70,   78,  111,   94,  106,   99,   87,
+ /*    10 */    29,   64,   38,   50,   43,
 );
     static public $yyExpectedTokens = array(
         /* 0 */ array(),
@@ -279,26 +284,26 @@ static public $yy_action = array(
         /* 3 */ array(2, 3, 4, 10, 11, 12, 13, 14, 15, 16, 18, ),
         /* 4 */ array(2, 3, 4, 10, 11, 12, 13, 14, 15, 16, 18, ),
         /* 5 */ array(2, 3, 4, 8, 10, 11, 12, 13, 14, 15, 16, 18, ),
-        /* 6 */ array(2, 3, 4, 10, 11, 12, 13, 14, 15, 16, 18, ),
+        /* 6 */ array(2, 3, 4, 9, 10, 11, 12, 13, 14, 15, 16, 18, ),
         /* 7 */ array(2, 3, 4, 10, 11, 12, 13, 14, 15, 16, 18, ),
         /* 8 */ array(2, 3, 4, 10, 11, 12, 13, 14, 15, 16, 18, ),
         /* 9 */ array(2, 3, 4, 10, 11, 12, 13, 14, 15, 16, 18, ),
         /* 10 */ array(4, 5, 10, 11, 12, 13, 14, 15, ),
         /* 11 */ array(4, 10, 11, 12, 13, 14, 15, ),
         /* 12 */ array(4, 10, 11, 12, 13, 14, 15, ),
-        /* 13 */ array(2, 3, ),
-        /* 14 */ array(1, 6, ),
-        /* 15 */ array(1, 6, ),
-        /* 16 */ array(7, 9, ),
-        /* 17 */ array(1, 19, ),
-        /* 18 */ array(1, 17, ),
-        /* 19 */ array(5, ),
-        /* 20 */ array(4, ),
-        /* 21 */ array(9, ),
-        /* 22 */ array(14, ),
-        /* 23 */ array(),
-        /* 24 */ array(),
-        /* 25 */ array(),
+        /* 13 */ array(4, 10, 11, 12, 13, 14, 15, ),
+        /* 14 */ array(2, 3, ),
+        /* 15 */ array(7, 9, ),
+        /* 16 */ array(1, 6, ),
+        /* 17 */ array(1, 6, ),
+        /* 18 */ array(1, 19, ),
+        /* 19 */ array(1, 17, ),
+        /* 20 */ array(9, ),
+        /* 21 */ array(5, ),
+        /* 22 */ array(9, ),
+        /* 23 */ array(4, ),
+        /* 24 */ array(14, ),
+        /* 25 */ array(9, ),
         /* 26 */ array(),
         /* 27 */ array(),
         /* 28 */ array(),
@@ -324,14 +329,17 @@ static public $yy_action = array(
         /* 48 */ array(),
         /* 49 */ array(),
         /* 50 */ array(),
+        /* 51 */ array(),
+        /* 52 */ array(),
+        /* 53 */ array(),
 );
     static public $yy_default = array(
- /*     0 */    53,   62,   62,   62,   82,   85,   85,   85,   85,   85,
- /*    10 */    58,   79,   79,   51,   85,   85,   67,   85,   85,   70,
- /*    20 */    85,   85,   85,   64,   81,   78,   84,   67,   80,   65,
- /*    30 */    77,   83,   73,   70,   63,   54,   55,   56,   59,   60,
- /*    40 */    61,   66,   76,   68,   69,   71,   72,   52,   74,   75,
- /*    50 */    57,
+ /*     0 */    56,   65,   65,   65,   86,   89,   89,   89,   89,   89,
+ /*    10 */    61,   83,   83,   89,   54,   71,   89,   89,   89,   89,
+ /*    20 */    89,   74,   71,   89,   89,   89,   85,   82,   67,   87,
+ /*    30 */    88,   68,   84,   70,   78,   81,   69,   57,   58,   59,
+ /*    40 */    62,   63,   64,   66,   72,   74,   73,   75,   76,   77,
+ /*    50 */    55,   79,   80,   60,
 );
 /* The next thing included is series of defines which control
 ** various aspects of the generated parser.
@@ -350,8 +358,8 @@ static public $yy_action = array(
 */
     const YYNOCODE = 33;
     const YYSTACKDEPTH = 100;
-    const YYNSTATE = 51;
-    const YYNRULE = 34;
+    const YYNSTATE = 54;
+    const YYNRULE = 35;
     const YYERRORSYMBOL = 20;
     const YYERRSYMDT = 'yy0';
     const YYFALLBACK = 0;
@@ -465,24 +473,25 @@ static public $yy_action = array(
  /*  13 */ "named_arg ::= term T_EQ expr",
  /*  14 */ "named_arg ::= term T_COLON expr",
  /*  15 */ "expr ::= T_ALPHA T_PAR_LEFT args_body T_PAR_RIGHT",
- /*  16 */ "expr ::= term",
- /*  17 */ "expr ::= json",
- /*  18 */ "expr ::= code",
- /*  19 */ "term ::= T_ALPHA",
- /*  20 */ "term ::= T_NULL",
- /*  21 */ "term ::= T_TRUE",
- /*  22 */ "term ::= T_FALSE",
- /*  23 */ "term ::= T_STRING",
- /*  24 */ "term ::= T_NUMBER",
- /*  25 */ "term ::= T_MINUS T_NUMBER",
- /*  26 */ "json ::= T_CURLY_OPEN json_obj T_CURLY_CLOSE",
- /*  27 */ "json ::= T_SUBSCR_OPEN json_arr T_SUBSCR_CLOSE",
- /*  28 */ "json_obj ::=",
- /*  29 */ "json_obj ::= json_obj T_COMMA json_obj",
- /*  30 */ "json_obj ::= term T_COLON expr",
- /*  31 */ "json_arr ::=",
- /*  32 */ "json_arr ::= json_arr T_COMMA expr",
- /*  33 */ "json_arr ::= expr",
+ /*  16 */ "expr ::= term T_COLON T_COLON term",
+ /*  17 */ "expr ::= term",
+ /*  18 */ "expr ::= json",
+ /*  19 */ "expr ::= code",
+ /*  20 */ "term ::= T_ALPHA",
+ /*  21 */ "term ::= T_NULL",
+ /*  22 */ "term ::= T_TRUE",
+ /*  23 */ "term ::= T_FALSE",
+ /*  24 */ "term ::= T_STRING",
+ /*  25 */ "term ::= T_NUMBER",
+ /*  26 */ "term ::= T_MINUS T_NUMBER",
+ /*  27 */ "json ::= T_CURLY_OPEN json_obj T_CURLY_CLOSE",
+ /*  28 */ "json ::= T_SUBSCR_OPEN json_arr T_SUBSCR_CLOSE",
+ /*  29 */ "json_obj ::=",
+ /*  30 */ "json_obj ::= json_obj T_COMMA json_obj",
+ /*  31 */ "json_obj ::= term T_COLON expr",
+ /*  32 */ "json_arr ::=",
+ /*  33 */ "json_arr ::= json_arr T_COMMA expr",
+ /*  34 */ "json_arr ::= expr",
     );
 
     /**
@@ -863,6 +872,7 @@ static public $yy_action = array(
   array( 'lhs' => 28, 'rhs' => 3 ),
   array( 'lhs' => 28, 'rhs' => 3 ),
   array( 'lhs' => 27, 'rhs' => 4 ),
+  array( 'lhs' => 27, 'rhs' => 4 ),
   array( 'lhs' => 27, 'rhs' => 1 ),
   array( 'lhs' => 27, 'rhs' => 1 ),
   array( 'lhs' => 27, 'rhs' => 1 ),
@@ -892,34 +902,35 @@ static public $yy_action = array(
     static public $yyReduceMap = array(
         4 => 4,
         5 => 5,
-        27 => 5,
+        28 => 5,
         6 => 6,
         9 => 6,
-        33 => 6,
+        34 => 6,
         7 => 7,
         11 => 7,
-        28 => 7,
-        31 => 7,
+        29 => 7,
+        32 => 7,
         8 => 8,
         10 => 10,
-        16 => 10,
         17 => 10,
-        23 => 10,
+        18 => 10,
+        24 => 10,
         12 => 12,
         13 => 13,
         14 => 13,
-        30 => 13,
+        31 => 13,
         15 => 15,
-        18 => 18,
+        16 => 16,
         19 => 19,
         20 => 20,
         21 => 21,
         22 => 22,
-        24 => 24,
+        23 => 23,
         25 => 25,
         26 => 26,
-        29 => 29,
-        32 => 32,
+        27 => 27,
+        30 => 30,
+        33 => 33,
     );
     /* Beginning here are the reduction cases.  A typical example
     ** follows:
@@ -927,75 +938,83 @@ static public $yy_action = array(
     **   function yy_r0($yymsp){ ... }           // User supplied code
     **  #line <lineno> <thisfile>
     */
-#line 63 "lib/Notoj/Parser.y"
+#line 64 "lib/Notoj/Parser.y"
     function yy_r4(){ 
     $this->body[] = new \Notoj\Annotation\Annotation(trim($this->yystack[$this->yyidx + -1]->minor), $this->yystack[$this->yyidx + 0]->minor); 
     }
-#line 940 "lib/Notoj/Parser.php"
-#line 67 "lib/Notoj/Parser.y"
-    function yy_r5(){ $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor;     }
-#line 943 "lib/Notoj/Parser.php"
+#line 951 "lib/Notoj/Parser.php"
 #line 68 "lib/Notoj/Parser.y"
-    function yy_r6(){ $this->_retvalue = array($this->yystack[$this->yyidx + 0]->minor);     }
-#line 946 "lib/Notoj/Parser.php"
+    function yy_r5(){ $this->_retvalue = $this->yystack[$this->yyidx + -1]->minor;     }
+#line 954 "lib/Notoj/Parser.php"
 #line 69 "lib/Notoj/Parser.y"
+    function yy_r6(){ $this->_retvalue = array($this->yystack[$this->yyidx + 0]->minor);     }
+#line 957 "lib/Notoj/Parser.php"
+#line 70 "lib/Notoj/Parser.y"
     function yy_r7(){ $this->_retvalue = array();     }
-#line 949 "lib/Notoj/Parser.php"
-#line 71 "lib/Notoj/Parser.y"
+#line 960 "lib/Notoj/Parser.php"
+#line 72 "lib/Notoj/Parser.y"
     function yy_r8(){  $this->_retvalue = array_merge($this->yystack[$this->yyidx + -2]->minor, $this->yystack[$this->yyidx + 0]->minor);     }
-#line 952 "lib/Notoj/Parser.php"
-#line 73 "lib/Notoj/Parser.y"
+#line 963 "lib/Notoj/Parser.php"
+#line 74 "lib/Notoj/Parser.y"
     function yy_r10(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor;     }
-#line 955 "lib/Notoj/Parser.php"
-#line 76 "lib/Notoj/Parser.y"
-    function yy_r12(){ $this->_retvalue = array($this->yystack[$this->yyidx + -3]->minor => $this->yystack[$this->yyidx + 0]->minor);     }
-#line 958 "lib/Notoj/Parser.php"
+#line 966 "lib/Notoj/Parser.php"
 #line 77 "lib/Notoj/Parser.y"
+    function yy_r12(){ $this->_retvalue = array($this->yystack[$this->yyidx + -3]->minor => $this->yystack[$this->yyidx + 0]->minor);     }
+#line 969 "lib/Notoj/Parser.php"
+#line 78 "lib/Notoj/Parser.y"
     function yy_r13(){ $this->_retvalue = array($this->yystack[$this->yyidx + -2]->minor => $this->yystack[$this->yyidx + 0]->minor);     }
-#line 961 "lib/Notoj/Parser.php"
-#line 82 "lib/Notoj/Parser.y"
+#line 972 "lib/Notoj/Parser.php"
+#line 83 "lib/Notoj/Parser.y"
     function yy_r15(){ 
     $this->_retvalue = new FunctionCall($this->yystack[$this->yyidx + -3]->minor, $this->yystack[$this->yyidx + -1]->minor);
     }
-#line 966 "lib/Notoj/Parser.php"
-#line 88 "lib/Notoj/Parser.y"
-    function yy_r18(){ 
+#line 977 "lib/Notoj/Parser.php"
+#line 87 "lib/Notoj/Parser.y"
+    function yy_r16(){ 
+    if (strtolower($this->yystack[$this->yyidx + 0]->minor) === 'class' && $this->file) {
+        $this->_retvalue = ClassReference::resolve($this->yystack[$this->yyidx + -3]->minor, $this->file);
+    } 
+    $this->_retvalue = $this->_retvalue ? $this->_retvalue : $this->yystack[$this->yyidx + -3]->minor . '::' . $this->yystack[$this->yyidx + 0]->minor;
+    }
+#line 985 "lib/Notoj/Parser.php"
+#line 96 "lib/Notoj/Parser.y"
+    function yy_r19(){ 
     $this->_retvalue = array_pop($this->body);
     }
-#line 971 "lib/Notoj/Parser.php"
-#line 92 "lib/Notoj/Parser.y"
-    function yy_r19(){ $this->_retvalue = trim($this->yystack[$this->yyidx + 0]->minor);     }
-#line 974 "lib/Notoj/Parser.php"
-#line 93 "lib/Notoj/Parser.y"
-    function yy_r20(){ $this->_retvalue = NULL;     }
-#line 977 "lib/Notoj/Parser.php"
-#line 94 "lib/Notoj/Parser.y"
-    function yy_r21(){ $this->_retvalue = TRUE;     }
-#line 980 "lib/Notoj/Parser.php"
-#line 95 "lib/Notoj/Parser.y"
-    function yy_r22(){ $this->_retvalue = FALSE;     }
-#line 983 "lib/Notoj/Parser.php"
-#line 97 "lib/Notoj/Parser.y"
-    function yy_r24(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor + 0;     }
-#line 986 "lib/Notoj/Parser.php"
-#line 98 "lib/Notoj/Parser.y"
-    function yy_r25(){ $this->_retvalue = -1 * ($this->yystack[$this->yyidx + 0]->minor+0);     }
-#line 989 "lib/Notoj/Parser.php"
+#line 990 "lib/Notoj/Parser.php"
+#line 100 "lib/Notoj/Parser.y"
+    function yy_r20(){ $this->_retvalue = trim($this->yystack[$this->yyidx + 0]->minor);     }
+#line 993 "lib/Notoj/Parser.php"
 #line 101 "lib/Notoj/Parser.y"
-    function yy_r26(){ $this->_retvalue  = $this->yystack[$this->yyidx + -1]->minor;     }
-#line 992 "lib/Notoj/Parser.php"
+    function yy_r21(){ $this->_retvalue = NULL;     }
+#line 996 "lib/Notoj/Parser.php"
+#line 102 "lib/Notoj/Parser.y"
+    function yy_r22(){ $this->_retvalue = TRUE;     }
+#line 999 "lib/Notoj/Parser.php"
+#line 103 "lib/Notoj/Parser.y"
+    function yy_r23(){ $this->_retvalue = FALSE;     }
+#line 1002 "lib/Notoj/Parser.php"
 #line 105 "lib/Notoj/Parser.y"
-    function yy_r29(){
+    function yy_r25(){ $this->_retvalue = $this->yystack[$this->yyidx + 0]->minor + 0;     }
+#line 1005 "lib/Notoj/Parser.php"
+#line 106 "lib/Notoj/Parser.y"
+    function yy_r26(){ $this->_retvalue = -1 * ($this->yystack[$this->yyidx + 0]->minor+0);     }
+#line 1008 "lib/Notoj/Parser.php"
+#line 109 "lib/Notoj/Parser.y"
+    function yy_r27(){ $this->_retvalue  = $this->yystack[$this->yyidx + -1]->minor;     }
+#line 1011 "lib/Notoj/Parser.php"
+#line 113 "lib/Notoj/Parser.y"
+    function yy_r30(){
 $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor; 
 foreach ($this->yystack[$this->yyidx + 0]->minor as $k => $v) {
     $this->_retvalue[$k] = $v;
 }
 
     }
-#line 1001 "lib/Notoj/Parser.php"
-#line 115 "lib/Notoj/Parser.y"
-    function yy_r32(){ $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor; $this->_retvalue[] = $this->yystack[$this->yyidx + 0]->minor;     }
-#line 1004 "lib/Notoj/Parser.php"
+#line 1020 "lib/Notoj/Parser.php"
+#line 123 "lib/Notoj/Parser.y"
+    function yy_r33(){ $this->_retvalue = $this->yystack[$this->yyidx + -2]->minor; $this->_retvalue[] = $this->yystack[$this->yyidx + 0]->minor;     }
+#line 1023 "lib/Notoj/Parser.php"
 
     /**
      * placeholder for the left hand side in a reduce operation.
@@ -1107,14 +1126,14 @@ foreach ($this->yystack[$this->yyidx + 0]->minor as $k => $v) {
      */
     function yy_syntax_error($yymajor, $TOKEN)
     {
-#line 46 "lib/Notoj/Parser.y"
+#line 47 "lib/Notoj/Parser.y"
 
     $expect = array();
     foreach ($this->yy_get_expected_tokens($yymajor) as $token) {
         $expect[] = self::$yyTokenName[$token];
     }
     throw new Exception('Unexpected ' . $this->tokenName($yymajor) . '(' . $TOKEN. ')');
-#line 1124 "lib/Notoj/Parser.php"
+#line 1143 "lib/Notoj/Parser.php"
     }
 
     /**
