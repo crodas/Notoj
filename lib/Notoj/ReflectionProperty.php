@@ -50,7 +50,7 @@ class ReflectionProperty extends \ReflectionProperty
 
     public function getDeclaringClass()
     {
-        return new ReflectionClass($this->getDeclaringClass()->getName());
+        return new ReflectionClass(parent::getDeclaringClass()->getName());
     }
 
     public function getAnnotations() 

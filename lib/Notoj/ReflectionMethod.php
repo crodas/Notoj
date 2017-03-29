@@ -50,7 +50,7 @@ class ReflectionMethod extends \ReflectionMethod
 
     public function getDeclaringClass()
     {
-        return new ReflectionClass($this->getDeclaringClass()->getName());
+        return new ReflectionClass(parent::getDeclaringClass()->getName());
     }
 
 
