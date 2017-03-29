@@ -51,7 +51,23 @@ class Notoj extends Cacheable
     protected static $parsed = array();
     protected static $internal_cache = array();
 
-    public static function parseDocComment($content)
+    /**
+     *  Parses a string (or Reflection object) with DocComment. 
+     *
+     *  It returns an array with all annotations founds in the DocComment. This
+     *  array is wrapped by an Notoj\Annotation\Annotations object which makes dealing with this array easier.
+     *
+     *  The content can be cached internally (in the same request) in memory for performance.
+     *
+     *  The parser do not return any exception at all, if there is any error the current annotation will be ignored
+     *  and the parser will continue looking for more annotations
+     *
+     *  @param string|Reflection $content
+     *  @param string $file         Filename where the annotation is located (optional)
+     *
+     *  @return Notoj\Annotation\Annotations 
+     */
+    public static function parseDocComment($content, $file = null)
     {
         if (is_object($content) && is_callable(array($content, 'getDocComment'))) {
             $content = $content->getDocComment();
@@ -67,6 +83,8 @@ class Notoj extends Cacheable
         $buffer  = array();
         $isNew   = true;
 
+        $Parser->file = $file;
+
         while (true) {
             try {
                 $token = $pzToken->getToken($isNew);
@@ -76,6 +94,7 @@ class Notoj extends Cacheable
             } catch (\Exception $e) {
                 $buffer = array_merge($buffer, $Parser->body);
                 $Parser = new \Notoj_Parser;
+                $Parser->file = $file;
                 $isNew  = true;
             }
         }

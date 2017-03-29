@@ -37,6 +37,7 @@
 */
 
 use Notoj\FunctionCall;
+use Notoj\ClassReference;
 }
 
 %declare_class {class Notoj_Parser }
@@ -82,6 +83,13 @@ named_arg(A) ::= term(B) T_COLON expr(C) . { A = array(B => C); }
 /* some day we might care about expressions rather than term */
 expr(A) ::= T_ALPHA(B) T_PAR_LEFT args_body(X) T_PAR_RIGHT . { 
     A = new FunctionCall(B, X);
+}
+
+expr(A) ::= term(B) T_COLON T_COLON term(X) . { 
+    if (strtolower(X) === 'class' && $this->file) {
+        A = ClassReference::resolve(B, $this->file);
+    } 
+    A = A ? A : B . '::' . X;
 }
 
 expr(A) ::= term(B) . { A = B; }

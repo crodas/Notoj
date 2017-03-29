@@ -51,7 +51,7 @@ class ReflectionObject extends \ReflectionObject
     public function getAnnotations() 
     {
         if ($this->annotation === NULL) {
-            $this->annotation = Notoj::parseDocComment($this);
+            $this->annotation = Notoj::parseDocComment($this, $this->getFileName());
         }
         return $this->annotation;
     }
