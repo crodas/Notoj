@@ -1,11 +1,12 @@
 <?php
 namespace Notoj\Test;
 
-use notoj\reflectionclass,
-    notoj\reflectionmethod;
+use notoj\reflectionclass;
+use notoj\reflectionmethod;
+use PHPUnit\Framework\TestCase;
 
 /** @test */
-class ArgumentsTest extends \PHPUnit_Framework_TestCase
+class ArgumentsTest extends TestCase
 {
     /** @SOME_function(foo:bar, bar:xxx) */
     function testNamedArgs2() 
