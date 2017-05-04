@@ -1,11 +1,12 @@
 <?php
 namespace Notoj\Test;
 
-use Notoj\ReflectionClass,
-    Notoj\ReflectionObject,
-    Notoj\ReflectionFunction,
-    Notoj\ReflectionProperty,
-    Notoj\ReflectionMethod;
+use Notoj\ReflectionClass;
+use Notoj\ReflectionObject;
+use Notoj\ReflectionFunction;
+use Notoj\ReflectionProperty;
+use Notoj\ReflectionMethod;
+use PHPUnit\Framework\TestCase;
 
 /** @zzexpect(True) */
 function someFunction() {
@@ -21,7 +22,7 @@ function foo() {
  *      ["foobar"]
  * )
  */
-class simpletest extends \PHPUnit_Framework_TestCase
+class simpletest extends TestCase
 {
     /** @var_name("foo") */
     protected $bar;
@@ -96,7 +97,7 @@ class simpletest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $annotation->count());
         $this->assertEquals($annotation[0]->getName(), 'zzexpect');
         $this->assertEquals(current($annotation[0]->getArgs()), true);
-        $this->assertEquals($function->getStartLine(), 11);
+        $this->assertEquals($function->getStartLine(), 12);
     }
 
     /** yet another comment {{{
@@ -191,6 +192,7 @@ class simpletest extends \PHPUnit_Framework_TestCase
                 $this->assertTrue($annotations instanceof $class);
             }
         }
+        $this->assertTrue(true);
     }
 
 
@@ -251,6 +253,7 @@ class simpletest extends \PHPUnit_Framework_TestCase
                 $this->assertNotEquals($annotation->getName(), 'invalid_me');
             }
         }
+        $this->assertTrue(true);
     }
 
     /**
