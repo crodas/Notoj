@@ -14,6 +14,12 @@ php:
   - hhvm-3.15
   - hhvm-3.18
 
+matrix:
+  include:
+    - php: hhvm
+      dist: trusty
+
+
 before_script:
     - composer install
     - phpunit --version
