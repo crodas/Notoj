@@ -1,6 +1,6 @@
 language: php
 script: 
-    - phpunit
+    - ./vendor/bin/phpunit
 
 php:
   - 5.3
