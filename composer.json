@@ -22,6 +22,6 @@
         }
     },
     "require-dev": {
-        "crodas/phpunit-compat": "^1.1"
+        "crodas/phpunit-compat": "^1.6"
     }
 }
