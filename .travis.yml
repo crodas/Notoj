@@ -34,4 +34,3 @@ matrix:
 
 before_script:
     - composer install
-    - phpunit --version
