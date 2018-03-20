@@ -34,9 +34,10 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
+
 namespace Notoj;
 
-abstract class Cacheable implements \IteratorAggregate 
+abstract class Cacheable implements \IteratorAggregate
 {
     protected $annotations;
     protected $objs = array();
@@ -46,12 +47,12 @@ abstract class Cacheable implements \IteratorAggregate
         return $this->annotations->getOne($name);
     }
 
-
     public function get($name, $type = '')
     {
         $type = ucfirst(strtolower(trim($type)));
+
         return $type
-            ? $this->GetAnnotationsBy($name, 'Notoj\Object\z' . $type)
+            ? $this->GetAnnotationsBy($name, 'Notoj\ObjectClass\z'.$type)
             : $this->annotations->get($name);
     }
 
@@ -79,7 +80,7 @@ abstract class Cacheable implements \IteratorAggregate
             }
         }
 
-        return NULL;
+        return null;
     }
 
     protected function getAnnotationsBy($filter, $class)
@@ -95,7 +96,6 @@ abstract class Cacheable implements \IteratorAggregate
 
         return $anns;
     }
-
 
     protected function getBy($filter, $class)
     {
@@ -113,48 +113,46 @@ abstract class Cacheable implements \IteratorAggregate
 
     public function getCallable($filter = '')
     {
-        return $this->getBy($filter, 'Notoj\Object\zCallable');
+        return $this->getBy($filter, 'Notoj\ObjectClass\zCallable');
     }
 
     public function getFunctions($filter = '')
     {
-        return $this->getBy($filter, 'Notoj\Object\zFunction');
+        return $this->getBy($filter, 'Notoj\ObjectClass\zFunction');
     }
 
     public function getMethods($filter = '')
     {
-        return $this->getBy($filter, 'Notoj\Object\zMethod');
+        return $this->getBy($filter, 'Notoj\ObjectClass\zMethod');
     }
 
     public function getProperties($filter = '')
     {
-        return $this->getBy($filter, 'Notoj\Object\zProperty');
+        return $this->getBy($filter, 'Notoj\ObjectClass\zProperty');
     }
 
     public function getClasses($filter = '')
     {
-        return $this->getBy($filter, 'Notoj\Object\zClass');
+        return $this->getBy($filter, 'Notoj\ObjectClass\zClass');
     }
 
     public function getPropertyByName($name)
     {
-        return $this->getByName($name, 'Notoj\Object\zProperty');
+        return $this->getByName($name, 'Notoj\ObjectClass\zProperty');
     }
-
 
     public function getMethodByName($name)
     {
-        return $this->getByName($name, 'Notoj\Object\zMethod');
+        return $this->getByName($name, 'Notoj\ObjectClass\zMethod');
     }
 
     public function getFunctionByName($name)
     {
-        return $this->getByName($name, 'Notoj\Object\zFunction');
+        return $this->getByName($name, 'Notoj\ObjectClass\zFunction');
     }
 
     public function getClassByName($name)
     {
-        return $this->getByName($name, 'Notoj\Object\zClass');
+        return $this->getByName($name, 'Notoj\ObjectClass\zClass');
     }
-
 }

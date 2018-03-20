@@ -41,16 +41,12 @@ use Remember\Remember;
 use crodas\FileUtil\Path;
 use crodas\ClassInfo\ClassInfo;
 use crodas\ClassInfo\Definition\TBase;
-use crodas\ClassInfo\Definition\TClass;
-use crodas\ClassInfo\Definition\TFunction;
-use crodas\ClassInfo\Definition\TProperty;
 use Notoj\Annotation\Annotations;
-use Notoj\Annotation\Annotation;
 
 class File extends Cacheable
 {
     /**
-     *  @type string
+     *  @var string
      */
     protected $files;
     protected $remember;
@@ -61,29 +57,29 @@ class File extends Cacheable
     {
         $this->remember = Remember::ns('notoj');
         $files = array();
-        foreach ((array)$filePath as $file) {
+        foreach ((array) $filePath as $file) {
             if (!is_file($file) || !is_readable($file)) {
                 throw new \RuntimeException("{$filePath} is not a file or cannot be read");
             }
             $files[] = Path::normalize($file);
         }
         $this->files = $files;
-        $this->annotations = new Annotations;
+        $this->annotations = new Annotations();
 
-        foreach((array)$files as $file) {
+        foreach ((array) $files as $file) {
             $this->doParse($file, $parser);
         }
     }
 
     protected function addObject(TBase $object)
     {
-        $cache = strtolower(get_class($object) . '::' . $object->getName());
+        $cache = strtolower(get_class($object).'::'.$object->getName());
         if (!empty($object->class)) {
-            $cache .= '::' . strtolower($object->class->getName());
+            $cache .= '::'.strtolower($object->class->getName());
         }
 
-        if (empty($this->objs[$cache]))  {
-            $obj  = Object\Base::create($object);
+        if (empty($this->objs[$cache])) {
+            $obj = ObjectClass\Base::create($object);
             $this->objs[$cache] = $obj;
             $this->objAnnotation[$cache] = $object;
             $this->annotations->merge($obj->getAnnotations());
@@ -92,8 +88,9 @@ class File extends Cacheable
 
     public function toCache($filter = null)
     {
-        $filter = $filter ?: function() { return true; };
+        $filter = $filter ?: function () { return true; };
         $toSerialize = array_filter($this->objAnnotation, $filter);
+
         return $toSerialize;
     }
 
@@ -110,15 +107,16 @@ class File extends Cacheable
             foreach ($cached as $object) {
                 $this->addObject($object);
             }
+
             return;
         }
 
         $this->cached = false;
 
         try {
-            $parser = $parser ? $parser : new ClassInfo;
+            $parser = $parser ? $parser : new ClassInfo();
             $parser->parse($path);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             // Internal error, probably parsing buggy/invalid php code
             return;
         }
@@ -129,7 +127,7 @@ class File extends Cacheable
             }
         }
 
-        $cache = $this->toCache(function($e) use ($path) {
+        $cache = $this->toCache(function ($e) use ($path) {
             return $e->getFile() === $path;
         });
         $this->remember->store($path, $cache);

@@ -34,11 +34,10 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
+
 namespace Notoj\Annotation;
 
-use Notoj\Object;
-
-abstract class Common 
+abstract class Common
 {
     protected $object;
 
@@ -49,22 +48,21 @@ abstract class Common
 
     public function isClass()
     {
-        return $this->object instanceof Object\zClass;
+        return $this->object instanceof ObjectClass\zClass;
     }
 
     public function isFunction()
     {
-        return $this->object instanceof Object\zFunction;
+        return $this->object instanceof ObjectClass\zFunction;
     }
 
     public function isProperty()
     {
-        return $this->object instanceof Object\zProperty;
+        return $this->object instanceof ObjectClass\zProperty;
     }
 
     public function isMethod()
     {
-        return $this->object instanceof Object\zMethod;
+        return $this->object instanceof ObjectClass\zMethod;
     }
-
 }

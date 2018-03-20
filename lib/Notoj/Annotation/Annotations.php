@@ -38,10 +38,9 @@
 namespace Notoj\Annotation;
 
 use RuntimeException;
-use InvalidArgumentException;
 use ArrayAccess;
 use Iterator;
-use Notoj\Object\Base;
+use Notoj\ObjectClass\Base;
 
 class Annotations extends Common implements ArrayAccess, Iterator
 {
@@ -56,10 +55,10 @@ class Annotations extends Common implements ArrayAccess, Iterator
         return $this->object->getName();
     }
 
-    public function merge(Annotations $a)
+    public function merge(self $a)
     {
         $this->annotations = array_merge($this->annotations, $a->annotations);
-        $this->merged  = true;
+        $this->merged = true;
     }
 
     public function has($name)
@@ -67,6 +66,7 @@ class Annotations extends Common implements ArrayAccess, Iterator
         if ($this->handleMultiple($name, __FUNCTION__, $return)) {
             return $return;
         }
+
         return !empty($this->aIndex[$name]);
     }
 
@@ -90,8 +90,8 @@ class Annotations extends Common implements ArrayAccess, Iterator
             return false;
         }
 
-        $method .= "Multi";
-        $return  = $this->$method(explode(",", $name));
+        $method .= 'Multi';
+        $return = $this->$method(explode(',', $name));
 
         return true;
     }
@@ -115,6 +115,7 @@ class Annotations extends Common implements ArrayAccess, Iterator
         if ($this->handleMultiple($name, __FUNCTION__, $return)) {
             return $return;
         }
+
         return current($this->aIndex[$name]);
     }
 
@@ -156,12 +157,13 @@ class Annotations extends Common implements ArrayAccess, Iterator
     public function setObject(Base $obj)
     {
         if ($this->merged) {
-            throw new RuntimeException("You cannot setObject() on a merged object");
+            throw new RuntimeException('You cannot setObject() on a merged object');
         }
         $this->object = $obj;
         foreach ($this->annotations as $ann) {
             $ann->object = $obj;
         }
+
         return $this;
     }
 
@@ -206,12 +208,12 @@ class Annotations extends Common implements ArrayAccess, Iterator
 
     public function offsetSet($index, $value)
     {
-        throw new \RuntimeException("You are not allowed");
+        throw new \RuntimeException('You are not allowed');
     }
-    
-    public function offsetUnset ($offset)
+
+    public function offsetUnset($offset)
     {
-        throw new \RuntimeException("You are not allowed");
+        throw new \RuntimeException('You are not allowed');
     }
 
     protected function buildIndex($rebuild = false)
@@ -227,12 +229,12 @@ class Annotations extends Common implements ArrayAccess, Iterator
         }
     }
 
-    public function fromCache(Array $cache)
+    public function fromCache(array $cache)
     {
-        $annotations = new self;
+        $annotations = new self();
         foreach ($cache as $object => $ann) {
             $object = unserialize($object);
-            $ann    = array_map(function($a) {
+            $ann = array_map(function ($a) {
                 return Annotation::fromCache($a);
             }, $ann);
             $obj = new self($ann);
@@ -251,10 +253,11 @@ class Annotations extends Common implements ArrayAccess, Iterator
         unset($this->object);
         $cache = serialize($this);
         $this->object = $object;
+
         return $cache;
     }
 
-    public function __construct(Array $annotations = array())
+    public function __construct(array $annotations = array())
     {
         $this->annotations = $annotations;
         foreach ($this->annotations as $annotation) {

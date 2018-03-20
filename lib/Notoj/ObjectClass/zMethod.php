@@ -34,7 +34,8 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj\Object;
+
+namespace Notoj\ObjectClass;
 
 class zMethod extends zClassMember implements zCallable
 {
@@ -46,12 +47,14 @@ class zMethod extends zClassMember implements zCallable
     public function isFinal()
     {
         $mods = $this->object->getMods();
+
         return in_array('final', $mods);
     }
 
     public function isAbstract()
     {
         $mods = $this->object->getMods();
+
         return in_array('abstract', $mods);
     }
 
@@ -62,8 +65,8 @@ class zMethod extends zClassMember implements zCallable
 
     public function exec()
     {
-        $class  = $this->object->class->getName();
-        $method = $this->object->getName(); 
+        $class = $this->object->class->getName();
+        $method = $this->object->getName();
         if (!class_exists($class, true)) {
             require $this->object->getFile();
         }
@@ -71,7 +74,7 @@ class zMethod extends zClassMember implements zCallable
         if ($this->object->isStatic()) {
             $callback = array($class, $method);
         } else {
-            $callback = array(new $class, $method);
+            $callback = array(new $class(), $method);
         }
 
         return call_user_func_array($callback, func_get_args());
