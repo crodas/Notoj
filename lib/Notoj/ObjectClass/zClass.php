@@ -34,19 +34,65 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj\Object;
 
-class zProperty extends zClassMember
+namespace Notoj\ObjectClass;
+
+class zClass extends Base
 {
-    public function getName()
+    public function getParent()
     {
-        return substr($this->object->getName(), 1);
+        $parent = $this->object->getParent();
+        if (empty($parent)) {
+            return null;
+        }
+
+        return new self($parent, null);
     }
 
-    public function isProperty()
+    protected function getType($filter, $method, $class)
+    {
+        $members = array();
+        foreach ($this->object->$method() as $member) {
+            $member = new $class($member, null);
+            if (!$filter || $member->has($filter)) {
+                $members[] = $member;
+            }
+        }
+
+        return $members;
+    }
+
+    public function getTraits($filter = '')
+    {
+        return $this->getType($filter, 'getTraits', __NAMESPACE__.'\zClass');
+    }
+
+    public function getProperties($filter = '')
+    {
+        return $this->getType($filter, 'getProperties', __NAMESPACE__.'\zProperty');
+    }
+
+    public function getMethods($filter = '')
+    {
+        return $this->getType($filter, 'getMethods', __NAMESPACE__.'\zMethod');
+    }
+
+    public function isFinal()
+    {
+        $mods = $this->object->getMods();
+
+        return in_array('final', $mods);
+    }
+
+    public function isAbstract()
+    {
+        $mods = $this->object->getMods();
+
+        return in_array('abstract', $mods);
+    }
+
+    public function isClass()
     {
         return true;
     }
 }
-
-

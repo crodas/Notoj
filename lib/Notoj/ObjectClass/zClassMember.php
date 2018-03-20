@@ -35,114 +35,41 @@
   +---------------------------------------------------------------------------------+
 */
 
-namespace Notoj\Object;
+namespace Notoj\Objectclass;
 
-use crodas\ClassInfo\Definition\TBase;
-use Notoj\Notoj;
-
-abstract class Base implements \ArrayAccess
+abstract class zClassMember extends Base
 {
-    protected $annotations;
-    protected $object;
-
-    public function getObject()
+    public function getClass()
     {
-        return $this->object;
+        return new zClass($this->object->class, null);
     }
 
-    public function offsetUnset($name)
+    public function isStatic()
     {
-        throw new \BadFunctionCallException;
+        $mods = $this->object->getMods();
+
+        return in_array('static', $mods);
     }
 
-    public function offsetSet($name, $value)
+    public function isProtected()
     {
-        throw new \BadFunctionCallException;
+        $mods = $this->object->getMods();
+
+        return in_array('protected', $mods);
     }
 
-    public function offsetExists($name)
+    public function isPrivate()
     {
-        return $this->annotations->has($name);
+        $mods = $this->object->getMods();
+
+        return in_array('private', $mods);
     }
 
-    public function offsetGet($name)
+    public function isPublic()
     {
-        return $this->annotations->getOne($name);
-    }
+        $mods = $this->object->getMods();
 
-    public function getFile()
-    {
-        return $this->object->getFile();
-    }
-
-    protected function __construct(TBase $object)
-    {
-        if (empty($object->annotations)) {
-            $object->annotations = Notoj::parseDocComment($object->GetPHPDoc(), $object->getFile());
-        }
-        $this->object = $object;
-        $this->annotations = $object->annotations;
-        $this->annotations->setObject($this);
-    }
-
-    public static function create(TBase $object)
-    {
-        $type = substr(strstr(get_class($object), "\\T"), 2);
-        if ($type == 'Function' && !empty($object->class)) {
-            $type = 'Method';
-        }
-        $class = __NAMESPACE__ . "\\z{$type}";
-        return new $class($object);
-    }
-
-    public function get($selector = '')
-    {
-        return $this->annotations->get($selector);
-    }
-
-
-    public function getOne($selector = '')
-    {
-        return $this->annotations->getOne($selector);
-    }
-
-    public function getLine()
-    {
-        return $this->object->getStartLine();
-    }
-
-    public function getName()
-    {
-        return $this->object->getName();
-    }
-
-    public function has($selector)
-    {
-        return $this->annotations->has($selector);
-    }
-
-    public function getAnnotations()
-    {
-        return $this->annotations;
-    }
-
-    public function isMethod()
-    {
-        return false;
-    }
-
-    public function isClass()
-    {
-        return false;
-    }
-
-    public function isProperty()
-    {
-        return false;
-    }
-
-    public function isFunction()
-    {
-        return false;
+        return !in_array('protected', $mods)
+            && !in_array('private', $mods);
     }
 }

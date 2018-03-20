@@ -34,38 +34,18 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj\Object;
 
-abstract class zClassMember extends Base
+namespace Notoj\ObjectClass;
+
+class zProperty extends zClassMember
 {
-    public function getClass()
+    public function getName()
     {
-        return new zClass($this->object->class, NULL);
+        return substr($this->object->getName(), 1);
     }
 
-    public function isStatic()
+    public function isProperty()
     {
-        $mods = $this->object->getMods();
-        return in_array('static', $mods);
-    }
-
-
-    public function isProtected()
-    {
-        $mods = $this->object->getMods();
-        return in_array('protected', $mods);
-    }
-
-    public function isPrivate()
-    {
-        $mods = $this->object->getMods();
-        return in_array('private', $mods);
-    }
-
-    public function isPublic()
-    {
-        $mods = $this->object->getMods();
-        return !in_array('protected', $mods)
-            && !in_array('private', $mods);
+        return true;
     }
 }

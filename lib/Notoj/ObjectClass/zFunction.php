@@ -34,8 +34,28 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj\Object;
 
-interface zCallable
+namespace Notoj\ObjectClass;
+
+class zFunction extends Base implements zCallable
 {
+    public function isFunction()
+    {
+        return true;
+    }
+
+    public function exec()
+    {
+        $function = $this->object->getName();
+        if (!is_callable($function)) {
+            require $this->object->GetFile();
+        }
+
+        return call_user_func_array($function, func_get_args());
+    }
+
+    public function getParameters()
+    {
+        return $this->object->getParameters();
+    }
 }

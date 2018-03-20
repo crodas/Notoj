@@ -34,30 +34,115 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj\Object;
 
-use crodas\ClassInfo\Definition\TFunction;
-use Notoj\Annotation\Annotations;
+namespace Notoj\ObjectClass;
 
-class zFunction extends Base implements zCallable
+use crodas\ClassInfo\Definition\TBase;
+use Notoj\Notoj;
+
+abstract class Base implements \ArrayAccess
 {
+    protected $annotations;
+    protected $object;
+
+    public function getObject()
+    {
+        return $this->object;
+    }
+
+    public function offsetUnset($name)
+    {
+        throw new \BadFunctionCallException();
+    }
+
+    public function offsetSet($name, $value)
+    {
+        throw new \BadFunctionCallException();
+    }
+
+    public function offsetExists($name)
+    {
+        return $this->annotations->has($name);
+    }
+
+    public function offsetGet($name)
+    {
+        return $this->annotations->getOne($name);
+    }
+
+    public function getFile()
+    {
+        return $this->object->getFile();
+    }
+
+    protected function __construct(TBase $object)
+    {
+        if (empty($object->annotations)) {
+            $object->annotations = Notoj::parseDocComment($object->GetPHPDoc(), $object->getFile());
+        }
+        $this->object = $object;
+        $this->annotations = $object->annotations;
+        $this->annotations->setObject($this);
+    }
+
+    public static function create(TBase $object)
+    {
+        $type = substr(strstr(get_class($object), '\\T'), 2);
+        if ('Function' == $type && !empty($object->class)) {
+            $type = 'Method';
+        }
+        $class = __NAMESPACE__."\\z{$type}";
+
+        return new $class($object);
+    }
+
+    public function get($selector = '')
+    {
+        return $this->annotations->get($selector);
+    }
+
+    public function getOne($selector = '')
+    {
+        return $this->annotations->getOne($selector);
+    }
+
+    public function getLine()
+    {
+        return $this->object->getStartLine();
+    }
+
+    public function getName()
+    {
+        return $this->object->getName();
+    }
+
+    public function has($selector)
+    {
+        return $this->annotations->has($selector);
+    }
+
+    public function getAnnotations()
+    {
+        return $this->annotations;
+    }
+
+    public function isMethod()
+    {
+        return false;
+    }
+
+    public function isClass()
+    {
+        return false;
+    }
+
+    public function isProperty()
+    {
+        return false;
+    }
+
     public function isFunction()
     {
-        return true;
-    }
-
-    public function exec()
-    {
-        $function = $this->object->getName();
-        if (!is_callable($function)) {
-            require $this->object->GetFile();
-        }
-        return call_user_func_array($function, func_get_args());
-    }
-
-    public function getParameters()
-    {
-        return $this->object->getParameters();
+        return false;
     }
 }
-
