@@ -83,7 +83,7 @@ class File extends Cacheable
         }
 
         if (empty($this->objs[$cache]))  {
-            $obj  = Object\Base::create($object);
+            $obj  = TObject\Base::create($object);
             $this->objs[$cache] = $obj;
             $this->objAnnotation[$cache] = $object;
             $this->annotations->merge($obj->getAnnotations());

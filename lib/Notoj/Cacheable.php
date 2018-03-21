@@ -51,7 +51,7 @@ abstract class Cacheable implements \IteratorAggregate
     {
         $type = ucfirst(strtolower(trim($type)));
         return $type
-            ? $this->GetAnnotationsBy($name, 'Notoj\Object\z' . $type)
+            ? $this->GetAnnotationsBy($name, 'Notoj\TObject\z' . $type)
             : $this->annotations->get($name);
     }
 
@@ -113,48 +113,48 @@ abstract class Cacheable implements \IteratorAggregate
 
     public function getCallable($filter = '')
     {
-        return $this->getBy($filter, 'Notoj\Object\zCallable');
+        return $this->getBy($filter, 'Notoj\TObject\zCallable');
     }
 
     public function getFunctions($filter = '')
     {
-        return $this->getBy($filter, 'Notoj\Object\zFunction');
+        return $this->getBy($filter, 'Notoj\TObject\zFunction');
     }
 
     public function getMethods($filter = '')
     {
-        return $this->getBy($filter, 'Notoj\Object\zMethod');
+        return $this->getBy($filter, 'Notoj\TObject\zMethod');
     }
 
     public function getProperties($filter = '')
     {
-        return $this->getBy($filter, 'Notoj\Object\zProperty');
+        return $this->getBy($filter, 'Notoj\TObject\zProperty');
     }
 
     public function getClasses($filter = '')
     {
-        return $this->getBy($filter, 'Notoj\Object\zClass');
+        return $this->getBy($filter, 'Notoj\TObject\zClass');
     }
 
     public function getPropertyByName($name)
     {
-        return $this->getByName($name, 'Notoj\Object\zProperty');
+        return $this->getByName($name, 'Notoj\TObject\zProperty');
     }
 
 
     public function getMethodByName($name)
     {
-        return $this->getByName($name, 'Notoj\Object\zMethod');
+        return $this->getByName($name, 'Notoj\TObject\zMethod');
     }
 
     public function getFunctionByName($name)
     {
-        return $this->getByName($name, 'Notoj\Object\zFunction');
+        return $this->getByName($name, 'Notoj\TObject\zFunction');
     }
 
     public function getClassByName($name)
     {
-        return $this->getByName($name, 'Notoj\Object\zClass');
+        return $this->getByName($name, 'Notoj\TObject\zClass');
     }
 
 }

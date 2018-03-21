@@ -36,7 +36,7 @@
 */
 namespace Notoj\Annotation;
 
-use Notoj\Object;
+use Notoj\TObject;
 
 abstract class Common 
 {
@@ -49,22 +49,22 @@ abstract class Common
 
     public function isClass()
     {
-        return $this->object instanceof Object\zClass;
+        return $this->object instanceof TObject\zClass;
     }
 
     public function isFunction()
     {
-        return $this->object instanceof Object\zFunction;
+        return $this->object instanceof TObject\zFunction;
     }
 
     public function isProperty()
     {
-        return $this->object instanceof Object\zProperty;
+        return $this->object instanceof TObject\zProperty;
     }
 
     public function isMethod()
     {
-        return $this->object instanceof Object\zMethod;
+        return $this->object instanceof TObject\zMethod;
     }
 
 }

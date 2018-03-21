@@ -34,38 +34,30 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj\Object;
+namespace Notoj\TObject;
 
-abstract class zClassMember extends Base
+use crodas\ClassInfo\Definition\TFunction;
+use Notoj\Annotation\Annotations;
+
+class zFunction extends Base implements zCallable
 {
-    public function getClass()
+    public function isFunction()
     {
-        return new zClass($this->object->class, NULL);
+        return true;
     }
 
-    public function isStatic()
+    public function exec()
     {
-        $mods = $this->object->getMods();
-        return in_array('static', $mods);
+        $function = $this->object->getName();
+        if (!is_callable($function)) {
+            require $this->object->GetFile();
+        }
+        return call_user_func_array($function, func_get_args());
     }
 
-
-    public function isProtected()
+    public function getParameters()
     {
-        $mods = $this->object->getMods();
-        return in_array('protected', $mods);
-    }
-
-    public function isPrivate()
-    {
-        $mods = $this->object->getMods();
-        return in_array('private', $mods);
-    }
-
-    public function isPublic()
-    {
-        $mods = $this->object->getMods();
-        return !in_array('protected', $mods)
-            && !in_array('private', $mods);
+        return $this->object->getParameters();
     }
 }
+

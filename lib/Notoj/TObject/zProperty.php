@@ -34,115 +34,19 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
+namespace Notoj\TObject;
 
-namespace Notoj\Object;
-
-use crodas\ClassInfo\Definition\TBase;
-use Notoj\Notoj;
-
-abstract class Base implements \ArrayAccess
+class zProperty extends zClassMember
 {
-    protected $annotations;
-    protected $object;
-
-    public function getObject()
-    {
-        return $this->object;
-    }
-
-    public function offsetUnset($name)
-    {
-        throw new \BadFunctionCallException;
-    }
-
-    public function offsetSet($name, $value)
-    {
-        throw new \BadFunctionCallException;
-    }
-
-    public function offsetExists($name)
-    {
-        return $this->annotations->has($name);
-    }
-
-    public function offsetGet($name)
-    {
-        return $this->annotations->getOne($name);
-    }
-
-    public function getFile()
-    {
-        return $this->object->getFile();
-    }
-
-    protected function __construct(TBase $object)
-    {
-        if (empty($object->annotations)) {
-            $object->annotations = Notoj::parseDocComment($object->GetPHPDoc(), $object->getFile());
-        }
-        $this->object = $object;
-        $this->annotations = $object->annotations;
-        $this->annotations->setObject($this);
-    }
-
-    public static function create(TBase $object)
-    {
-        $type = substr(strstr(get_class($object), "\\T"), 2);
-        if ($type == 'Function' && !empty($object->class)) {
-            $type = 'Method';
-        }
-        $class = __NAMESPACE__ . "\\z{$type}";
-        return new $class($object);
-    }
-
-    public function get($selector = '')
-    {
-        return $this->annotations->get($selector);
-    }
-
-
-    public function getOne($selector = '')
-    {
-        return $this->annotations->getOne($selector);
-    }
-
-    public function getLine()
-    {
-        return $this->object->getStartLine();
-    }
-
     public function getName()
     {
-        return $this->object->getName();
-    }
-
-    public function has($selector)
-    {
-        return $this->annotations->has($selector);
-    }
-
-    public function getAnnotations()
-    {
-        return $this->annotations;
-    }
-
-    public function isMethod()
-    {
-        return false;
-    }
-
-    public function isClass()
-    {
-        return false;
+        return substr($this->object->getName(), 1);
     }
 
     public function isProperty()
     {
-        return false;
-    }
-
-    public function isFunction()
-    {
-        return false;
+        return true;
     }
 }
+
+

@@ -34,30 +34,66 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj\Object;
+namespace Notoj\TObject;
 
-use crodas\ClassInfo\Definition\TFunction;
+use crodas\ClassInfo\Definition\TClass;
 use Notoj\Annotation\Annotations;
+use Notoj\Cacheable;
 
-class zFunction extends Base implements zCallable
+class zClass extends Base
 {
-    public function isFunction()
+    public function getParent()
+    {
+        $parent = $this->object->getParent();
+        if (empty($parent)) {
+            return NULL;
+        }
+
+        return new self($parent, NULL);
+    }
+
+    protected function getType($filter, $method, $class)
+    {
+        $members = array();
+        foreach ($this->object->$method() as $member) {
+            $member = new $class($member, NULL);
+            if (!$filter || $member->has($filter)) {
+                $members[] = $member;
+            }
+        }
+
+        return $members;
+    }
+
+    public function getTraits($filter = '')
+    {
+        return $this->getType($filter, 'getTraits', __NAMESPACE__ . '\zClass');
+    }
+
+    public function getProperties($filter = '')
+    {
+        return $this->getType($filter, 'getProperties', __NAMESPACE__ . '\zProperty');
+    }
+
+    public function getMethods($filter = '')
+    {
+        return $this->getType($filter, 'getMethods', __NAMESPACE__ . '\zMethod');
+    }
+
+    public function isFinal()
+    {
+        $mods = $this->object->getMods();
+        return in_array('final', $mods);
+    }
+
+    public function isAbstract()
+    {
+        $mods = $this->object->getMods();
+        return in_array('abstract', $mods);
+    }
+
+    public function isClass()
     {
         return true;
     }
-
-    public function exec()
-    {
-        $function = $this->object->getName();
-        if (!is_callable($function)) {
-            require $this->object->GetFile();
-        }
-        return call_user_func_array($function, func_get_args());
-    }
-
-    public function getParameters()
-    {
-        return $this->object->getParameters();
-    }
 }
-

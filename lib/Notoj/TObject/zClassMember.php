@@ -34,8 +34,38 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj\Object;
+namespace Notoj\TObject;
 
-interface zCallable
+abstract class zClassMember extends Base
 {
+    public function getClass()
+    {
+        return new zClass($this->object->class, NULL);
+    }
+
+    public function isStatic()
+    {
+        $mods = $this->object->getMods();
+        return in_array('static', $mods);
+    }
+
+
+    public function isProtected()
+    {
+        $mods = $this->object->getMods();
+        return in_array('protected', $mods);
+    }
+
+    public function isPrivate()
+    {
+        $mods = $this->object->getMods();
+        return in_array('private', $mods);
+    }
+
+    public function isPublic()
+    {
+        $mods = $this->object->getMods();
+        return !in_array('protected', $mods)
+            && !in_array('private', $mods);
+    }
 }
