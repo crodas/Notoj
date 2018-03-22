@@ -187,7 +187,7 @@ class simpletest extends TestCase
             'getProperties' => 'zProperty',
         );
         foreach ($methods as $method  => $class) {
-            $class = "Notoj\\Object\\$class";
+            $class = "Notoj\\TObject\\$class";
             foreach ($obj->$method() as $annotations) {
                 $this->assertTrue($annotations instanceof $class);
             }
@@ -293,7 +293,7 @@ class simpletest extends TestCase
 
         $i = 0;
         foreach ($foo->getFunctions() as $function) {
-            $this->assertTrue($function instanceof \Notoj\Object\zFunction);
+            $this->assertTrue($function instanceof \Notoj\TObject\zFunction);
             $i++;
         }
         $this->assertTrue($i > 0);
@@ -302,7 +302,7 @@ class simpletest extends TestCase
 
         $i   = 0;
         foreach ($foo->getClasses('FOOBAR') as $class) {
-            $this->assertTrue($class instanceof \Notoj\Object\zClass);
+            $this->assertTrue($class instanceof \Notoj\TObject\zClass);
             $this->assertTrue(!empty($class['foobar']));
             $this->assertTrue($class['foobar'] instanceof \Notoj\Annotation\Annotation);
             $this->assertEquals(array(), $class->getMethods('xxx'));
@@ -339,7 +339,7 @@ class simpletest extends TestCase
             'foobar'
         );
         foreach ($foo->get('foobar,barfoo') as $annotation) {
-            $this->assertTrue($annotation->getObject() instanceof \Notoj\Object\Base);
+            $this->assertTrue($annotation->getObject() instanceof \Notoj\TObject\Base);
             $this->assertTrue( file_exists($annotation->getFile()) );
             $this->assertTrue($annotation->isClass());
             $this->assertFalse($annotation->isMethod());

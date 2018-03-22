@@ -1,14 +1,38 @@
 language: php
-script: phpunit tests
+script: 
+    - ./vendor/bin/phpunit
 
 php:
-  - hhvm
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
   - 7.0
+  - 7.1
+  - 7.2
+
+matrix:
+  include:
+    - php: 5.3
+      dist: precise
+    - php: hhvm-3.6
+      dist: trusty
+      group: stable
+    - php: hhvm-3.9
+      dist: trusty
+      group: stable
+    - php: hhvm-3.12
+      dist: trusty
+      group: stable
+    - php: hhvm-3.15
+      dist: trusty
+      group: stable
+    - php: hhvm-3.18
+      dist: trusty
+      group: stable
+    - php: hhvm
+      dist: trusty
+      group: stable
+
 
 before_script:
     - composer install
-    - phpunit --version

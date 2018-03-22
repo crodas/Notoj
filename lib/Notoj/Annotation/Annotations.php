@@ -41,7 +41,7 @@ use RuntimeException;
 use InvalidArgumentException;
 use ArrayAccess;
 use Iterator;
-use Notoj\Object\Base;
+use Notoj\TObject\Base;
 
 class Annotations extends Common implements ArrayAccess, Iterator
 {

@@ -34,46 +34,115 @@
   | Authors: César Rodas <crodas@php.net>                                           |
   +---------------------------------------------------------------------------------+
 */
-namespace Notoj\Object;
 
-class zMethod extends zClassMember implements zCallable
+namespace Notoj\TObject;
+
+use crodas\ClassInfo\Definition\TBase;
+use Notoj\Notoj;
+
+abstract class Base implements \ArrayAccess
 {
-    public function getParameters()
+    protected $annotations;
+    protected $object;
+
+    public function getObject()
     {
-        return $this->object->getParameters();
+        return $this->object;
     }
 
-    public function isFinal()
+    public function offsetUnset($name)
     {
-        $mods = $this->object->getMods();
-        return in_array('final', $mods);
+        throw new \BadFunctionCallException;
     }
 
-    public function isAbstract()
+    public function offsetSet($name, $value)
     {
-        $mods = $this->object->getMods();
-        return in_array('abstract', $mods);
+        throw new \BadFunctionCallException;
+    }
+
+    public function offsetExists($name)
+    {
+        return $this->annotations->has($name);
+    }
+
+    public function offsetGet($name)
+    {
+        return $this->annotations->getOne($name);
+    }
+
+    public function getFile()
+    {
+        return $this->object->getFile();
+    }
+
+    protected function __construct(TBase $object)
+    {
+        if (empty($object->annotations)) {
+            $object->annotations = Notoj::parseDocComment($object->GetPHPDoc(), $object->getFile());
+        }
+        $this->object = $object;
+        $this->annotations = $object->annotations;
+        $this->annotations->setObject($this);
+    }
+
+    public static function create(TBase $object)
+    {
+        $type = substr(strstr(get_class($object), "\\T"), 2);
+        if ($type == 'Function' && !empty($object->class)) {
+            $type = 'Method';
+        }
+        $class = __NAMESPACE__ . "\\z{$type}";
+        return new $class($object);
+    }
+
+    public function get($selector = '')
+    {
+        return $this->annotations->get($selector);
+    }
+
+
+    public function getOne($selector = '')
+    {
+        return $this->annotations->getOne($selector);
+    }
+
+    public function getLine()
+    {
+        return $this->object->getStartLine();
+    }
+
+    public function getName()
+    {
+        return $this->object->getName();
+    }
+
+    public function has($selector)
+    {
+        return $this->annotations->has($selector);
+    }
+
+    public function getAnnotations()
+    {
+        return $this->annotations;
     }
 
     public function isMethod()
     {
-        return true;
+        return false;
     }
 
-    public function exec()
+    public function isClass()
     {
-        $class  = $this->object->class->getName();
-        $method = $this->object->getName(); 
-        if (!class_exists($class, true)) {
-            require $this->object->getFile();
-        }
+        return false;
+    }
 
-        if ($this->object->isStatic()) {
-            $callback = array($class, $method);
-        } else {
-            $callback = array(new $class, $method);
-        }
+    public function isProperty()
+    {
+        return false;
+    }
 
-        return call_user_func_array($callback, func_get_args());
+    public function isFunction()
+    {
+        return false;
     }
 }

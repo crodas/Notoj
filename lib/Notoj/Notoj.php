@@ -44,10 +44,6 @@ use Notoj\Annotation\Annotation;
  */
 class Notoj extends Cacheable
 {
-    const T_CLASS = 1;
-    const T_FUNCTION = 2;
-    const T_PROPERTY = 3;
-
     protected static $parsed = array();
     protected static $internal_cache = array();
 
@@ -106,14 +102,6 @@ class Notoj extends Cacheable
         $struct = new Annotations(array_merge($buffer, $Parser->body));
         self::$internal_cache[$id] = $struct->toCache();
         return $struct;
-    }
-
-    public static function parseAll() 
-    {
-        $class = new self;
-        foreach (get_included_files() as $file) {
-            $class->parseFile($file);
-        }
     }
 
     public function parseFile($file)
