@@ -1,5 +1,5 @@
 {
-    "name": "crodas/Notoj",
+    "name": "crodas/notoj",
     "description": "Annotation parser. Uses reflection and provides cache out of the box.",
     "authors": [
         {
