@@ -27,9 +27,6 @@ matrix:
     - php: hhvm-3.18
       dist: trusty
       group: stable
-    - php: hhvm
-      dist: trusty
-      group: stable
 
 
 before_script:
