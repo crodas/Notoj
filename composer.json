@@ -1,5 +1,5 @@
 {
-    "name": "crodas/Notoj",
+    "name": "crodas/notoj",
     "description": "Annotation parser. Uses reflection and provides cache out of the box.",
     "authors": [
         {
@@ -15,7 +15,7 @@
         "crodas/remember": ">=0.4.2"
     },
     "license": "BSD-4-Clause",
-    "version": "v1.6.1",
+    "version": "v1.7.0",
     "autoload": {
         "psr-0": {
             "Notoj": "lib/"

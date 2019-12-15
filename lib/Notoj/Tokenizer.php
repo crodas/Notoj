@@ -197,7 +197,7 @@ class Tokenizer
                     }
 
                     if (strlen($data) == 0) {
-                        continue;
+                        continue 2;
                     }
 
                     $e--;
